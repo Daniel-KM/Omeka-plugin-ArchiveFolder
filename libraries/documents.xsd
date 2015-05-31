@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" elementFormDefault="qualified">
+    <xs:annotation>
+        <xs:documentation>
+            Just a simple schema to ingest standard metadata in Omeka via OAI-PMH.
+            This schema is not designed to be used to expose data in OAI-PMH.
+            Dublin Core elements are supported to simplify ingest of flat data.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="http://dublincore.org/schemas/xmls/qdc/2006/01/06/dc.xsd" />
+    <xs:import namespace="http://purl.org/dc/terms/" schemaLocation="http://dublincore.org/schemas/xmls/qdc/2006/01/06/dcterms.xsd" />
+    <xs:element name="documents">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="record"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="record">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="elementSet"/>
+                <xs:element ref="extra"/>
+                <xs:element ref="dc:any"/>
+                <xs:element name="record">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element ref="elementSet"/>
+                            <xs:element ref="extra"/>
+                            <xs:element ref="dc:any"/>
+                        </xs:choice>
+                        <xs:attribute name="file" type="xs:anyURI" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="collection" type="xs:string"/>
+            <xs:attribute name="itemType" type="xs:string"/>
+            <xs:attribute name="featured" type="xs:boolean"/>
+            <xs:attribute name="public" type="xs:boolean"/>
+            <xs:attribute name="action">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="delete"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="elementSet">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="data" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType mixed="true">
+                                    <xs:sequence>
+                                        <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="extra">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="data" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType mixed="true">
+                        <xs:sequence>
+                            <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

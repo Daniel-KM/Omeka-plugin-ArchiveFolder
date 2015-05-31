@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This somewhat flat Xml file is used to manage simply all Omeka features and
+updates. It contains:
+- multivalued content
+- content with multiple lines
+- flat and hierarchical Dublin Core formats, at the choice of user
+- creation of a collection when it doesn't exists
+- extra data (here in array notation for the plugin Geolocation)
+Some missing data of records will be updated via the update file.
+-->
+<documents>
+    <record
+        name="doc #1"
+        collection="Tests of the plugin Archive Folder"
+        itemType="Still Image"
+        featured="1"
+        >
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Title of the document of the Directory B-A (from “document.xml”)</data>
+            </element>
+            <element name="Creator">
+                <data>Anonymous</data>
+                <data>Co-anonymous</data>
+            </element>
+            <element name="Date">
+                <data>2015</data>
+            </element>
+            <element name="Description">
+                <data>This data is multilined and contains tags.
+
+The second line.
+This is a <i>tagged word</i> (not managed, because the whole data is not a valid html one).</data>
+                <data><p>This second description is a valid <strong>html</strong> one, <em>with</em> a cdata (<![CDATA["& inside"]]>) content.</p></data>
+                <data>The geolocation is a random one.</data>
+                <data><![CDATA[This fourth description is a simple string <em>inside</em> a CDATA one.]]></data>
+                <data><![CDATA[<p>This fifth description is a valid <strong>html</strong> string <em>inside</em> a CDATA one.</p>]]></data>
+                <data><p>To try the update of the folder by the OAI-PMH harvester, replace the file "<code>Dir_B/Subdir_B-A/document.xml</code>" of your copied directory by the matching one that is prepared in the directory "<code>tests/suite/_files/Update_files/</code>", and click on "Update" in the tab "Archive folders".</p></data>
+            </element>
+        </elementSet>
+        <elementSet name="Item Type Metadata">
+            <element name="Physical Dimensions">
+                <data>640x480px</data>
+            </element>
+        </elementSet>
+        <extra>
+            <data name="geolocation[latitude]">5</data>
+            <data name="geolocation[longitude]">10</data>
+            <data name="geolocation[zoom_level]">15</data>
+            <data name="geolocation[map_type]" />
+            <data name="geolocation[address]" />
+            <data name="Tag">My first tag</data>
+            <data name="tag">My second tag</data>
+        </extra>
+        <record
+            file="image_Subdir_B-A_1.png"
+            >
+            <elementSet name="Dublin Core">
+                <element name="Title">
+                    <data>The recto of the Image (Image Subdir B-A #1)</data>
+                </element>
+                <element name="Description">
+                    <data>First description.</data>
+                    <data>Second description.</data>
+                    <data>Third description.</data>
+                    <data>Fourth description.</data>
+                    <data>Fifth description.</data>
+                </element>
+            </elementSet>
+        </record>
+        <record
+            file="image_Subdir_B-A_2.png"
+            >
+            <elementSet name="Dublin Core">
+                <element name="Title">
+                    <data>The verso of the Image (Image Subdir B-A #2)</data>
+                </element>
+            </elementSet>
+        </record>
+    </record>
+    <record
+        name="doc #2"
+        collection="Tests of the plugin Archive Folder"
+        itemType="Still Image"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:dcterms="http://purl.org/dc/terms/"
+        >
+        <dc:title>A simple document of ”document.xml”, without attached file</dc:title>
+        <dc:creator>Unknown, just for test of Dublin Core</dc:creator>
+        <dcterms:abstract>This is an abstract.</dcterms:abstract>
+        <extra>
+            <data name="tag">My tag</data>
+        </extra>
+    </record>
+</documents>

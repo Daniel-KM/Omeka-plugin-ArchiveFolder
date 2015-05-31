@@ -1,0 +1,50 @@
+[{
+    "name":"Baobab",
+    "metadata":{
+        "Dublin Core":{
+            "Title":["Baobab"],
+            "Coverage":["Madagascar"]
+    }},
+    "extra":{
+        "geolocation[latitude]":"-20.250833°",
+        "geolocation[longitude]":"44.418333°",
+        "geolocation[zoom_level]":"10",
+        "geolocation[map_type]":"",
+        "geolocation[address]":"",
+        "Tags":["Tree"]
+    },
+    "files":{
+        "1":{
+            "path":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/a\/a8\/Adansonia_grandidieri04.jpg",
+            "metadata":{
+                "Dublin Core":{
+                    "Title":["Adansonia grandidieri","Français : Baobab de Grandidier, photo prise près de Morondava, Madagascar"],
+                    "Creator":["Bernard Gagnon"],
+                    "Date":["14 March 2007"],
+                    "Rights":["Creative Commons CC-BY-SA"]
+        }}},
+        "2":{
+            "path":"file_1.jpg",
+            "metadata":{
+                "Dublin Core":{
+                    "Title":["File 1: OK"]
+        }}},
+        "3":{
+            "path":"../file_2.png",
+            "metadata":{
+                "Dublin Core":{
+                    "Title":["File 2: External to the folder"]
+        }}},
+        "4":{
+            "path":"../../file_3.jpg",
+            "metadata":{
+                "Dublin Core":{
+                    "Title":["File 3: External to the folder and to the base path"]
+        }}},
+        "5":{
+            "path":"../../../../../../../tmp/file_4.jpg",
+            "metadata":{
+                "Dublin Core":{
+                    "Title":["File 4: External to the folder and inside the server"]
+    }}}}
+}]

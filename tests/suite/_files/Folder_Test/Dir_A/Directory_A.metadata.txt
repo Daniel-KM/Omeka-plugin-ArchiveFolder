@@ -1,0 +1,22 @@
+Dublin Core : Title = Title of the document of the Directory A (from "Directory_A.metadata.txt")
+Creator = John Smith
+Dublin Core:Creator=Mary Smith
+Description = This is the Dublin Core Description of this document.
+  This is the second line of the description, after a line break.
+
+     This is the fourth line, after an empty paragraph.
+  The spaces at the start of the fourth line, after the first two, are not trimmed, because they are inside the description and belongs to it.
+This line is a comment, because the equal sign is absent and it doesn't begin with two spaces.
+ Date = 2015
+
+File = image_Dir_A_1.png
+Dublin Core:Title = The Recto of the Image (Image Dir A 1)
+Rights = Creative Commons CC0
+
+File = image_Dir_A_2.png
+Dublin Core : Title = The verso of the Image (Image Dir A 2)
+Rights = Public Domain
+
+Item = Document 2
+Title = Second document of "Directory_A.metadata.txt", without attached file
+Another field = This field can be written in the static repository with a special format or hook.

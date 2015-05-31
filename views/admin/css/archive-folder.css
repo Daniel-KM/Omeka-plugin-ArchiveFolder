@@ -1,0 +1,44 @@
+.folder-status .status,
+.harvest-status .status {
+/*    cursor: pointer; */
+    margin-left: 3px;
+    margin-right: 3px;
+    padding-bottom: 1px;
+    padding-left: 20px;
+    position:relative;
+}
+.harvest-full-status,
+.harvest-prefix {
+    font-style: italic;
+    text-align: right;
+}
+.status.added {
+    background: url('../../../../../application/views/scripts/images/silk-icons/error_add.png') no-repeat scroll 0 0 transparent;
+}
+.status.reset {
+    background: url('../../../../../application/views/scripts/images/silk-icons/exclamation.png') no-repeat scroll 0 0 transparent;
+}
+.status.queued,
+.status.progress {
+        background: url('../../../../../application/views/scripts/images/silk-icons/error_go.png') no-repeat scroll 0 0 transparent;
+}
+.status.paused {
+    background: url('../../../../../application/views/scripts/images/silk-icons/time.png') no-repeat scroll 0 0 transparent;
+}
+.status.stopped,
+.status.killed {
+    background: url('../../../../../application/views/scripts/images/silk-icons/error.png') no-repeat scroll 0 0 transparent;
+}
+.status.completed {
+    background: url('../../../../../application/views/scripts/images/silk-icons/tick.png') no-repeat scroll 0 0 transparent;
+}
+.status.deleted {
+    background: url('../../../../../application/views/scripts/images/silk-icons/delete.png') no-repeat scroll 0 0 transparent;
+}
+.status.error {
+    background: url('../../../../../application/views/scripts/images/silk-icons/cancel.png') no-repeat scroll 0 0 transparent;
+}
+.action {
+    color: #338899;
+    cursor: pointer;
+}

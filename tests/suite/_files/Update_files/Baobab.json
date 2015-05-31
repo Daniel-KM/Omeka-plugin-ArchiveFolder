@@ -1,0 +1,26 @@
+[{
+    "name":"Baobab",
+    "metadata":{
+        "Dublin Core":{
+            "Title":["Baobab"],
+            "Coverage":["Madagascar"]
+    }},
+    "extra":{
+        "geolocation[latitude]":"-20.250833°",
+        "geolocation[longitude]":"44.418333°",
+        "geolocation[zoom_level]":"10",
+        "geolocation[map_type]":"",
+        "geolocation[address]":"",
+        "Tags":["Tree"]
+    },
+    "files":{
+        "1":{
+            "path":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/a\/a8\/Adansonia_grandidieri04.jpg",
+            "metadata":{
+                "Dublin Core":{
+                    "Title":["Adansonia grandidieri","Français : Baobab de Grandidier, photo prise près de Morondava, Madagascar"],
+                    "Creator":["Bernard Gagnon"],
+                    "Date":["14 March 2007"],
+                    "Rights":["Creative Commons CC-BY-SA"]
+    }}}}
+}]

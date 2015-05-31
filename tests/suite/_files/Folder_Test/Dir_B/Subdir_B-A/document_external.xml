@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents>
+    <record
+        name="doc #3"
+        collection="Architectural Heritage"
+        itemType="Still Image"
+        featured="1"
+        >
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Cattedrale di Santa Maria del Fiore</data>
+                <data>English: Florence Cathedral of Santa Maria del Fiore</data>
+            </element>
+            <element name="Creator">
+                <data>Arnolfo di Cambio</data>
+            </element>
+            <element name="Date">
+                <data>1436</data>
+            </element>
+            <element name="Description">
+                <data><![CDATA[From Wikipedia, the free encyclopedia
+The Basilica di Santa Maria del Fiore (English, "Basilica of Saint Mary of the Flower") is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
+The cathedral complex, located in Piazza del Duomo, includes the Baptistery and Giotto's Campanile. The three buildings are part of the UNESCO World Heritage Site covering the historic centre of Florence and are a major attraction to tourists visiting the region of Tuscany. The basilica is one of Italy's largest churches, and until development of new structural materials in the modern era, the dome was the largest in the world. It remains the largest brick dome ever constructed.
+The cathedral is the mother church of the Roman Catholic Archdiocese of Florence, whose archbishop is currently Giuseppe Betori.]]></data>
+            </element>
+        </elementSet>
+        <elementSet name="Item Type Metadata">
+            <element name="Physical Dimensions">
+                <data>Height: 114.5 m</data>
+            </element>
+        </elementSet>
+        <extra>
+            <data name="geolocation[latitude]">43.773145</data>
+            <data name="geolocation[longitude]">11.2559602</data>
+            <data name="geolocation[zoom_level]">18</data>
+            <data name="geolocation[map_type]" />
+            <data name="geolocation[address]" />
+            <data name="tag">Church</data>
+            <data name="tag">Quattrocento</data>
+        </extra>
+        <record
+            file="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/The_Cathedral_panoramic_view_from_Vecchio_Palace_Florence_Italy.jpg/1280px-The_Cathedral_panoramic_view_from_Vecchio_Palace_Florence_Italy.jpg"
+            >
+            <elementSet name="Dublin Core">
+                <element name="Title">
+                    <data>The Cathedral panoramic view from Vecchio Palace, Florence, Italy</data>
+                </element>
+            </elementSet>
+        </record>
+    </record>
+    <record
+        name="doc #4"
+        collection="Architectural Heritage"
+        itemType="Still Image"
+        >
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Salisbury Cathedral</data>
+            </element>
+            <element name="Creator">
+                <data>Unknown</data>
+            </element>
+            <element name="Description">
+                <data>For testing purposes, metadata of this item will be updated later.
+To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_B/Subdir_B-A/document_external.xml" of your copied directory by the matching one that is prepared in the directory "tests/suite/_files/Update_files/", and click on "Update" in the tab "Archive folders".</data>
+            </element>
+        </elementSet>
+    </record>
+</documents>

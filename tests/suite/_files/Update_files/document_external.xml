@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents>
+    <record
+        name="doc #3"
+        collection="Architectural Heritage"
+        itemType="Still Image"
+        featured="1"
+        >
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Cattedrale di Santa Maria del Fiore</data>
+                <data>English: Florence Cathedral of Santa Maria del Fiore</data>
+            </element>
+            <element name="Creator">
+                <data>Arnolfo di Cambio</data>
+                <data>Filippo Brunelleschi</data>
+            </element>
+            <element name="Date">
+                <data>1436</data>
+            </element>
+            <element name="Description">
+                <data><![CDATA[From Wikipedia, the free encyclopedia
+The Basilica di Santa Maria del Fiore (English, "Basilica of Saint Mary of the Flower") is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
+The cathedral complex, located in Piazza del Duomo, includes the Baptistery and Giotto's Campanile. The three buildings are part of the UNESCO World Heritage Site covering the historic centre of Florence and are a major attraction to tourists visiting the region of Tuscany. The basilica is one of Italy's largest churches, and until development of new structural materials in the modern era, the dome was the largest in the world. It remains the largest brick dome ever constructed.
+The cathedral is the mother church of the Roman Catholic Archdiocese of Florence, whose archbishop is currently Giuseppe Betori.]]></data>
+            </element>
+        </elementSet>
+        <elementSet name="Item Type Metadata">
+            <element name="Physical Dimensions">
+                <data>Height: 114.5 m</data>
+            </element>
+        </elementSet>
+        <extra>
+            <data name="geolocation[latitude]">43.773145</data>
+            <data name="geolocation[longitude]">11.2559602</data>
+            <data name="geolocation[zoom_level]">18</data>
+            <data name="geolocation[map_type]" />
+            <data name="geolocation[address]" />
+            <data name="tag">Church</data>
+            <data name="tag">Quattrocento</data>
+        </extra>
+        <record
+            file="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/The_Cathedral_panoramic_view_from_Vecchio_Palace_Florence_Italy.jpg/1280px-The_Cathedral_panoramic_view_from_Vecchio_Palace_Florence_Italy.jpg"
+            >
+            <elementSet name="Dublin Core">
+                <element name="Title">
+                    <data>The Cathedral panoramic view from Vecchio Palace, Florence, Italy</data>
+                </element>
+                <element name="Date">
+                    <data>ca. 1890 and ca. 1900</data>
+                </element>
+                <element name="Rights">
+                    <data>Public Domain</data>
+                </element>
+            </elementSet>
+        </record>
+    </record>
+    <record
+        name="doc #4"
+        collection="Architectural Heritage"
+        itemType="Still Image"
+        >
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Cathedral Church of the Blessed Virgin Mary (Salisbury)</data>
+            </element>
+            <element name="Creator">
+                <data>Bishop Richard Poore</data>
+                <data>Elias of Dereham</data>
+            </element>
+            <element name="Date">
+                <data>1220-1320</data>
+            </element>
+            <element name="Description">
+                <data><![CDATA[From Wikipedia, the free encyclopedia
+                    Salisbury Cathedral, formally known as the Cathedral Church of the Blessed Virgin Mary, is an Anglican cathedral in Salisbury, England, and one of the leading examples of Early English architecture. The main body of the cathedral was completed in only 38 years, from 1220 to 1258.
+                    The cathedral has the tallest church spire in the United Kingdom (123m/404 ft). Visitors can take the "Tower Tour" where the interior of the hollow spire, with its ancient wood scaffolding, can be viewed. The cathedral also has the largest cloister and the largest cathedral close in Britain (80 acres (320,000 m2)). It contains the world's oldest working clock (from AD 1386) and has the best surviving of the four original copies of Magna Carta (all four original copies are in England). In 2008, the cathedral celebrated the 750th anniversary of its consecration.
+                    The cathedral is the mother church of the Diocese of Salisbury and seat of the Bishop of Salisbury, the Rt Revd Nick Holtam.]]></data>
+            </element>
+        </elementSet>
+        <elementSet name="Item Type Metadata">
+            <element name="Physical Dimensions">
+                <data>Height: 123 m</data>
+            </element>
+        </elementSet>
+        <extra>
+            <data name="geolocation:latitude">51.0649085</data>
+            <data name="geolocation:longitude">-1.7972886</data>
+            <data name="geolocation:zoom_level">15</data>
+            <data name="geolocation:map_type" />
+            <data name="geolocation:address" />
+            <data name="tag">Church</data>
+            <data name="tag">Middle Age</data>
+        </extra>
+        <record
+            file="https://upload.wikimedia.org/wikipedia/commons/4/46/Salisbury_Cathedral_from_the_Bishop_Grounds_c.1825.jpg"
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:dcterms="http://purl.org/dc/terms/"
+            >
+            <dc:title>Salisbury Cathedral from the Bishop Grounds</dc:title>
+            <dc:creator>John Constable</dc:creator>
+            <dc:date>c. 1825</dc:date>
+            <dc:rights>Public Domain</dc:rights>
+        </record>
+    </record>
+</documents>

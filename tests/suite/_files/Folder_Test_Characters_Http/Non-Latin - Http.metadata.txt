@@ -1,0 +1,8 @@
+Title = Title of a document with non-latin characters (from "Non-Latin - Http.metadata.txt")
+Creator = Anonymous
+Description = This filename contains spaces and non-alphanumeric and non-recommended characters, and can be ingested via http only.
+Date = 2015
+
+File = With%20non-latin/Caf%C3%A9%20%231%20(2%E2%82%AC).png
+Title = The file with spaces and non-alphanumeric and non-recommended characters (http)
+Rights = Creative Commons CC0
