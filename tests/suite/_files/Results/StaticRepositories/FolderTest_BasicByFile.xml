@@ -35,7 +35,7 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:879wvjo9u9zvxatt55123j1i2</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -48,7 +48,7 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:bpu7iysu2msmoayvd2rv67p31</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -63,7 +63,7 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:879wvjo9u9zvxatt55123j1i2</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -76,7 +76,7 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:bpu7iysu2msmoayvd2rv67p31</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -91,11 +91,11 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:879wvjo9u9zvxatt55123j1i2</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-06-12T14:22:19Z">
+  <metsHdr CREATEDATE="2015-08-24T13:17:07Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -127,11 +127,11 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:bpu7iysu2msmoayvd2rv67p31</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-06-12T14:22:19Z">
+  <metsHdr CREATEDATE="2015-08-24T13:17:07Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -165,10 +165,10 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:879wvjo9u9zvxatt55123j1i2</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
-<record xmlns="http://localhost/documents/">
+<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Image_Basic_1</data>
@@ -183,10 +183,10 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Basic:bpu7iysu2msmoayvd2rv67p31</oai:identifier>
-        <oai:datestamp>2015-06-12</oai:datestamp>
+        <oai:datestamp>2015-08-24</oai:datestamp>
       </oai:header>
       <oai:metadata>
-<record xmlns="http://localhost/documents/">
+<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Image_Basic_2</data>

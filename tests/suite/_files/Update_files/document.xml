@@ -30,7 +30,7 @@ Some missing data of records will be updated via the update file.
                 <data>This data is multilined and contains tags.
 
 The second line.
-This is a <i>tagged word</i> (not managed, because the whole data is not a valid html one).</data>
+This is a <i>tagged word</i>, managed even if there isn't a root tag.</data>
                 <data><p>This second description is a valid <strong>html</strong> one, <em>with</em> a cdata (<![CDATA["& inside"]]>) content.</p></data>
                 <data>The geolocation is a random one.</data>
                 <data><![CDATA[<p>This updated fourth description is a valid <strong>html</strong> string <em>inside</em> a CDATA one.</p>]]></data>
