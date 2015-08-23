@@ -45,8 +45,8 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
      */
     protected $_options = array(
         'archive_folder_force_update' => true,
-        'archive_folder_memory_limit',
-        'archive_folder_short_dispatcher',
+        'archive_folder_memory_limit' => null,
+        'archive_folder_short_dispatcher' => null,
         'archive_folder_static_dir' => 'repositories',
         // With roles, in particular if Guest User is installed.
         'archive_folder_allow_roles' => 'a:1:{i:0;s:5:"super";}',
@@ -146,15 +146,15 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookConfig($args)
     {
         $post = $args['post'];
-        foreach (array(
-                'archive_folder_allow_roles',
-            ) as $posted) {
-            $post[$posted] = isset($post[$posted])
-                ? serialize($post[$posted])
-                : serialize(array());
-        }
-        foreach ($post as $key => $value) {
-            set_option($key, $value);
+        foreach ($this->_options as $optionKey => $optionValue) {
+            if (in_array($optionKey, array(
+                    'archive_folder_allow_roles',
+                ))) {
+               $post[$optionKey] = serialize($post[$optionKey]) ?: serialize(array());
+            }
+            if (isset($post[$optionKey])) {
+                set_option($optionKey, $post[$optionKey]);
+            }
         }
     }
 
@@ -315,6 +315,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
             'class' => 'ArchiveFolder_Mapping_Document',
             'description' => __('Documents xml (simple format that manages all features of Omeka)'),
         );
+
         return $mappings;
     }
 
