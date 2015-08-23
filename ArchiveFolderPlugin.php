@@ -37,7 +37,6 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         'archive_folder_oai_identifiers',
         'archive_folder_mappings',
         'archive_folder_formats',
-        'oai_pmh_harvester_maps',
     );
 
     /**
@@ -291,33 +290,31 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     */
     public function filterArchiveFolderMappings($mappings)
     {
+        // Available mappings in the plugin at first place to keep order.
+        $archiveFolderMappings = array();
         // Available default mappings in the plugin.
-        $mappings['text'] = array(
+        $archiveFolderMappings['text'] = array(
             'class' => 'ArchiveFolder_Mapping_Text',
             'description' => __('Text (extension: ".metadata.txt")'),
         );
-        $mappings['json'] = array(
+        $archiveFolderMappings['json'] = array(
             'class' => 'ArchiveFolder_Mapping_Json',
             'description' => __('Json (extension: ".json")'),
         );
-        $mappings['odt'] = array(
+        $archiveFolderMappings['odt'] = array(
             'class' => 'ArchiveFolder_Mapping_Odt',
             'description' => __('Open Document Text (extension: ".odt")'),
         );
-        $mappings['ods'] = array(
+        $archiveFolderMappings['ods'] = array(
             'class' => 'ArchiveFolder_Mapping_Ods',
             'description' => __('Open Document Spreadsheet (extension: ".ods")'),
         );
-        $mappings['mets'] = array(
+        $archiveFolderMappings['mets'] = array(
             'class' => 'ArchiveFolder_Mapping_Mets',
             'description' => __('METS xml (with a profile compliant with Dublin Core)'),
         );
-        $mappings['doc'] = array(
-            'class' => 'ArchiveFolder_Mapping_Document',
-            'description' => __('Documents xml (simple format that manages all features of Omeka)'),
-        );
 
-        return $mappings;
+        return array_merge($archiveFolderMappings, $mappings);
     }
 
     /**
@@ -330,45 +327,24 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     */
     public function filterArchiveFolderFormats($formats)
     {
-        // Available default formats in the plugin.
-        $formats['oai_dc'] = array(
+        // Available formats in the plugin at first place to keep order.
+        $archiveFolderFormats = array();
+        $archiveFolderFormats['oai_dc'] = array(
             'prefix' => 'oai_dc',
             'class' => 'ArchiveFolder_Format_OaiDc',
             'description' => __('Dublin Core'),
         );
-        $formats['oai_dcq'] = array(
+        $archiveFolderFormats['oai_dcq'] = array(
             'prefix' => 'oai_dcq',
             'class' => 'ArchiveFolder_Format_OaiDcq',
             'description' => __('Qualified Dublin Core'),
         );
-        $formats['mets'] = array(
+        $archiveFolderFormats['mets'] = array(
             'prefix' => 'mets',
             'class' => 'ArchiveFolder_Format_Mets',
             'description' => __('METS'),
         );
-        $formats['doc'] = array(
-            'prefix' => 'doc',
-            'class' => 'ArchiveFolder_Format_Document',
-            'description' => __('Documents'),
-        );
 
-        return $formats;
-    }
-
-    /**
-     * Get the available OAI-PMH to Omeka maps, which should correspond to
-     * OAI-PMH metadata formats.
-     *
-     * @param array $maps Associative array of supported schemas.
-     * @return array
-     */
-    public function filterOaiPmhHarvesterMaps($maps)
-    {
-        $maps[ArchiveFolder_Harvest_Document::METADATA_PREFIX] = array(
-            'class' => 'ArchiveFolder_Harvest_Document',
-            'schema' => ArchiveFolder_Harvest_Document::METADATA_SCHEMA,
-        );
-
-        return $maps;
+        return array_merge($archiveFolderFormats, $formats);
     }
 }

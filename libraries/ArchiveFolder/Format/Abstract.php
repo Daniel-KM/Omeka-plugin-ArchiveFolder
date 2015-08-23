@@ -84,7 +84,10 @@ abstract class ArchiveFolder_Format_Abstract
     protected function _loadDcmiElements()
     {
         // Prepare labels of dc terms.
-        require dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'elements_qdc.php';
+        require PLUGIN_DIR
+            . DIRECTORY_SEPARATOR . 'ArchiveFolderDocument'
+            . DIRECTORY_SEPARATOR . 'libraries'
+            . DIRECTORY_SEPARATOR . 'elements_qdc.php';
         foreach ($elements as $element) {
             $this->_dcmiTerms[$element['name']] = $element['label'];
         }

@@ -167,18 +167,19 @@ See below for more details on metadata files.
 Installation
 ------------
 
-Install first the plugins [OAI-PMH Harvester], and ['Oai-PMH Gateway]. Even if
-they are optional, they are required to import data inside the Omeka database.
-[OAI-PMH Repository] can be used too to expose data directly from Omeka.
-
-Note: the official [OAI-PMH Repository] has been completed in an [improved fork],
-in particular with a human interface, and until merge of the commits, the latter
-is recommended.
+Install first the plugins [Archive Folder Document], [OAI-PMH Harvester], and
+['Oai-PMH Gateway]. Even if only the first one is required, the latter are used
+to import data inside the Omeka database.
 
 Note: the official [OAI-PMH Harvester] can only ingest standard metadata
 (elements). If you want to ingest other standards, files and metadata of files,
 extra data, and to manage records, you should use the fixed and improved [fork]
 of it.
+
+The optional plugin [OAI-PMH Repository] can be used to expose data directly
+from Omeka. Note: the official [OAI-PMH Repository] has been completed in an
+[improved fork], in particular with a human interface, and until merge of the
+commits, the latter is recommended.
 
 Then uncompress files and rename plugin folder `ArchiveFolder`.
 
@@ -657,6 +658,7 @@ Copyright
 [Mets]: https://www.loc.gov/standards/mets
 [Geolocation]: https://omeka.org/add-ons/plugins/geolocation
 [Apache httpd]: https://httpd.apache.org
+[Archive Folder Document]: https://github.com/Daniel-KM/ArchiveFolderDocument
 [OAI-PMH Repository]: https://omeka.org/add-ons/plugins/oai-pmh-repository
 [plugin issues]: https://github.com/Daniel-KM/ArchiveFolder/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html

@@ -432,8 +432,9 @@ class ArchiveFolder_Builder
 
         // Check which files are metadata files.
         $documents = array();
-        foreach ($this->_mappings as $name => $mapping) {
-            foreach ($this->_files as $filepath => $filename) {
+        // Keep order of current files, so process by file.
+        foreach ($this->_files as $filepath => $filename) {
+            foreach ($this->_mappings as $name => $mapping) {
                 if ($mapping->isMetadataFile($filepath)) {
                     // Save the path to the metadata file.
                     $this->_metadataFiles[$filepath] = $filename;

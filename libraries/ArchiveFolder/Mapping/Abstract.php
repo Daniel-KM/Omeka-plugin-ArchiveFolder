@@ -122,7 +122,10 @@ abstract class ArchiveFolder_Mapping_Abstract
 
         if ($this->_getParameter('use_qdc')) {
             // Prepare labels of dc terms.
-            require dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'elements_qdc.php';
+            require PLUGIN_DIR
+                . DIRECTORY_SEPARATOR . 'ArchiveFolderDocument'
+                . DIRECTORY_SEPARATOR . 'libraries'
+                . DIRECTORY_SEPARATOR . 'elements_qdc.php';
             $this->_dcTerms = array();
             foreach ($elements as $element) {
                 // Checks are done on lower case names and labels.
