@@ -143,7 +143,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
 
         $this->addElement('multiCheckbox', 'metadata_formats', array(
             'label' => __('Metadata Formats'),
-            'description' => __('Metadata formats used by the static repository.'),
+            'description' => __('Metadata formats exposed by the static repository.'),
             'multiOptions' => $formats,
             // Only the required format and the internal document are set true by default.
             'value' => array('oai_dc', 'doc'),

@@ -6,8 +6,8 @@
  */
 class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
 {
-    /*  XML schema and OAI prefix for the format represented by this class.
-        These constants are required for all maps. */
+    // Xml schema and OAI prefix for the format represented by this class.
+    // These constants are required for all maps.
     const METADATA_SCHEMA = 'http://localhost';
     const METADATA_PREFIX = 'doc';
 
@@ -18,13 +18,11 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
     const DC_TERMS_PREFIX = 'dcterms';
     const DC_TERMS_NAMESPACE = 'http://purl.org/dc/terms/';
 
-    /**
-     * Collection to insert items into.
-     * @var Collection
-     */
+    // Collection to insert items into.
     protected $_collection;
 
-    protected $_createCollection = true;
+    // Create collections from records.
+    protected $_createCollections = true;
 
     // List of the Dublin Core terms. Can be enlarged to qualified ones.
     protected $_dcTerms = array(
@@ -597,7 +595,7 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
             if (empty($collection)) {
                 $collection = $this->_getCollectionByTitle($collectionIdentifier);
             }
-            if (empty($collection) && $this->_createCollection) {
+            if (empty($collection) && $this->_createCollections) {
                 $collection = $this->_createCollectionFromTitle($collectionIdentifier);
             }
             if ($collection) {
@@ -650,7 +648,7 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
         $select->where("s.text = ?", $name);
 
         $collection = $collectionTable->fetchObject($select);
-        if (!$collection && !$this->_createCollection) {
+        if (!$collection && !$this->_createCollections) {
             _log('[ArchiveFolder] '. 'Collection not found. Collections must be created with identical names prior to import', Zend_Log::NOTICE);
             return false;
         }
