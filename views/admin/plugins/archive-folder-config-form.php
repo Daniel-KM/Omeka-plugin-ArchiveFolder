@@ -45,6 +45,20 @@
                 array('checked' => (boolean) get_option('archive_folder_short_dispatcher'))); ?>
         </div>
     </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('archive_folder_processor',
+                __('Command of the processor')); ?>
+        </div>
+        <div class="inputs five columns omega">
+            <p class="explanation">
+                <?php echo __('Command of the processor. Let empty to use the internal xslt processor of php.'); ?>
+                <?php echo __('This is required by some formats that need to parse a xslt 2 stylesheet.'); ?>
+                <?php echo __('See format of the command and examples in the readme.'); ?>
+            </p>
+            <?php echo get_view()->formText('archive_folder_processor', get_option('archive_folder_processor'), null); ?>
+        </div>
+    </div>
 </fieldset>
 <fieldset id="fieldset-archive-folder-rights"><legend><?php echo __('Rights and Roles'); ?></legend>
     <div class="field">

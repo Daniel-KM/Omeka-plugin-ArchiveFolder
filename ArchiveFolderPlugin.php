@@ -48,6 +48,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         'archive_folder_memory_limit' => null,
         'archive_folder_short_dispatcher' => null,
         'archive_folder_static_dir' => 'repositories',
+        'archive_folder_processor' => '',
         // With roles, in particular if Guest User is installed.
         'archive_folder_allow_roles' => 'a:1:{i:0;s:5:"super";}',
     );

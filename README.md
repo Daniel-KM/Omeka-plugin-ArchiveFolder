@@ -229,6 +229,24 @@ For security reasons, the plugin checks the extension of each ingested file. So,
 if you import specific files, in particular XML metadata files and json ones,
 they should be allowed in the page "/admin/settings/edit-security".
 
+* XSLT processor
+
+The xslt processor of php is a slow xslt 1 one. So it's recommended to use an
+external xslt 2 processor, ten to twenty times faster. The command can be
+configured in the configuration page of the plugin. Use "%1$s", "%2$s", "%3$s",
+without escape, for the file input, the stylesheet, and the output.
+
+Examples for Debian / Ubuntu / Mint:
+```
+saxonb-xslt -ext:on -versionmsg:off -s:%1$s -xsl:%2$s -o:%3$s
+CLASSPATH=/usr/share/java/Saxon-HE.jar java net.sf.saxon.Transform -ext:on -versionmsg:off -s:%1$s -xsl:%2$s -o:%3$s
+```
+
+Example for Fedora / RedHat / Centos / Mandriva:
+```
+saxon -ext:on -versionmsg:off -s:%1$s -xsl:%2$s -o:%3$s
+```
+
 
 Formats of metadata
 -------------------
