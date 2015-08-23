@@ -12,7 +12,7 @@ class ArchiveFolder_Format_OaiDcq extends ArchiveFolder_Format_Abstract
 
     // Namespaces for simple and qualified Dublin Core.
     const DUBLIN_CORE_NAMESPACE = 'http://purl.org/dc/elements/1.1/';
-    const DC_TERMS_NAMESPACE = 'http://purl.org/dc/terms/';
+    const DCTERMS_NAMESPACE = 'http://purl.org/dc/terms/';
 
     protected $_metadataPrefix = self::METADATA_PREFIX;
     protected $_metadataSchema = self::METADATA_SCHEMA;
@@ -47,8 +47,8 @@ class ArchiveFolder_Format_OaiDcq extends ArchiveFolder_Format_Abstract
         $writer->startElement('oai_dcq:dcterms');
         $writer->writeAttribute('xmlns:oai_dcq', self::METADATA_NAMESPACE);
         $writer->writeAttribute('xmlns:dc', self::DUBLIN_CORE_NAMESPACE);
-        $writer->writeAttribute('xmlns:dcterms', self::DC_TERMS_NAMESPACE);
-        $writer->writeAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $writer->writeAttribute('xmlns:dcterms', self::DCTERMS_NAMESPACE);
+        $writer->writeAttribute('xmlns:' . self::XSI_PREFIX, self::XSI_NAMESPACE);
         $writer->writeAttribute('xsi:schemaLocation', self::METADATA_NAMESPACE . ' ' . self::METADATA_SCHEMA);
 
         $this->_fillDublinCore($record['metadata']);

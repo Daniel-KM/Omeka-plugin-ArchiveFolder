@@ -6,6 +6,10 @@
  */
 abstract class ArchiveFolder_Format_Abstract
 {
+    // The xsi is required for each record according to oai-pmh protocol.
+    const XSI_PREFIX = 'xsi';
+    const XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance';
+
     // OAI prefix for the format represented by this class is requried.
     protected $_metadataPrefix;
     protected $_metadataSchema;

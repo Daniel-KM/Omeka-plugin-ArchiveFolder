@@ -17,6 +17,10 @@
  */
 abstract class ArchiveFolder_Mapping_Abstract
 {
+    // The xsi is required for each record according to oai-pmh protocol.
+    const XSI_PREFIX = 'xsi';
+    const XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance';
+
     protected $_uri;
     protected $_parameters;
 
@@ -276,6 +280,8 @@ abstract class ArchiveFolder_Mapping_Abstract
      * declaration.
      *
      * @internal Internal uris should be the final ones (relative or absolute).
+     * The namespaces and schema location should be set.
+     * The namespace for "xsi" is automatically added here if needed.
      *
      * @return string|null
      */
@@ -290,12 +296,16 @@ abstract class ArchiveFolder_Mapping_Abstract
             return;
         }
 
-        // Remove the "xml" declaration if any.
-        $xml = $this->_xml->asXml();
-        if (strpos($xml, '<?xml') === 0) {
-            $xml = substr($xml, strpos($xml, '?>') + 2);
+        // Add the "xsi" namespace, standard in the oai-pmh protocol.
+        $dom = dom_import_simplexml($this->_xml)->ownerDocument;
+        if ($dom === false) {
+            return;
         }
-        return $xml;
+        $dom->documentElement->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:' . self::XSI_PREFIX, self::XSI_NAMESPACE);
+        $this->_xml = simplexml_import_dom($dom);
+
+        // Return without the xml declaration.
+        return $dom->saveXML($dom->documentElement);
     }
 
     /**

@@ -12,10 +12,7 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
 
     // Namespaces for simple and qualified Dublin Core.
     const DUBLIN_CORE_NAMESPACE = 'http://purl.org/dc/elements/1.1/';
-    const DC_TERMS_NAMESPACE = 'http://purl.org/dc/terms/';
-
-    const XSI_PREFIX = 'xsi';
-    const XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance';
+    const DCTERMS_NAMESPACE = 'http://purl.org/dc/terms/';
 
     const XLINK_PREFIX = 'xlink';
     const XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
@@ -197,7 +194,7 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
         $writer->startElement('xmlData');
         $writer->writeAttribute('xmlns:dc', self::DUBLIN_CORE_NAMESPACE);
         if (!empty($this->_parametersFormat['use_qdc'])) {
-            $writer->writeAttribute('xmlns:dcterms', self::DC_TERMS_NAMESPACE);
+            $writer->writeAttribute('xmlns:dcterms', self::DCTERMS_NAMESPACE);
         }
 
         $this->_fillDublinCore($doc['metadata']);

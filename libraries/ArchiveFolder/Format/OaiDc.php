@@ -36,7 +36,7 @@ class ArchiveFolder_Format_OaiDc extends ArchiveFolder_Format_Abstract
         $writer->startElement('oai_dc:dc');
         $writer->writeAttribute('xmlns:oai_dc', self::METADATA_NAMESPACE);
         $writer->writeAttribute('xmlns:dc', self::DUBLIN_CORE_NAMESPACE);
-        $writer->writeAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $writer->writeAttribute('xmlns:' . self::XSI_PREFIX, self::XSI_NAMESPACE);
         $writer->writeAttribute('xsi:schemaLocation', self::METADATA_NAMESPACE . ' ' . self::METADATA_SCHEMA);
 
         $this->_fillDublinCore($record['metadata']);
