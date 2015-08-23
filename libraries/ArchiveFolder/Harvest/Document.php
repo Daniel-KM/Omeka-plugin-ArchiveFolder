@@ -367,7 +367,8 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
             $name = strtolower($dc->getName());
             if (isset($this->_dcTerms[$name])) {
                 $text = $this->_innerXML($dc);
-                $current['metadata']['Dublin Core'][$this->_dcTerms[$name]][] = array('text'=> $text, 'html' => $this->_isXml($text));
+                $current['metadata']['Dublin Core'][$this->_dcTerms[$name]][] =
+                    array('text'=> $text, 'html' => $this->_isXml($text));
             }
         }
 
@@ -391,7 +392,8 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
                 $data = $element->data;
                 foreach ($data as $value) {
                     $text = $this->_innerXML($value);
-                    $current['metadata'][$elementSetName][$elementName][] = array('text'=> $text, 'html' => $this->_isXml($text));
+                    $current['metadata'][$elementSetName][$elementName][] =
+                        array('text'=> $text, 'html' => $this->_isXml($text));
                 }
             }
         }
@@ -510,19 +512,6 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
         }
 
         return trim($innerXml);
-    }
-
-    /**
-     * Check if a string is an Xml one.
-     *
-     * @param string $string
-     * @return boolean
-     */
-    protected function _isXml($string)
-    {
-        // A main tag is added to allow inner ones.
-        return strpos($string, '<') !== false && strpos($string, '>') !== false
-            && (boolean) simplexml_load_string("<xml>$string</xml>", 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
     }
 
     /**
