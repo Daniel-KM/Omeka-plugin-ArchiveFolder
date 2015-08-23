@@ -101,7 +101,7 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
     {
         // Get document record from record.
         $record = $record->metadata->record;
-        if (empty($record)) {
+        if (empty($record) || $record->asXml() == '') {
             return array(
                 'itemMetadata' => array(),
                 'elementTexts' => array(),
@@ -495,23 +495,23 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
      */
     protected function _innerXML($xml)
     {
-        $innerXml= '';
-        foreach (dom_import_simplexml($xml)->childNodes as $child) {
-            $innerXml .= $child->ownerDocument->saveXML($child);
-        }
+        $output = $xml->asXml();
+        $pos = strpos($output, '>') + 1;
+        $len = strrpos($output, '<') - $pos;
+        $output = trim(substr($output, $pos, $len));
 
         // Only main CDATA is managed, not inside content: if this is an xml or
         // html, it will be managed automatically by the display; if this is a
         // text, the cdata is a text too.
-        $simpleXml = simplexml_load_string($innerXml, 'SimpleXMLElement', LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+        $simpleXml = simplexml_load_string($output, 'SimpleXMLElement', LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
         // Non XML data.
         if (empty($simpleXml)) {
-            if ($this->_isCdata($innerXml)) {
-                $innerXml = substr($innerXml, 9, strlen($innerXml) - 12);
+            if ($this->_isCdata($output)) {
+                $output = substr($output, 9, strlen($output) - 12);
             }
         }
 
-        return trim($innerXml);
+        return trim($output);
     }
 
     /**

@@ -237,10 +237,9 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
      */
     protected function _innerXML($xml)
     {
-        $innerXML= '';
-        foreach (dom_import_simplexml($xml)->childNodes as $child) {
-            $innerXML .= $child->ownerDocument->saveXML($child);
-        }
-        return $innerXML;
+        $output = $xml->asXml();
+        $pos = strpos($output, '>') + 1;
+        $len = strrpos($output, '<') - $pos;
+        return trim(substr($output, $pos, $len));
     }
 }
