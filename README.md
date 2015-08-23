@@ -18,8 +18,9 @@ available directly in Omeka (see the included example below).
 
 In the true world, this tool is designed for people and institutions who store
 folders of files somewhere on hard drives or servers, who manage them with a
-simple file manager and with some metadata in various files. Of course, if files
-and metadata are well managed, they can be ingested too.
+simple file manager and with some metadata in various files (text, spreadsheet,
+xml...). Of course, if files and metadata are well managed, they can be ingested
+too.
 
 This plugin replaces the [fork of Csv Import] and the plugin [Xml Import], that
 won't be maintained any more. All of their features have equivalents in this
@@ -261,12 +262,16 @@ Dublin Core format.
 
 ### Documents XML
 
-This internal and simple format with only the five tags `record`, `elementSet`,
-`element`, `extra` and `data` under the root tag `documents` allows to import
-all metadata and specific fields of Omeka, so this is the one that is set by
-default for the harvesting. For compatibilty purposes, it supports the tags of
-the Dublin Core (simple or qualified). Standard attributes of the record can be
-set as extra data. Here is the structure (see true examples for details):
+This internal and simple format is a pivot format and is designed to be internal
+only, not to be exposed.
+
+It has only the five tags `record`, `elementSet`, `element`, `extra` and `data`
+under the root tag `documents` allows to import all metadata and specific fields
+of Omeka, so this is the one that is set by default for the harvesting. For
+compatibilty purposes, it supports the tags of the Dublin Core (simple or
+qualified). Standard attributes of the record can be set as extra data.
+
+Here is the structure (see true examples for details):
 
 ```xml
 <record xmlns="http://localhost/documents/" name="my-doc #1">
@@ -290,8 +295,6 @@ set as extra data. Here is the structure (see true examples for details):
     <record file="http://localhost/path/to/the/file" />
 </record>
 ```
-
-This pivot format is designed to be internal only, not to be exposed.
 
 ### Text
 
@@ -625,7 +628,7 @@ Copyright
 
 [Archive Folder]: https://github.com/Daniel-KM/ArchiveFolder
 [Omeka]: https://www.omeka.org
-[OAI static repository]: https://www.openarchives.org/OAI/2.0/guidelines-static-repository.htm
+[OAI-PMH static repository]: https://www.openarchives.org/OAI/2.0/guidelines-static-repository.htm
 [OAI-PMH Harvester]: https://omeka.org/add-ons/plugins/oai-pmh-harvester
 [OAI-PMH Gateway]: https://github.com/Daniel-KM/OaiPmhGateway
 [fork of Csv Import]: https://github.com/Daniel-KM/CsvImport
