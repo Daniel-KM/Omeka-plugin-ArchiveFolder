@@ -329,33 +329,51 @@ abstract class ArchiveFolder_Format_Abstract
      *
      * @param string $elementName
      * @param string $string
+     * @param array $attributes Optional attributes.
      * @return void
      */
-    protected function _writeElement($elementName, $string)
+    protected function _writeElement($elementName, $string, $attributes = array())
     {
         $writer = $this->_writer;
 
         if ($this->_isCdata($string)) {
+            $string = substr($string, 9, strlen($string) - 12);
+        }
+
+        // TODO Check if cdata is needed (and add prefix if needed).
+        // Previously, Xml was protected by a cdata and writeRaw() is not used,
+        // because the default prefix may be managed or not, and it is not
+        // checked.
+
+        if ($this->_isXml($string)) {
             $writer->startElement($elementName);
-            $writer->writeCDATA(substr($string, 9, strlen($string) - 12));
+            $this->_writeAttributes($attributes);
+            $writer->writeRaw($string);
             $writer->endElement();
-            return;
         }
-
-        $xml = simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOERROR | LIBXML_NOWARNING);
-        // Simple string, so it will be automatically encoded.
-        if (empty($xml)) {
+        elseif (empty($attributes)) {
             $writer->writeElement($elementName, $string);
-            return;
         }
+        else {
+            $writer->startElement($elementName);
+            $this->_writeAttributes($attributes);
+            $writer->text($string);
+            $writer->endElement();
+        }
+    }
 
-        // Xml are protected by a cdata and writeRaw() is not used, because the
-        // default prefix may be managed or not, and it is not checked.
-        $xml = $xml->asXml();
-        $string = trim(substr($xml, strlen('<?xml version="1.0"?>')));
-        $writer->startElement($elementName);
-        $writer->writeCDATA($string);
-        $writer->endElement();
+    /**
+     * Write attributes to an open element via xml writer.
+     *
+     * @param array $attributes Attributes.
+     */
+    protected function _writeAttributes($attributes)
+    {
+        $writer = $this->_writer;
+
+        foreach ($attributes as $name => $value) {
+            $writer->writeAttribute($name, $value);
+        }
     }
 
     /**

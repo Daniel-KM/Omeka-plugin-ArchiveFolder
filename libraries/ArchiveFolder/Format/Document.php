@@ -106,7 +106,7 @@ class ArchiveFolder_Format_Document extends ArchiveFolder_Format_Abstract
                 $writer->startElement('element');
                 $writer->writeAttribute('name', $elementName);
                 foreach ($element as $data) {
-                    $writer->writeElement('data', $data);
+                    $this->_writeElement('data', $data);
                 }
                 $writer->endElement();
             }
@@ -133,10 +133,7 @@ class ArchiveFolder_Format_Document extends ArchiveFolder_Format_Abstract
             }
             // There is no intermediate field element: use metadata instead!
             foreach ($field as $data) {
-                $writer->startElement('data');
-                $writer->writeAttribute('name', $name);
-                $writer->text($data);
-                $writer->endElement();
+                $this->_writeElement('data', $data, array('name' => $name));
             }
         }
         $writer->endElement();
