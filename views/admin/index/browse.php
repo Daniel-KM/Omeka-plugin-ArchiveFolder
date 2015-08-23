@@ -208,7 +208,7 @@ echo head(array(
                                 <?php endif;
 
                                 if ($folder->isSetToBeHarvested() && $folder->status != ArchiveFolder::STATUS_ADDED):
-                                    if (in_array($harvest->status, array(OaipmhHarvester_Harvest::STATUS_QUEUED, OaipmhHarvester_Harvest::STATUS_IN_PROGRESS))):
+                                    if ($harvest and in_array($harvest->status, array(OaipmhHarvester_Harvest::STATUS_QUEUED, OaipmhHarvester_Harvest::STATUS_IN_PROGRESS))):
                                 $actionUri = $this->url(array(
                                         'action' => 'browse',
                                     ),
