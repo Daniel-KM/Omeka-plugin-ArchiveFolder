@@ -251,6 +251,7 @@ abstract class ArchiveFolder_Mapping_Abstract
         if (!isset($this->_processedFiles[$filepath])) {
             $this->_metadataFilepath = $filepath;
             $this->_prepareDocuments();
+            $this->_setXmlFormat();
             $this->_validateDocuments();
             $this->_removeDuplicateMetadata();
         }
@@ -810,5 +811,32 @@ abstract class ArchiveFolder_Mapping_Abstract
         }
 
         return $domDocument;
+    }
+
+    /**
+     * Set the xml format of all documents, specially if a sub class is used.
+     */
+    protected function _setXmlFormat()
+    {
+        $documents = &$this->_processedFiles[$this->_metadataFilepath];
+
+        foreach ($documents as &$document) {
+            if (isset($document['xml'])) {
+                $document['format_xml'] = $this->_formatXml;
+            }
+            else {
+                unset($document['format_xml']);
+            }
+            if (isset($document['files'])) {
+                foreach ($document['files'] as &$file) {
+                    if (isset($file['xml'])) {
+                        $file['format_xml'] = $this->_formatXml;
+                    }
+                    else {
+                        unset($file['format_xml']);
+                    }
+                }
+            }
+        }
     }
 }

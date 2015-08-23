@@ -94,7 +94,6 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
             }
 
             // All records are imported: no check if empty.
-            $doc['format_xml'] = $this->_formatXml;
             $recordDom = dom_import_simplexml($record);
             $recordDom->setAttribute('xmlns', self::XML_NAMESPACE);
             $doc['xml'] = $record->asXml();

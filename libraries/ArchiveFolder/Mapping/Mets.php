@@ -56,7 +56,6 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $this->_prepareFilesMetadata();
 
         // All records are imported: no check if empty.
-        $doc['format_xml'] = $this->_formatXml;
         $doc['xml'] = $this->_asXml();
         $documents[] = $doc;
     }

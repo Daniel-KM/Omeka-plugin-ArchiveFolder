@@ -818,7 +818,9 @@ class ArchiveFolder_Builder
 
         // If there is an xml file for the current document, use it directly for
         // the specified format.
-        if (!empty($document['xml']) && $prefix == $document['format_xml']) {
+        if (!empty($document['xml']) && !empty($document['format_xml'])
+                && $prefix == $document['format_xml']
+            ) {
             $documentWriter->writeRaw($document['xml']);
         }
         // Default conversion.
