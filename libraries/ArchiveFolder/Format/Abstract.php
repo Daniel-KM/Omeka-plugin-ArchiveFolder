@@ -252,7 +252,12 @@ abstract class ArchiveFolder_Format_Abstract
     {
         $doc = &$this->_document;
 
-        $doc['metadata']['Dublin Core']['Identifier'][] = $this->_getAbsoluteUrl($doc['name']);
+        $url = $this->_getAbsoluteUrl($doc['name']);
+        if (empty($doc['metadata']['Dublin Core']['Identifier'])
+                || !in_array($url, $doc['metadata']['Dublin Core']['Identifier'])
+            ) {
+            $doc['metadata']['Dublin Core']['Identifier'][] = $url;
+        }
 
         if (!empty($this->_parametersFormat['link_to_files'])) {
             // Add metadata is different when item and files are separated.
@@ -266,7 +271,12 @@ abstract class ArchiveFolder_Format_Abstract
 
             if (isset($doc['files'])) {
                 foreach ($doc['files'] as $file) {
-                    $doc['metadata']['Dublin Core'][$fileLink][] = $this->_getAbsoluteUrl($file['name']);
+                    $url = $this->_getAbsoluteUrl($file['name']);
+                    if (empty($doc['metadata']['Dublin Core'][$fileLink])
+                            || !in_array($url, $doc['metadata']['Dublin Core'][$fileLink])
+                        ) {
+                        $doc['metadata']['Dublin Core'][$fileLink][] = $url;
+                    }
                 }
             }
         }
@@ -285,7 +295,12 @@ abstract class ArchiveFolder_Format_Abstract
         $metadata = isset($file['metadata']) ? $file['metadata'] : array();
 
         $fileLink = $this->_parametersFormat['use_qdc'] ? 'isRequiredBy' : 'Relation';
-        $metadata['Dublin Core'][$fileLink][] = $this->_getAbsoluteUrl($doc['name']);
+        $url = $this->_getAbsoluteUrl($doc['name']);
+        if (empty($metadata['Dublin Core'][$fileLink])
+                || !in_array($url, $metadata['Dublin Core'][$fileLink])
+            ) {
+            $metadata['Dublin Core'][$fileLink][] = $url;
+        }
 
         $this->_document['files'][$order]['metadata'] = $metadata;
     }
