@@ -377,7 +377,10 @@ abstract class ArchiveFolder_Format_Abstract
      */
     protected function _isXml($string)
     {
-        return (boolean) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOERROR | LIBXML_NOWARNING);
+        return strpos($string, '<') !== false
+            && strpos($string, '>') !== false
+            // A main tag is added to allow inner ones.
+            && (boolean) simplexml_load_string("<xml>$string</xml>", 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
     }
 
     /**

@@ -520,7 +520,9 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
      */
     protected function _isXml($string)
     {
-        return (boolean) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
+        // A main tag is added to allow inner ones.
+        return strpos($string, '<') !== false && strpos($string, '>') !== false
+            && (boolean) simplexml_load_string("<xml>$string</xml>", 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
     }
 
     /**
