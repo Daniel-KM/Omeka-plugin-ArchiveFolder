@@ -606,7 +606,11 @@ class ArchiveFolder_Harvest_Document extends OaipmhHarvester_Harvest_Abstract
 
         // Process "itemType".
         if (isset($extra['item type'])) {
-            $itemMetadata['item_type_name'] = $extra['item type'];
+            $itemType = get_record('ItemType', array('name' => $extra['item type']));
+            // TODO Unlike collection, item types are not created.
+            if ($itemType) {
+                $itemMetadata['item_type_name'] = $extra['item type'];
+            }
         }
 
         // Process "tags".
