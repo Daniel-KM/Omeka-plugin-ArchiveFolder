@@ -589,8 +589,14 @@ class ArchiveFolder_Builder
         }
 
         if (count($unsets) > 0) {
-            $message = __('%d documents with forbidden files (extension or uri) were skipped.',
-                count($unsets), implode('", "', $unsets));
+            if (count($unsets) == 1) {
+                $message = __('%d document with forbidden files (extension or uri) was skipped: %s.',
+                    count($unsets), '"' . implode('", "', $unsets) . '"');
+            }
+            else {
+                $message = __('%d documents with forbidden files (extension or uri) were skipped: %s.',
+                    count($unsets), '"' . implode('", "', $unsets) . '"');
+            }
             $this->_folder->addMessage($message);
             _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s',
                 $this->_folder->id, $this->_folder->uri, $message));
@@ -711,7 +717,7 @@ class ArchiveFolder_Builder
         }
         $writer->endElement();
 
-        // Add metadata is different when item and files are separated.
+        // Metadata may be different when files are separated.
         $recordsForFiles = (boolean) $this->_getParameter('records_for_files');
 
         if ($this->_folder->hasBeenStopped()) return;

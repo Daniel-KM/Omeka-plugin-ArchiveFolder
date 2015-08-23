@@ -6,7 +6,7 @@
  */
 class ArchiveFolder_Mapping_Json extends ArchiveFolder_Mapping_Abstract
 {
-    protected $_checkMetadataFile = array('extension', '_checkJsonFormat');
+    protected $_checkMetadataFile = array('extension', 'json');
     protected $_extension = 'json';
 
     /**
@@ -14,7 +14,7 @@ class ArchiveFolder_Mapping_Json extends ArchiveFolder_Mapping_Abstract
      *
      * @return boolean
      */
-    protected function _checkJsonFormat()
+    protected function _checkJson()
     {
         $content = file_get_contents($this->_metadataFilepath);
         if (empty($content)) {

@@ -27,7 +27,7 @@ abstract class ArchiveFolder_Mapping_Abstract
     protected $_metadataFilepath;
 
     // The list of tests to check if a file is a metadata file.
-    protected $_checkMetadataFile = array();
+    protected $_checkMetadataFile = array('false');
 
     // The lower case extension, to check if the file is a metadata one.
     protected $_extension;
@@ -154,31 +154,15 @@ abstract class ArchiveFolder_Mapping_Abstract
 
         foreach ($this->_checkMetadataFile as $check) {
             switch ($check) {
-                case 'extension':
-                    if (!$this->_checkExtension()) {
-                        return false;
-                    }
-                    break;
-
-                case 'double extension':
-                    if (!$this->_checkDoubleExtension()) {
-                        return false;
-                    }
-                    break;
-
-                case 'validate xml':
-                    if (!$this->_checkXmlFormat()) {
-                        return false;
-                    }
-                    break;
-
                 case 'false':
                     return false;
 
                 default:
-                    if (method_exists($this, $check) && !$this->$check()) {
+                    $method = '_check' . ucfirst(Inflector::camelize($check));
+                    if (method_exists($this, $method) && !$this->$method()) {
                         return false;
                     }
+                    break;
             }
         }
 
@@ -208,20 +192,49 @@ abstract class ArchiveFolder_Mapping_Abstract
     }
 
     /**
-     * Check if the current file is a xml metadata one.
+     * Check if the current file is a xml metadata one, without validation.
      *
      * @return boolean
      */
-    protected function _checkXmlFormat()
+    protected function _checkXml()
     {
         // XmlReader is the quickest and the simplest for such a check, locaaly
         // or remotely.
         $reader = new XMLReader;
         $result = $reader->open($this->_metadataFilepath, null, LIBXML_NSCLEAN);
         if ($result) {
-            $reader->read();
-            $result = $reader->name === $this->_xmlRoot
-                &&  $reader->getAttribute('xmlns') === $this->_xmlNamespace;
+            $result = false;
+            while ($reader->read()) {
+                if ($reader->name != '#comment') {
+                    $result = $reader->name === $this->_xmlRoot;
+                    break;
+                }
+            }
+        }
+        $reader->close();
+        return $result;
+    }
+
+    /**
+     * Check if the current file is a xml metadata one.
+     *
+     * @return boolean
+     */
+    protected function _checkValidateXml()
+    {
+        // XmlReader is the quickest and the simplest for such a check, locaaly
+        // or remotely.
+        $reader = new XMLReader;
+        $result = $reader->open($this->_metadataFilepath, null, LIBXML_NSCLEAN);
+        if ($result) {
+            $result = false;
+            while ($reader->read()) {
+                if ($reader->name != '#comment') {
+                    $result = $reader->name === $this->_xmlRoot
+                        &&  $reader->getAttribute('xmlns') === $this->_xmlNamespace;
+                    break;
+                }
+            }
         }
         $reader->close();
         return $result;
@@ -322,6 +335,7 @@ abstract class ArchiveFolder_Mapping_Abstract
                 $path = isset($file['path']) && strlen($file['path']) > 0
                     ? $file['path']
                     : (isset($file['name']) ? $file['name'] : null);
+
                 // Check if there is a filepath.
                 // Empty() is not used, because "0" can be a content.
                 $path = trim($path);
@@ -423,7 +437,7 @@ abstract class ArchiveFolder_Mapping_Abstract
 
         if (!isset($relativeMetadataPaths[$this->_uri][$this->_metadataFilepath])) {
             $relativeMetadataPath = pathinfo(trim(substr($this->_metadataFilepath, 1 + strlen($this->_uri))), PATHINFO_DIRNAME);
-            if ($relativeMetadataPath == '.') {
+            if ($relativeMetadataPath == '.' || $relativeMetadataPath == '') {
                 $relativeMetadataPaths[$this->_uri][$this->_metadataFilepath] = '';
             }
             // Not root, so add the separator.

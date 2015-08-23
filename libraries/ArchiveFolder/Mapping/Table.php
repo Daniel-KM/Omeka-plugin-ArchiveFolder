@@ -6,6 +6,8 @@
  */
 class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
 {
+    // False is used, because this is an intermediate class to be used with
+    // a spreadsheet.
     protected $_checkMetadataFile = array('false');
 
     // Element delimiter is used to separate values of the element inside cell.
