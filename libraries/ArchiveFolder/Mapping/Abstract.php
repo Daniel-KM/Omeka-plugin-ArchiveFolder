@@ -180,40 +180,64 @@ abstract class ArchiveFolder_Mapping_Abstract
     /**
      * Check if the current file is a metadata one.
      *
+     * @param string $filepath The current one is used if null.
+     * @param string $extension The current one is used if null.
      * @return boolean
      */
-    protected function _checkExtension()
+    protected function _checkExtension($filepath = null, $extension = null)
     {
-        return strtolower(pathinfo($this->_metadataFilepath, PATHINFO_EXTENSION)) === $this->_extension;
+        if (is_null($filepath)) {
+            $filepath = $this->_metadataFilepath;
+        }
+        if (is_null($extension)) {
+            $extension = $this->_extension;
+        }
+        return strtolower(pathinfo($filepath, PATHINFO_EXTENSION)) === $extension;
     }
 
     /**
      * Check if the current file is a metadata one for a double extension.
      *
+     * @param string $filepath The current one is used if null.
+     * @param string $extension The current one is used if null.
      * @return boolean
      */
-    protected function _checkDoubleExtension()
+    protected function _checkDoubleExtension($filepath = null, $extension = null)
     {
-        $extension = '.' . $this->_extension;
-        return substr(strtolower($this->_metadataFilepath), strlen($this->_metadataFilepath) - strlen($extension)) === $extension;
+        if (is_null($filepath)) {
+            $filepath = $this->_metadataFilepath;
+        }
+        if (is_null($extension)) {
+            $extension = $this->_extension;
+        }
+        $extension = '.' . $extension;
+        return substr(strtolower($filepath), strlen($filepath) - strlen($extension)) === $extension;
     }
 
     /**
      * Check if the current file is a xml metadata one, without validation.
      *
+     * @param string $filepath The current one is used if null.
+     * @param string $xmlRoot The current one is used if null.
      * @return boolean
      */
-    protected function _checkXml()
+    protected function _checkXml($filepath = null, $xmlRoot = null)
     {
+        if (is_null($filepath)) {
+            $filepath = $this->_metadataFilepath;
+        }
+        if (is_null($xmlRoot)) {
+            $xmlRoot = $this->_xmlRoot;
+        }
         // XmlReader is the quickest and the simplest for such a check, locaaly
         // or remotely.
         $reader = new XMLReader;
-        $result = $reader->open($this->_metadataFilepath, null, LIBXML_NSCLEAN);
+        $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
         if ($result) {
             $result = false;
             while ($reader->read()) {
                 if ($reader->name != '#comment') {
-                    $result = $reader->name === $this->_xmlRoot;
+                    $result = $reader->name === $xmlRoot;
                     break;
                 }
             }
@@ -225,20 +249,32 @@ abstract class ArchiveFolder_Mapping_Abstract
     /**
      * Check if the current file is a xml metadata one.
      *
+     * @param string $filepath The current one is used if null.
+     * @param string $xmlRoot The current one is used if null.
+     * @param string $xmlNamespace The current one is used if null.
      * @return boolean
      */
-    protected function _checkValidateXml()
+    protected function _checkValidateXml($filepath = null, $xmlRoot = null, $xmlNamespace = null)
     {
+        if (is_null($filepath)) {
+            $filepath = $this->_metadataFilepath;
+        }
+        if (is_null($xmlRoot)) {
+            $xmlRoot = $this->_xmlRoot;
+        }
+        if (is_null($xmlNamespace)) {
+            $xmlNamespace = $this->_xmlNamespace;
+        }
         // XmlReader is the quickest and the simplest for such a check, locaaly
         // or remotely.
         $reader = new XMLReader;
-        $result = $reader->open($this->_metadataFilepath, null, LIBXML_NSCLEAN);
+        $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
         if ($result) {
             $result = false;
             while ($reader->read()) {
                 if ($reader->name != '#comment') {
-                    $result = $reader->name === $this->_xmlRoot
-                        &&  $reader->getAttribute('xmlns') === $this->_xmlNamespace;
+                    $result = $reader->name === $xmlRoot
+                        &&  $reader->getAttribute('xmlns') === $xmlNamespace;
                     break;
                 }
             }
