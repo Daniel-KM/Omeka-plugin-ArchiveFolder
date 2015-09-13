@@ -115,6 +115,10 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         foreach ($xmlFiles as $xmlFile) {
             $xmlFile->registerXPathNamespace(self::XML_PREFIX, self::XML_NAMESPACE);
             $xmlFile->registerXPathNamespace(self::XLINK_PREFIX, self::XLINK_NAMESPACE);
+
+            // The unique file id is used anywhere in the mets xml.
+            $fileId = (string) $xmlFile->attributes()->ID;
+
             $xpath = 'mets:FLocat[1]/@xlink:href';
             $result = $xmlFile->xpath($xpath);
             // This path can be absolute or relative.
@@ -135,7 +139,6 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             // The dmd id can be set in files section or in the structural map,
             // else there is no metadata for this file.
             if (empty($dmdId)) {
-                $fileId = (string) $xmlFile->attributes()->ID;
                 $xpath = "/mets:mets/mets:structMap[1]//mets:div[mets:fptr[@FILEID = '$fileId']][1]/@DMDID";
                 $result = $this->_xml->xpath($xpath);
                 $dmdId = (string) reset($result);
@@ -147,7 +150,6 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             // The amd id can be used to save some interesting data.
             $amdId = (string) $xmlFile->attributes()->ADMID;
             if (empty($amdId)) {
-                $fileId = (string) $xmlFile->attributes()->ID;
                 $xpath = "/mets:mets/mets:structMap[1]//mets:div[mets:fptr[@FILEID = '$fileId']][1]/@ADMID";
                 $result = $this->_xml->xpath($xpath);
                 $amdId = (string) reset($result);
@@ -156,11 +158,26 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             $amdId = explode(' ', $amdId);
             $amdId = (string) reset($amdId);
 
+            // The siblings are all files that share the same metadata.
+            // They allow too associate alto xml files to images, for example.
+            $xpath = "/mets:mets/mets:structMap[1]//mets:div[mets:fptr[@FILEID = '$fileId']][1]
+                /mets:fptr/@FILEID[. != '$fileId']";
+            $result = $this->_xml->xpath($xpath);
+            $siblingIds = array();
+            if ($result) {
+                foreach ($result as $resultId) {
+                    $siblingIds[] = (string) $resultId;
+                }
+            }
+
             $file = array();
             $file['path'] = $path;
-            // These ids are used internally only.
+            // These values are used internally only.
+            $file['fileId'] = $fileId;
             $file['dmdId'] = $dmdId;
             $file['amdId'] = $amdId;
+            $file['siblingIds'] = $siblingIds;
+
             $referencedFiles[] = $file;
         }
 
@@ -174,17 +191,63 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
     {
         $doc = &$this->_doc;
 
+        // This will be used only if there are alto xml files.
+        $altoMetadata = array();
+        $altoIngester = new ArchiveFolder_Ingester_Alto($this->_uri, $this->_parameters);
+
         foreach ($doc['files'] as &$file) {
             $dmdId = $file['dmdId'];
             $file['metadata'] = $this->_getDCMetadata($dmdId) ?: array();
             $amdId = $file['amdId'];
             $amdMetadata = $this->_getDCMetadataForSource($amdId) ?: array();
             $file['metadata'] = array_merge_recursive($file['metadata'], $amdMetadata);
-            $ocrMetadata = $this->_extractOcr($file['path']);
-            $file['metadata'] = array_merge_recursive($file['metadata'], $ocrMetadata);
+
+            $ocrMetadata = $altoIngester->extractMetadata($file['path']);
+            if ($ocrMetadata) {
+                if ($this->_getParameter('keep_ocr_with_alto_file')) {
+                    $file['metadata'] = array_merge_recursive($file['metadata'], $ocrMetadata);
+                }
+                // Ocr metadata will be merged in the associated image once all
+                // metadata will be extracted.
+                else {
+                    $altoMetadata[$file['fileId']] = $ocrMetadata;
+                }
+            }
+        }
+
+        // Merge associated alto file if there are metadata.
+        if ($altoMetadata && !$this->_getParameter('keep_ocr_with_alto_file')) {
+            foreach ($altoMetadata as $fileId => $ocrMetadata) {
+                // Get the file.
+                $siblingIds = array();
+                foreach ($doc['files'] as $key => &$file) {
+                    if ($file['fileId'] == $fileId) {
+                        $siblingIds = $file['siblingIds'];
+                        break;
+                    }
+                }
+
+                // Get the sibling image file (first sibling id).
+                $siblingId = reset($siblingIds);
+                if ($siblingId) {
+                    // Get the metadata of this file.
+                    foreach ($doc['files'] as &$file) {
+                        if ($file['fileId'] == $siblingId) {
+                            $file['metadata'] = array_merge_recursive($file['metadata'], $ocrMetadata);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Clean the files.
+        foreach ($doc['files'] as &$file) {
             // These ids are used internally only.
+            unset($file['fileId']);
             unset($file['dmdId']);
             unset($file['amdId']);
+            unset($file['siblingIds']);
         }
     }
 
@@ -322,58 +385,5 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         }
 
         return $dmdId;
-    }
-
-    /**
-     * Extract ocr from an alto file.
-     *
-     * @param string $filepath
-     * @return array Array of standard metadata, else empty array.
-     */
-    protected function _extractOcr($filepath)
-    {
-        // TODO Check if sub-path.
-        $file = $this->_managePaths->getAbsolutePath($filepath);
-        if (!$this->_validateFile->isMetadataFile(
-                $file,
-                $this->_checkMetadataFile,
-                array(
-                    'extension' => $this->_extension,
-                    'xmlRoot' => $this->_xmlRoot,
-                    'xmlNamespace' => $this->_xmlNamespace,
-            ))) {
-            return array();
-        }
-
-        $metadata = array();
-
-        // Extract the text via the stylesheet.
-        if ($this->_getParameter('fill_ocr_text')) {
-            // Process the xml file via the stylesheet.
-            $textPath = $this->_processXslt($file, $this->_xslOcrText);
-            if (filesize($textPath) > 0) {
-                $metadata['OCR']['Text'][] = file_get_contents($textPath);
-            }
-        }
-
-        // Extract the data via the stylesheet.
-        if ($this->_getParameter('fill_ocr_data')) {
-            // Process the xml file via the stylesheet.
-            $dataPath = $this->_processXslt($file, $this->_xslOcrData);
-            if (filesize($dataPath) > 0) {
-                $metadata['OCR']['Data'][] = file_get_contents($dataPath);
-            }
-        }
-
-        // Extract the process via the stylesheet.
-        if ($this->_getParameter('fill_ocr_process')) {
-            // Process the xml file via the stylesheet.
-            $processPath = $this->_processXslt($file, $this->_xslOcrProcess);
-            if (filesize($processPath) > 0) {
-                $metadata['OCR']['Process'][] = file_get_contents($processPath);
-            }
-        }
-
-        return $metadata;
     }
 }

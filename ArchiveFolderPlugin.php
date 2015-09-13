@@ -36,6 +36,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         'admin_navigation_main',
         'archive_folder_oai_identifiers',
         'archive_folder_mappings',
+        'archive_folder_ingesters',
         'archive_folder_formats',
     );
 
@@ -315,6 +316,27 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         );
 
         return array_merge($archiveFolderMappings, $mappings);
+    }
+
+    /**
+     * Add the ingesters for associated files that are available.
+     *
+     * @internal The prefix is a value to allow multiple ways to format data.
+     *
+     * @param array $ingesters Ingesters array.
+     * @return array Filtered Ingesters array.
+    */
+    public function filterArchiveFolderIngesters($ingesters)
+    {
+        // Available ingesters in the plugin at first place to keep order.
+        $archiveFolderIngesters = array();
+        $archiveFolderIngesters['alto'] = array(
+            'prefix' => 'alto',
+            'class' => 'ArchiveFolder_Ingester_Alto',
+            'description' => __('Alto xml files for OCR'),
+        );
+
+        return array_merge($archiveFolderIngesters, $ingesters);
     }
 
     /**
