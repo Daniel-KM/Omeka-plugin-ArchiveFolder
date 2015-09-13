@@ -35,11 +35,11 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</dc:title>
+  <dc:title>Title of the document of the Directory A (from "Directory_A.metadata.txt")</dc:title>
   <dc:creator>John Smith</dc:creator>
   <dc:creator>Mary Smith</dc:creator>
   <dc:description>This is the Dublin Core Description of this document.
@@ -57,11 +57,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</dc:title>
+  <dc:title>Second document of "Directory_A.metadata.txt", without attached file</dc:title>
   <dc:identifier>http://www.example.com/repository/Dir_A/Document%202</dc:identifier>
 </oai_dc:dc>
 </oai:metadata>
@@ -71,11 +71,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
-  <dc:title>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</dc:title>
+  <dc:title>Title of the document of the Directory A (from "Directory_A.metadata.txt")</dc:title>
   <dc:creator>John Smith</dc:creator>
   <dc:creator>Mary Smith</dc:creator>
   <dc:description>This is the Dublin Core Description of this document.
@@ -93,11 +93,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
-  <dc:title>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</dc:title>
+  <dc:title>Second document of "Directory_A.metadata.txt", without attached file</dc:title>
   <dc:identifier>http://www.example.com/repository/Dir_A/Document%202</dc:identifier>
 </oai_dcq:dcterms>
 </oai:metadata>
@@ -107,11 +107,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T13:17:07Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -120,7 +120,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   <dmdSec ID="DMD.01">
     <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Dublin Core Metadata">
       <xmlData xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
-        <dc:title>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</dc:title>
+        <dc:title>Title of the document of the Directory A (from "Directory_A.metadata.txt")</dc:title>
         <dc:creator>John Smith</dc:creator>
         <dc:creator>Mary Smith</dc:creator>
         <dc:description>This is the Dublin Core Description of this document.
@@ -155,11 +155,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T13:17:07Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -168,7 +168,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   <dmdSec ID="DMD.02">
     <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Dublin Core Metadata">
       <xmlData xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
-        <dc:title>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</dc:title>
+        <dc:title>Second document of "Directory_A.metadata.txt", without attached file</dc:title>
         <dc:identifier>http://www.example.com/repository/Dir_A/Document%202</dc:identifier>
       </xmlData>
     </mdWrap>
@@ -187,13 +187,13 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
-      <data>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</data>
+      <data>Title of the document of the Directory A (from "Directory_A.metadata.txt")</data>
     </element>
     <element name="Creator">
       <data>John Smith</data>
@@ -219,13 +219,13 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
-      <data>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</data>
+      <data>Second document of "Directory_A.metadata.txt", without attached file</data>
     </element>
     <element name="Identifier">
       <data>http://www.example.com/repository/Dir_A/Document%202</data>

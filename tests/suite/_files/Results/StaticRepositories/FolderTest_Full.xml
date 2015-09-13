@@ -35,11 +35,11 @@
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3fpm4t2chgpgkvj1bfe5ls1or</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</dc:title>
+  <dc:title>Title of the document of the Directory A (from "Directory_A.metadata.txt")</dc:title>
   <dc:creator>John Smith</dc:creator>
   <dc:creator>Mary Smith</dc:creator>
   <dc:description>This is the Dublin Core Description of this document.
@@ -57,11 +57,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</dc:title>
+  <dc:title>Second document of "Directory_A.metadata.txt", without attached file</dc:title>
   <dc:identifier>http://www.example.com/repository/Folder_Test/Document%202</dc:identifier>
 </oai_dc:dc>
 </oai:metadata>
@@ -69,7 +69,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3x3kj4euajdvjo6gm1ky5uqrn</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -85,7 +85,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:87udupo7fwnizu83a9jr247rl</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -111,7 +111,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0a5xuht8nkxfoz2a6gl81aefg</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -124,7 +124,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3tk6j16378lz6exgrs1rgdezo</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -132,7 +132,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
   <dc:title>English: Florence Cathedral of Santa Maria del Fiore</dc:title>
   <dc:creator>Arnolfo di Cambio</dc:creator>
   <dc:description>From Wikipedia, the free encyclopedia
-The Basilica di Santa Maria del Fiore (English, &quot;Basilica of Saint Mary of the Flower&quot;) is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
+The Basilica di Santa Maria del Fiore (English, "Basilica of Saint Mary of the Flower") is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
 The cathedral complex, located in Piazza del Duomo, includes the Baptistery and Giotto's Campanile. The three buildings are part of the UNESCO World Heritage Site covering the historic centre of Florence and are a major attraction to tourists visiting the region of Tuscany. The basilica is one of Italy's largest churches, and until development of new structural materials in the modern era, the dome was the largest in the world. It remains the largest brick dome ever constructed.
 The cathedral is the mother church of the Roman Catholic Archdiocese of Florence, whose archbishop is currently Giuseppe Betori.</dc:description>
   <dc:date>1436</dc:date>
@@ -144,14 +144,14 @@ The cathedral is the mother church of the Roman Catholic Archdiocese of Florence
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0lpuxc4a33c0dqhaaam3z3p5x</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
   <dc:title>Salisbury Cathedral</dc:title>
   <dc:creator>Unknown</dc:creator>
   <dc:description>For testing purposes, metadata of this item will be updated later.
-To try the update of the folder by the OAI-PMH harvester, replace the file &quot;Dir_B/Subdir_B-A/document_external.xml&quot; of your copied directory by the matching one that is prepared in the directory &quot;tests/suite/_files/Update_files/&quot;, and click on &quot;Update&quot; in the tab &quot;Archive folders&quot;.</dc:description>
+To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_B/Subdir_B-A/document_external.xml" of your copied directory by the matching one that is prepared in the directory "tests/suite/_files/Update_files/", and click on "Update" in the tab "Archive folders".</dc:description>
   <dc:identifier>http://www.example.com/repository/Folder_Test/doc%20%234</dc:identifier>
 </oai_dc:dc>
 </oai:metadata>
@@ -159,11 +159,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>Test of Mets import via Archive Folder (from &quot;Subdir_B-B.mets.xml&quot;)</dc:title>
+  <dc:title>Test of Mets import via Archive Folder (from "Subdir_B-B.mets.xml")</dc:title>
   <dc:creator>Elisabeth II</dc:creator>
   <dc:creator>Louis XIV</dc:creator>
   <dc:description>This record has two attached files, whose path contains only simple alphanumeric characters and no space, so the relative location is the same for http and local path and it can be ingested by the two ways.</dc:description>
@@ -183,7 +183,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:drcmuqxvn31jknq2n9l2yntjm</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -202,7 +202,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:buie52mbsk4nsuu9vm7nxgzsc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -223,7 +223,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:e9nxqr3gqzpaav661w3h5eo97</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -241,7 +241,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:akek2emy0tngf70g71n3sk0e6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -256,7 +256,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:bq5z8egofwi0z3fxif2cmxha4</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -270,11 +270,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2be4hgztb23ejghdnr64a3buf</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>The description of this document from &quot;External_Metadata.ods&quot; has multiple lines.</dc:title>
+  <dc:title>The description of this document from "External_Metadata.ods" has multiple lines.</dc:title>
   <dc:description>This cell has multiple lines.
 
 There is an empty line before this one (as text).
@@ -287,7 +287,7 @@ The item has two files without specific metadata.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:dyqx41cyss0efixdww51hsd7p</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -306,7 +306,7 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:aptne9ixk45eexmxmlsfsjwzb</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -319,7 +319,7 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:ck2u8j60r58fu0sgyxrigm3cu</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -333,7 +333,7 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:8y7lke4ihfgcrw0npkwj13clw</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -349,11 +349,11 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3fpm4t2chgpgkvj1bfe5ls1or</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
-  <dc:title>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</dc:title>
+  <dc:title>Title of the document of the Directory A (from "Directory_A.metadata.txt")</dc:title>
   <dc:creator>John Smith</dc:creator>
   <dc:creator>Mary Smith</dc:creator>
   <dc:description>This is the Dublin Core Description of this document.
@@ -371,11 +371,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
-  <dc:title>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</dc:title>
+  <dc:title>Second document of "Directory_A.metadata.txt", without attached file</dc:title>
   <dc:identifier>http://www.example.com/repository/Folder_Test/Document%202</dc:identifier>
 </oai_dcq:dcterms>
 </oai:metadata>
@@ -383,7 +383,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3x3kj4euajdvjo6gm1ky5uqrn</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -399,7 +399,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:87udupo7fwnizu83a9jr247rl</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -425,7 +425,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0a5xuht8nkxfoz2a6gl81aefg</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -439,7 +439,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3tk6j16378lz6exgrs1rgdezo</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -447,7 +447,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
   <dc:title>English: Florence Cathedral of Santa Maria del Fiore</dc:title>
   <dc:creator>Arnolfo di Cambio</dc:creator>
   <dc:description>From Wikipedia, the free encyclopedia
-The Basilica di Santa Maria del Fiore (English, &quot;Basilica of Saint Mary of the Flower&quot;) is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
+The Basilica di Santa Maria del Fiore (English, "Basilica of Saint Mary of the Flower") is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
 The cathedral complex, located in Piazza del Duomo, includes the Baptistery and Giotto's Campanile. The three buildings are part of the UNESCO World Heritage Site covering the historic centre of Florence and are a major attraction to tourists visiting the region of Tuscany. The basilica is one of Italy's largest churches, and until development of new structural materials in the modern era, the dome was the largest in the world. It remains the largest brick dome ever constructed.
 The cathedral is the mother church of the Roman Catholic Archdiocese of Florence, whose archbishop is currently Giuseppe Betori.</dc:description>
   <dc:date>1436</dc:date>
@@ -459,14 +459,14 @@ The cathedral is the mother church of the Roman Catholic Archdiocese of Florence
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0lpuxc4a33c0dqhaaam3z3p5x</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
   <dc:title>Salisbury Cathedral</dc:title>
   <dc:creator>Unknown</dc:creator>
   <dc:description>For testing purposes, metadata of this item will be updated later.
-To try the update of the folder by the OAI-PMH harvester, replace the file &quot;Dir_B/Subdir_B-A/document_external.xml&quot; of your copied directory by the matching one that is prepared in the directory &quot;tests/suite/_files/Update_files/&quot;, and click on &quot;Update&quot; in the tab &quot;Archive folders&quot;.</dc:description>
+To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_B/Subdir_B-A/document_external.xml" of your copied directory by the matching one that is prepared in the directory "tests/suite/_files/Update_files/", and click on "Update" in the tab "Archive folders".</dc:description>
   <dc:identifier>http://www.example.com/repository/Folder_Test/doc%20%234</dc:identifier>
 </oai_dcq:dcterms>
 </oai:metadata>
@@ -474,11 +474,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
-  <dc:title>Test of Mets import via Archive Folder (from &quot;Subdir_B-B.mets.xml&quot;)</dc:title>
+  <dc:title>Test of Mets import via Archive Folder (from "Subdir_B-B.mets.xml")</dc:title>
   <dc:creator>Elisabeth II</dc:creator>
   <dc:creator>Louis XIV</dc:creator>
   <dc:description>This record has two attached files, whose path contains only simple alphanumeric characters and no space, so the relative location is the same for http and local path and it can be ingested by the two ways.</dc:description>
@@ -498,7 +498,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:drcmuqxvn31jknq2n9l2yntjm</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -517,7 +517,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:buie52mbsk4nsuu9vm7nxgzsc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -538,7 +538,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:e9nxqr3gqzpaav661w3h5eo97</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -556,7 +556,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:akek2emy0tngf70g71n3sk0e6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -571,7 +571,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:bq5z8egofwi0z3fxif2cmxha4</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -585,11 +585,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2be4hgztb23ejghdnr64a3buf</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
-  <dc:title>The description of this document from &quot;External_Metadata.ods&quot; has multiple lines.</dc:title>
+  <dc:title>The description of this document from "External_Metadata.ods" has multiple lines.</dc:title>
   <dc:description>This cell has multiple lines.
 
 There is an empty line before this one (as text).
@@ -602,7 +602,7 @@ The item has two files without specific metadata.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:dyqx41cyss0efixdww51hsd7p</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -621,7 +621,7 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:aptne9ixk45eexmxmlsfsjwzb</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -634,7 +634,7 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:ck2u8j60r58fu0sgyxrigm3cu</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -648,7 +648,7 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:8y7lke4ihfgcrw0npkwj13clw</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -664,11 +664,11 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3fpm4t2chgpgkvj1bfe5ls1or</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -677,7 +677,7 @@ This is the second line of the description, after a line break.</dc:description>
   <dmdSec ID="DMD.01">
     <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Dublin Core Metadata">
       <xmlData xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
-        <dc:title>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</dc:title>
+        <dc:title>Title of the document of the Directory A (from "Directory_A.metadata.txt")</dc:title>
         <dc:creator>John Smith</dc:creator>
         <dc:creator>Mary Smith</dc:creator>
         <dc:description>This is the Dublin Core Description of this document.
@@ -712,11 +712,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -725,7 +725,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   <dmdSec ID="DMD.02">
     <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Dublin Core Metadata">
       <xmlData xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
-        <dc:title>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</dc:title>
+        <dc:title>Second document of "Directory_A.metadata.txt", without attached file</dc:title>
         <dc:identifier>http://www.example.com/repository/Folder_Test/Document%202</dc:identifier>
       </xmlData>
     </mdWrap>
@@ -742,11 +742,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3x3kj4euajdvjo6gm1ky5uqrn</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -781,11 +781,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:87udupo7fwnizu83a9jr247rl</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -833,11 +833,11 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0a5xuht8nkxfoz2a6gl81aefg</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -865,11 +865,11 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3tk6j16378lz6exgrs1rgdezo</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -882,7 +882,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</dc:descri
         <dc:title>English: Florence Cathedral of Santa Maria del Fiore</dc:title>
         <dc:creator>Arnolfo di Cambio</dc:creator>
         <dc:description>From Wikipedia, the free encyclopedia
-The Basilica di Santa Maria del Fiore (English, &quot;Basilica of Saint Mary of the Flower&quot;) is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
+The Basilica di Santa Maria del Fiore (English, "Basilica of Saint Mary of the Flower") is the main church of Florence, Italy. Il Duomo di Firenze, as it is ordinarily called, was begun in 1296 in the Gothic style to the design of Arnolfo di Cambio and completed structurally in 1436 with the dome engineered by Filippo Brunelleschi. The exterior of the basilica is faced with polychrome marble panels in various shades of green and pink bordered by white and has an elaborate 19th-century Gothic Revival façade by Emilio De Fabris.
 The cathedral complex, located in Piazza del Duomo, includes the Baptistery and Giotto's Campanile. The three buildings are part of the UNESCO World Heritage Site covering the historic centre of Florence and are a major attraction to tourists visiting the region of Tuscany. The basilica is one of Italy's largest churches, and until development of new structural materials in the modern era, the dome was the largest in the world. It remains the largest brick dome ever constructed.
 The cathedral is the mother church of the Roman Catholic Archdiocese of Florence, whose archbishop is currently Giuseppe Betori.</dc:description>
         <dc:date>1436</dc:date>
@@ -908,11 +908,11 @@ The cathedral is the mother church of the Roman Catholic Archdiocese of Florence
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0lpuxc4a33c0dqhaaam3z3p5x</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -924,7 +924,7 @@ The cathedral is the mother church of the Roman Catholic Archdiocese of Florence
         <dc:title>Salisbury Cathedral</dc:title>
         <dc:creator>Unknown</dc:creator>
         <dc:description>For testing purposes, metadata of this item will be updated later.
-To try the update of the folder by the OAI-PMH harvester, replace the file &quot;Dir_B/Subdir_B-A/document_external.xml&quot; of your copied directory by the matching one that is prepared in the directory &quot;tests/suite/_files/Update_files/&quot;, and click on &quot;Update&quot; in the tab &quot;Archive folders&quot;.</dc:description>
+To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_B/Subdir_B-A/document_external.xml" of your copied directory by the matching one that is prepared in the directory "tests/suite/_files/Update_files/", and click on "Update" in the tab "Archive folders".</dc:description>
         <dc:identifier>http://www.example.com/repository/Folder_Test/doc%20%234</dc:identifier>
       </xmlData>
     </mdWrap>
@@ -941,7 +941,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:premis="info:lc/xmlns/premis-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:niso="http://www.niso.org/Z39-87-2006.pdf" xmlns:textmd="info:lc/xmlns/textMD-v3" OBJID="my_obj_id_1" LABEL="Test of Mets via Archive Folder" TYPE="Text">
@@ -1019,11 +1019,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:drcmuqxvn31jknq2n9l2yntjm</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1064,11 +1064,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:buie52mbsk4nsuu9vm7nxgzsc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1117,11 +1117,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:e9nxqr3gqzpaav661w3h5eo97</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1158,11 +1158,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:akek2emy0tngf70g71n3sk0e6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1196,11 +1196,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:bq5z8egofwi0z3fxif2cmxha4</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1236,11 +1236,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2be4hgztb23ejghdnr64a3buf</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1249,7 +1249,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file &quot
   <dmdSec ID="DMD.013">
     <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Dublin Core Metadata">
       <xmlData xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
-        <dc:title>The description of this document from &quot;External_Metadata.ods&quot; has multiple lines.</dc:title>
+        <dc:title>The description of this document from "External_Metadata.ods" has multiple lines.</dc:title>
         <dc:description>This cell has multiple lines.
 
 There is an empty line before this one (as text).
@@ -1271,11 +1271,11 @@ The item has two files without specific metadata.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:dyqx41cyss0efixdww51hsd7p</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1316,11 +1316,11 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:aptne9ixk45eexmxmlsfsjwzb</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1347,11 +1347,11 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:ck2u8j60r58fu0sgyxrigm3cu</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1387,11 +1387,11 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:8y7lke4ihfgcrw0npkwj13clw</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-08-24T16:44:19Z">
+  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -1429,13 +1429,13 @@ This is the second line of the description, after a line break.</dc:description>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3fpm4t2chgpgkvj1bfe5ls1or</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
-      <data>Title of the document of the Directory A (from &quot;Directory_A.metadata.txt&quot;)</data>
+      <data>Title of the document of the Directory A (from "Directory_A.metadata.txt")</data>
     </element>
     <element name="Creator">
       <data>John Smith</data>
@@ -1461,13 +1461,13 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
-      <data>Second document of &quot;Directory_A.metadata.txt&quot;, without attached file</data>
+      <data>Second document of "Directory_A.metadata.txt", without attached file</data>
     </element>
     <element name="Identifier">
       <data>http://www.example.com/repository/Folder_Test/Document%202</data>
@@ -1482,7 +1482,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3x3kj4euajdvjo6gm1ky5uqrn</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1518,7 +1518,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:87udupo7fwnizu83a9jr247rl</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" name="doc #1" collection="Tests of the plugin Archive Folder" itemType="Still Image" featured="1">
@@ -1585,7 +1585,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</data>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0a5xuht8nkxfoz2a6gl81aefg</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns="http://localhost/documents/" name="doc #2" collection="Tests of the plugin Archive Folder" itemType="Still Image">
@@ -1600,7 +1600,7 @@ This is a <i>tagged word</i>, managed even if there isn't a root tag.</data>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:3tk6j16378lz6exgrs1rgdezo</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" name="doc #3" collection="Architectural Heritage" itemType="Still Image" featured="1">
@@ -1648,7 +1648,7 @@ The cathedral is the mother church of the Roman Catholic Archdiocese of Florence
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:0lpuxc4a33c0dqhaaam3z3p5x</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" name="doc #4" collection="Architectural Heritage" itemType="Still Image">
@@ -1669,13 +1669,13 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
-      <data>Test of Mets import via Archive Folder (from &quot;Subdir_B-B.mets.xml&quot;)</data>
+      <data>Test of Mets import via Archive Folder (from "Subdir_B-B.mets.xml")</data>
     </element>
     <element name="Creator">
       <data>Elisabeth II</data>
@@ -1711,7 +1711,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:drcmuqxvn31jknq2n9l2yntjm</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1754,7 +1754,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:buie52mbsk4nsuu9vm7nxgzsc</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1796,7 +1796,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:e9nxqr3gqzpaav661w3h5eo97</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1830,7 +1830,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:akek2emy0tngf70g71n3sk0e6</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1861,7 +1861,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:bq5z8egofwi0z3fxif2cmxha4</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1886,13 +1886,13 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:2be4hgztb23ejghdnr64a3buf</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
   <elementSet name="Dublin Core">
     <element name="Title">
-      <data>The description of this document from &quot;External_Metadata.ods&quot; has multiple lines.</data>
+      <data>The description of this document from "External_Metadata.ods" has multiple lines.</data>
     </element>
     <element name="Description">
       <data>This cell has multiple lines.
@@ -1911,7 +1911,7 @@ The item has two files without specific metadata.</data>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:dyqx41cyss0efixdww51hsd7p</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1940,7 +1940,7 @@ This is the second line of the description, after a line break.</data>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:aptne9ixk45eexmxmlsfsjwzb</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1964,7 +1964,7 @@ This is the second line of the description, after a line break.</data>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:ck2u8j60r58fu0sgyxrigm3cu</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
@@ -1982,7 +1982,7 @@ This is the second line of the description, after a line break.</data>
     <oai:record>
       <oai:header>
         <oai:identifier>oai:www.example.com:Folder_Test:8y7lke4ihfgcrw0npkwj13clw</oai:identifier>
-        <oai:datestamp>2015-08-24</oai:datestamp>
+        <oai:datestamp>2015-09-15</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
