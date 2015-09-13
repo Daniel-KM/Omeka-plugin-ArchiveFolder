@@ -72,7 +72,9 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
 
         // Get the object id if any to create the name.
         $id = $this->_xml->xpath('/mets:mets/@OBJID[. != ""]');
-        $name = $id ? $id[0]->__toString() : $this->_getRelativePathToFolder($this->_metadataFilepath);
+        $name = $id
+            ? $id[0]->__toString()
+            : $this->_managePaths->getRelativePathToFolder($this->_metadataFilepath);
         $doc = array('name' => $name);
 
         $this->_prepareMetadata();
@@ -124,7 +126,7 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             // document.
             $flocat = dom_import_simplexml($xmlFile->FLocat);
             if ($flocat) {
-                $fileurl = $this->_getRepositoryUrlForFile($path);
+                $fileurl = $this->_managePaths->getRepositoryUrlForFile($path);
                 $flocat->setAttribute('xlink:href', $fileurl);
             }
 
@@ -331,10 +333,15 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
     protected function _extractOcr($filepath)
     {
         // TODO Check if sub-path.
-        $file = $this->_getAbsolutePath($filepath);
-        if (!$this->_checkExtension($file, 'xml')
-                || !$this->_checkXml($file, 'alto')
-            ) {
+        $file = $this->_managePaths->getAbsolutePath($filepath);
+        if (!$this->_validateFile->isMetadataFile(
+                $file,
+                $this->_checkMetadataFile,
+                array(
+                    'extension' => $this->_extension,
+                    'xmlRoot' => $this->_xmlRoot,
+                    'xmlNamespace' => $this->_xmlNamespace,
+            ))) {
             return array();
         }
 

@@ -15,6 +15,9 @@ abstract class ArchiveFolder_Format_Abstract
     protected $_metadataSchema;
     protected $_metadataNamespace;
 
+    // Tools that will be used.
+    protected $_managePaths;
+
     // List of the simple Dublin Core terms, used when the user want to add
     // specific values to all records or when they can be get from files.
     // This is the default format of the metadata.
@@ -72,6 +75,8 @@ abstract class ArchiveFolder_Format_Abstract
     {
         $this->_uri = $uri;
         $this->_parameters = $parameters;
+
+        $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($uri, $parameters);
     }
 
     /**
@@ -252,7 +257,7 @@ abstract class ArchiveFolder_Format_Abstract
     {
         $doc = &$this->_document;
 
-        $url = $this->_getAbsoluteUrl($doc['name']);
+        $url = $this->_managePaths->getAbsoluteUrl($doc['name']);
         if (empty($doc['metadata']['Dublin Core']['Identifier'])
                 || !in_array($url, $doc['metadata']['Dublin Core']['Identifier'])
             ) {
@@ -271,7 +276,7 @@ abstract class ArchiveFolder_Format_Abstract
 
             if (isset($doc['files'])) {
                 foreach ($doc['files'] as $file) {
-                    $url = $this->_getAbsoluteUrl($file['name']);
+                    $url = $this->_managePaths->getAbsoluteUrl($file['name']);
                     if (empty($doc['metadata']['Dublin Core'][$fileLink])
                             || !in_array($url, $doc['metadata']['Dublin Core'][$fileLink])
                         ) {
@@ -295,7 +300,7 @@ abstract class ArchiveFolder_Format_Abstract
         $metadata = isset($file['metadata']) ? $file['metadata'] : array();
 
         $fileLink = $this->_parametersFormat['use_qdc'] ? 'isRequiredBy' : 'Relation';
-        $url = $this->_getAbsoluteUrl($doc['name']);
+        $url = $this->_managePaths->getAbsoluteUrl($doc['name']);
         if (empty($metadata['Dublin Core'][$fileLink])
                 || !in_array($url, $metadata['Dublin Core'][$fileLink])
             ) {
@@ -428,51 +433,6 @@ abstract class ArchiveFolder_Format_Abstract
     }
 
     /**
-     * Rebuild the url to a file and url-encode it if wanted.
-     *
-     * Note: The "#" and the"?" are url-encoded in all cases for easier use.
-     *
-     * @param string $filepath This is a relative filepath (if url, string is
-     * returned as it).
-     * @param boolean $urlencode If true, URL-encode according to RFC 3986.
-     * This parameter is not used for external urls, that should be already
-     * formatted.
-     * @return string The url.
-     */
-    protected function _getAbsoluteUrl($filepath, $urlencode = true)
-    {
-        // Check if this is an url.
-        if ($this->_isRemote($filepath)) {
-            return $filepath;
-        }
-
-        if ($urlencode) {
-            // Check if it is not already an encoded url.
-            if ($this->_getParameter('transfer_strategy') == 'Filesystem') {
-                $filepath = $this->_rawurlencodeRelativePath($filepath);
-            }
-            return $this->_getParameter('repository_folder') . $filepath;
-        }
-
-        return $this->_getParameter('repository_folder_human')
-            . str_replace(array('#', '?'), array('%23', '%3F'), $filepath);
-    }
-
-    /**
-     * Encode a path as RFC [RFC 3986] (same as rawurlencode(), except "/").
-     *
-     * @param string $relativePath Relative path.
-     * @return string
-     */
-   protected function _rawurlencodeRelativePath($relativePath)
-   {
-        $paths = explode('/', $relativePath);
-        $paths = array_map('rawurlencode', $paths);
-        $path = implode('/', $paths);
-        return $path;
-   }
-
-    /**
      * Get the item type according to the default file type or the first file.
      *
      * @return string|null The item type name.
@@ -536,19 +496,5 @@ abstract class ArchiveFolder_Format_Abstract
     public function _md5hash($filepath)
     {
         return md5_file($filepath);
-    }
-
-    /**
-     * Determine if a path is a remote url or a local path.
-     *
-     * @param string $path
-     * @return boolean
-     */
-    protected function _isRemote($path)
-    {
-        return strpos($path, 'http://') === 0
-            || strpos($path, 'https://') === 0
-            || strpos($path, 'ftp://') === 0
-            || strpos($path, 'sftp://') === 0;
     }
 }

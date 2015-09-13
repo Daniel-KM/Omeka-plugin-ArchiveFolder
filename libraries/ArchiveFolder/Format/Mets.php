@@ -256,7 +256,7 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
             $title = $this->_getParameter('transfer_strategy') != 'Filesystem'
                  ? rawurldecode(pathinfo($file['path'], PATHINFO_BASENAME))
                  : pathinfo($file['path'], PATHINFO_BASENAME);
-             $href = $this->_getAbsoluteUrl($file['name']);
+             $href = $this->_managePaths->getAbsoluteUrl($file['name']);
 
             $writer->startElement('FLocat');
             $writer->writeAttribute('LOCTYPE', 'URL');

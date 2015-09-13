@@ -129,7 +129,7 @@ class ArchiveFolder_Mapping_Text extends ArchiveFolder_Mapping_Abstract
         }
         // Else set a name if needed.
         elseif (empty($first['name'])) {
-            $first['name'] = $this->_getRelativePathToFolder($this->_metadataFilepath);
+            $first['name'] = $this->_managePaths->getRelativePathToFolder($this->_metadataFilepath);
         }
 
         return $documents;
