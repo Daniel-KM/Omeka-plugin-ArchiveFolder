@@ -164,6 +164,29 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $this->_checkFolder();
     }
 
+    public function testMetsAlto()
+    {
+        $uri = TEST_FILES_DIR
+            . DIRECTORY_SEPARATOR . 'Folder_Test_Mets_Alto';
+
+        $parameters = array(
+            'repository_name' => 'Folder Test Mets Alto',
+            'fill_ocr_text' => true,
+            'fill_ocr_data' => true,
+            'fill_ocr_process' => true,
+            'records_for_files' => true,
+        );
+
+        $expected = TEST_FILES_DIR
+            . DIRECTORY_SEPARATOR . 'Results'
+            . DIRECTORY_SEPARATOR . 'StaticRepositories'
+            . DIRECTORY_SEPARATOR . 'FolderTest_Mets_Alto.xml';
+
+        $this->_prepareFolderTest($uri, $parameters);
+        $this->_expectedXml = $expected;
+        $this->_checkFolder();
+    }
+
     public function testNonLatinCharactersLocal()
     {
         $uri = TEST_FILES_DIR

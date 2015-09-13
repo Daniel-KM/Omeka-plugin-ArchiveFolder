@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets OBJID="my_obj_id_1" LABEL="Test of Mets via Archive Folder" TYPE="Text" xmlns="http://www.loc.gov/METS/" xmlns:premis="info:lc/xmlns/premis-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:niso="http://www.niso.org/Z39-87-2006.pdf" xmlns:textmd="info:lc/xmlns/textMD-v3">
+   <metsHdr CREATEDATE="2015-04-16T08:48:56+02:00" RECORDSTATUS="Complete">
+      <agent ROLE="Creator" TYPE="INDIVIDUAL">
+         <name>Daniel Berthereau</name>
+      </agent>
+      <agent ROLE="OTHER" OTHERROLE="BUILDER" TYPE="OTHER" OTHERTYPE="SOFTWARE">
+         <name>Archive Folder for Omeka (https://github.com/Daniel-KM/ArchiveFolder)</name>
+      </agent>
+   </metsHdr>
+   <dmdSec ID="DMD.2">
+      <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Metadata of the Document">
+         <xmlData>
+            <dc:dc>
+               <dc:title>Test of Mets and Alto import via Archive Folder (from "Subdir_B-B_Alto.mets.xml")</dc:title>
+               <dc:creator>Myself</dc:creator>
+               <dc:description>This record has four attached files, two images png and the OCR in Alto xml.</dc:description>
+               <dc:date>2015</dc:date>
+               <dc:type>Text</dc:type>
+               <dc:type>Fake document</dc:type>
+               <dc:identifier>ark:/99999/fkp3m9d</dc:identifier>
+               <dc:relation>ark:/99999/fk7w6n</dc:relation>
+               <dc:language>eng</dc:language>
+               <dc:rights>Public Domain</dc:rights>
+            </dc:dc>
+         </xmlData>
+      </mdWrap>
+   </dmdSec>
+   <dmdSec ID="DMD.3">
+      <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Metadata of the File">
+         <xmlData>
+            <dc:dc>
+                <dc:title>Image #1 of Subdir B-B Alto</dc:title>
+                <dc:description>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</dc:description>
+            </dc:dc>
+         </xmlData>
+      </mdWrap>
+   </dmdSec>
+   <dmdSec ID="DMD.4">
+        <mdWrap MIMETYPE="text/xml" MDTYPE="DC" LABEL="Metadata of the File">
+         <xmlData>
+            <dc:dc>
+                <dc:title>Image #2 of Subdir B-B Alto</dc:title>
+                <dc:description>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</dc:description>
+            </dc:dc>
+         </xmlData>
+      </mdWrap>
+   </dmdSec>
+   <fileSec>
+      <fileGrp ID="GRP.1" USE="master">
+         <file ID="master.1" MIMETYPE="image/png" SEQ="1" GROUPID="1">
+            <FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="master/image_Subdir_B-B_1.png"/>
+         </file>
+         <file ID="master.2" MIMETYPE="image/png" SEQ="2" GROUPID="2">
+            <FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="master/image_Subdir_B-B_2.png"/>
+         </file>
+      </fileGrp>
+      <fileGrp ID="GRP.2" USE="ocr">
+        <file ID="ocr.1" MIMETYPE="text/xml" SEQ="1" GROUPID="1" ADMID="AMD.10">
+            <FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="ocr/image_Subdir_B-B_1.alto.xml"/>
+        </file>
+        <file ID="ocr.2" MIMETYPE="text/xml" SEQ="2" GROUPID="2" ADMID="AMD.11">
+            <FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="ocr/image_Subdir_B-B_2.alto.xml"/>
+        </file>
+      </fileGrp>
+   </fileSec>
+   <structMap TYPE="physical">
+      <div TYPE="set" ID="DIV.1">
+         <div TYPE="group" LABEL="Text" ID="DIV.2" DMDID="DMD.2">
+            <div TYPE="object" ORDER="1" ORDERLABEL="1" LABEL="Image 1" ID="DIV.3" DMDID="DMD.3">
+               <fptr FILEID="master.1"/>
+               <fptr FILEID="ocr.1"/>
+            </div>
+            <div TYPE="object" ORDER="2" ORDERLABEL="2" LABEL="Image 2" ID="DIV.4" DMDID="DMD.4">
+               <fptr FILEID="master.2"/>
+               <fptr FILEID="ocr.2"/>
+            </div>
+         </div>
+      </div>
+   </structMap>
+</mets>

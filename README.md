@@ -410,6 +410,9 @@ plugin [OcrElementSet] should be installed first to create fields for it,
 because texts are saved at file level. Else, a hook can be used to import data
 somewhere else.
 
+The plugin [OcrElementSet] saves ocr about each image at file level, so the
+option "File Metadata" should be set.
+
 Note: The namespace of the xslt stylesheets may need to be changed according to
 your files.
 

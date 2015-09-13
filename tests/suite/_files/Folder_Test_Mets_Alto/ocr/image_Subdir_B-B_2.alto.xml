@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alto xmlns="http://bibnum.bnf.fr/ns/alto_prod" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/TR/xlink" ID="alto.2" xsi:schemaLocation="http://bibnum.bnf.fr/ns/alto_prod http://bibnum.bnf.fr/ns/alto_prod.xsd">
+    <Description>
+        <MeasurementUnit>pixel</MeasurementUnit>
+        <sourceImageInformation>
+            <fileName>image_Subdir_B-B_2.png</fileName>
+        </sourceImageInformation>
+        <OCRProcessing ID="OCR_1">
+            <ocrProcessingStep>
+                <processingDateTime>2015-09-14</processingDateTime>
+                <processingStepDescription>[002_TOTAL_CHARS] TOTAL CAR. {16}</processingStepDescription>
+                <processingStepDescription>[007_TOTAL_STRINGS] TOTAL STRINGS {4}</processingStepDescription>
+                <processingStepDescription>[010_CHARS_NON-ISO] CARS NON-ISO {0}</processingStepDescription>
+                <processingStepDescription>[011_CHARS_PUNCTUATION] CARS PONCTUATION {0}</processingStepDescription>
+                <processingStepDescription>[012_CHARS_DIGITS] CARS CHIFFRES {1}</processingStepDescription>
+                <processingStepDescription>[013_CHARS_SUSPECT] CARS SUSPECTS {0}</processingStepDescription>
+                <processingSoftware>
+                    <softwareCreator>Daniel Berthereau</softwareCreator>
+                    <softwareName>Image to Alto</softwareName>
+                    <softwareVersion>2.2</softwareVersion>
+                </processingSoftware>
+            </ocrProcessingStep>
+        </OCRProcessing>
+    </Description>
+    <Styles>
+        <TextStyle ID="TXT_1" FONTFAMILY="SANS" FONTSIZE="72" FONTCOLOR="000000" FONTSTYLE="bold"/>
+        <ParagraphStyle ID="TXT_2" ALIGN="Center"/>
+    </Styles>
+    <Layout>
+        <Page ID="PAG_00000002" HEIGHT="640" WIDTH="480" PHYSICAL_IMG_NR="0">
+            <PrintSpace ID="PAG_00000002_PrintSpace" HEIGHT="224" WIDTH="427" HPOS="106" VPOS="124">
+                <TextBlock ID="PAG_00000002_TB000001" STYLEREFS="TXT_1" HEIGHT="224" WIDTH="426" HPOS="106" VPOS="124">
+                    <TextLine ID="PAG_00000002_TL000001" STYLEREFS="TXT_1 TXT_2" HEIGHT="70" WIDTH="244" HPOS="200" VPOS="124" BASELINE="178">
+                        <String ID="PAG_00000002_ST000001" STYLEREFS="TXT_1" HEIGHT="70" WIDTH="244" HPOS="200" VPOS="124" CONTENT="Image" CC="99999" WC="1" WD="true"/>
+                    </TextLine>
+                    <TextLine ID="PAG_00000002_TL000002" STYLEREFS="TXT_1 TXT_2" HEIGHT="56" WIDTH="426" HPOS="106" VPOS="206" BASELINE="262">
+                        <String ID="PAG_00000002_ST000002" STYLEREFS="TXT_1" HEIGHT="56" WIDTH="264" HPOS="106" VPOS="206" CONTENT="Subdir" CC="999999" WC="1" WD="false"/>
+                        <SP ID="PAG_00000002_SP000001" WIDTH="32" HPOS="370" VPOS="206"/>
+                        <String ID="PAG_00000002_ST000003" STYLEREFS="TXT_1" HEIGHT="56" WIDTH="130" HPOS="402" VPOS="206" CONTENT="B-B" CC="999" WC="1" WD="false"/>
+                    </TextLine>
+                    <TextLine ID="PAG_00000002_TL000003" STYLEREFS="TXT_1 TXT_2" HEIGHT="56" WIDTH="102" HPOS="269" VPOS="292" BASELINE="348">
+                        <String ID="PAG_00000002_ST000004" STYLEREFS="TXT_1" HEIGHT="56" WIDTH="102" HPOS="269" VPOS="292" CONTENT="#1" CC="99" WC="1" WD="false"/>
+                    </TextLine>
+                </TextBlock>
+            </PrintSpace>
+        </Page>
+    </Layout>
+</alto>

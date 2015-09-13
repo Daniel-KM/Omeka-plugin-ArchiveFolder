@@ -81,6 +81,9 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
         // ArchiveFolderDocument is a required plugin.
         $pluginHelper->setUp('ArchiveFolderDocument');
         $pluginHelper->setUp(self::PLUGIN_NAME);
+        // OcrElementSet is an optional plugin.
+        $pluginHelper->setUp('OcrElementSet');
+        $pluginHelper->setUp(self::PLUGIN_NAME);
 
         // Allow extensions "xml" and "json".
         $whiteList = get_option(Omeka_Validate_File_Extension::WHITELIST_OPTION) . ',xml,json';
