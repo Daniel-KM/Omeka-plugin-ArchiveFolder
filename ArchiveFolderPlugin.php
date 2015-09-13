@@ -139,7 +139,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     /**
-     * Saves plugin configuration page and creates folders if needed.
+     * Handle a submitted config form.
      *
      * @param array Options set in the config form.
      */

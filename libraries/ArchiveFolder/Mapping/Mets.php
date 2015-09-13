@@ -25,6 +25,30 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
     // Current doc for internal purposes.
     protected $_doc;
 
+    // List of files groups in the files section to process (attribute "USE").
+    // This avoids to load thumbnails, etc.
+    // The first one is always added.
+    protected $_fileSecGrps = array('master', 'ocr', 'MASTER', 'OCR');
+
+    protected $_xslOcrText = 'libraries/ArchiveFolder/Mapping/alto2text.xsl';
+    protected $_xslOcrData = 'libraries/ArchiveFolder/Mapping/alto2json.xsl';
+    protected $_xslOcrProcess = 'libraries/ArchiveFolder/Mapping/alto2process.xsl';
+
+    public function __construct($uri, $parameters)
+    {
+        $this->_xslOcrText = PLUGIN_DIR
+            . DIRECTORY_SEPARATOR . 'ArchiveFolder'
+            . DIRECTORY_SEPARATOR . $this->_xslOcrText;
+        $this->_xslOcrData = PLUGIN_DIR
+            . DIRECTORY_SEPARATOR . 'ArchiveFolder'
+            . DIRECTORY_SEPARATOR . $this->_xslOcrData;
+        $this->_xslOcrProcess = PLUGIN_DIR
+            . DIRECTORY_SEPARATOR . 'ArchiveFolder'
+            . DIRECTORY_SEPARATOR . $this->_xslOcrProcess;
+
+        parent::__construct($uri, $parameters);
+    }
+
     /**
      * Prepare the list of documents set inside the current metadata file.
      */
@@ -68,6 +92,7 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $doc = &$this->_doc;
 
         $dmdId = $this->_getDocumentMetadataId();
+
         $doc['metadata'] = $this->_getDCMetadata($dmdId) ?: array();
     }
 
@@ -79,7 +104,11 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $doc = &$this->_doc;
 
         $referencedFiles = array();
-        $xpath = '/mets:mets/mets:fileSec[1]//mets:fileGrp[1]/mets:file[mets:FLocat]';
+        $use = empty($this->_fileSecGrps)
+            ? ''
+            : ('or @USE = "' . implode('" or @USE = "', $this->_fileSecGrps) . '"');
+
+        $xpath = "/mets:mets/mets:fileSec[1]//mets:fileGrp[position() = 1 $use]/mets:file[mets:FLocat]";
         $xmlFiles = $this->_xml->xpath($xpath);
         foreach ($xmlFiles as $xmlFile) {
             $xmlFile->registerXPathNamespace(self::XML_PREFIX, self::XML_NAMESPACE);
@@ -109,11 +138,27 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
                 $result = $this->_xml->xpath($xpath);
                 $dmdId = (string) reset($result);
             }
+            // Only the first dmd id is used.
+            $dmdId = explode(' ', $dmdId);
+            $dmdId = (string) reset($dmdId);
+
+            // The amd id can be used to save some interesting data.
+            $amdId = (string) $xmlFile->attributes()->ADMID;
+            if (empty($amdId)) {
+                $fileId = (string) $xmlFile->attributes()->ID;
+                $xpath = "/mets:mets/mets:structMap[1]//mets:div[mets:fptr[@FILEID = '$fileId']][1]/@ADMID";
+                $result = $this->_xml->xpath($xpath);
+                $amdId = (string) reset($result);
+            }
+            // Only the first amd id is used.
+            $amdId = explode(' ', $amdId);
+            $amdId = (string) reset($amdId);
 
             $file = array();
             $file['path'] = $path;
-            // The dmdId is used internally only.
+            // These ids are used internally only.
             $file['dmdId'] = $dmdId;
+            $file['amdId'] = $amdId;
             $referencedFiles[] = $file;
         }
 
@@ -130,18 +175,24 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         foreach ($doc['files'] as &$file) {
             $dmdId = $file['dmdId'];
             $file['metadata'] = $this->_getDCMetadata($dmdId) ?: array();
-            // The dmdId is used internally only.
+            $amdId = $file['amdId'];
+            $amdMetadata = $this->_getDCMetadataForSource($amdId) ?: array();
+            $file['metadata'] = array_merge_recursive($file['metadata'], $amdMetadata);
+            $ocrMetadata = $this->_extractOcr($file['path']);
+            $file['metadata'] = array_merge_recursive($file['metadata'], $ocrMetadata);
+            // These ids are used internally only.
             unset($file['dmdId']);
+            unset($file['amdId']);
         }
     }
 
     /**
-     * Return an array of DC metadata from an dmd id, when metadata are DC.
+     * Return an array of DC metadata from a dmd or amd id when metadata are DC.
      *
-     * @param string $dmdId
+     * @param string $id
      * @return array|null
      */
-    private function _getDCMetadata($dmdId)
+    private function _getDCMetadata($id)
     {
         // Ordered list of the simple Dublin Core terms.
         static $dcTerms = array(
@@ -162,11 +213,11 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             'rights' => 'Rights',
         );
 
-        if (empty($dmdId)) {
+        if (empty($id)) {
             return;
         }
 
-        $xpath = "/mets:mets/mets:dmdSec[@ID = '$dmdId']";
+        $xpath = "/mets:mets//mets:*[@ID = '$id']";
         $result = $this->_xml->xpath($xpath);
         if (empty($result)) {
             return;
@@ -198,6 +249,27 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
     }
 
     /**
+     * Return an array of DC metadata from a source section.
+     *
+     * Note: by convention, if there is only a description, this is the format.
+     *
+     * @param string $id
+     * @return array|null
+     */
+    private function _getDCMetadataForSource($id)
+    {
+        $metadata = $this->_getDCMetadata($id) ?: array();
+        if ($metadata
+                && count($metadata['Dublin Core']) == 1
+                && isset($metadata['Dublin Core']['Description'])
+            ) {
+            $metadata['Dublin Core']['Format'] = $metadata['Dublin Core']['Description'];
+            unset($metadata['Dublin Core']['Description']);
+        }
+        return $metadata;
+    }
+
+    /**
      * Return the descriptive metadata id of the document.
      *
      * In some cases, specially images of a serial, the first descriptive
@@ -220,12 +292,13 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         if ($countDmd == 1) {
             $xpath = '/mets:mets/mets:dmdSec[1]/@ID';
             $result = $this->_xml->xpath($xpath);
-            return reset($result);
+            $dmdId = (string) reset($result);
+            return $dmdId;
         }
 
         // More than one descriptive metadata.
 
-        // If files have a div for themselves, it's the parent one, else this
+        // If files have a div for themselves, it's the parent one, else this is
         // the deepest div with all file pointers and a dmd id.
         // This is where the special case for serials is managed.
         $xpath = '/mets:mets/mets:fileSec[1]/mets:fileGrp[1]/mets:file';
@@ -233,9 +306,67 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $countFiles = count($result);
 
         $xpath = "/mets:mets/mets:structMap[1]
-            //mets:div[count(.//mets:fptr) = '$countFiles']/@DMDID";
+            //mets:div[count(.//mets:fptr) = $countFiles]/@DMDID";
         $result = $this->_xml->xpath($xpath);
         $dmdId = (string) array_pop($result);
+
+        // Manage some other cases (missing files or pointers without files), so
+        // the first one is used (TODO the periodic is not managed here).
+        if (empty($dmdId)) {
+            $xpath = '/mets:mets/mets:dmdSec[1]/@ID';
+            $result = $this->_xml->xpath($xpath);
+            $dmdId = (string) reset($result);
+            return $dmdId;
+        }
+
         return $dmdId;
+    }
+
+    /**
+     * Extract ocr from an alto file.
+     *
+     * @param string $filepath
+     * @return array Array of standard metadata, else empty array.
+     */
+    protected function _extractOcr($filepath)
+    {
+        // TODO Check if sub-path.
+        $file = $this->_getAbsolutePath($filepath);
+        if (!$this->_checkExtension($file, 'xml')
+                || !$this->_checkXml($file, 'alto')
+            ) {
+            return array();
+        }
+
+        $metadata = array();
+
+        // Extract the text via the stylesheet.
+        if ($this->_getParameter('fill_ocr_text')) {
+            // Process the xml file via the stylesheet.
+            $textPath = $this->_processXslt($file, $this->_xslOcrText);
+            if (filesize($textPath) > 0) {
+                $metadata['OCR']['Text'][] = file_get_contents($textPath);
+            }
+        }
+
+        // Extract the data via the stylesheet.
+        if ($this->_getParameter('fill_ocr_data')) {
+            // Process the xml file via the stylesheet.
+            $dataPath = $this->_processXslt($file, $this->_xslOcrData);
+            if (filesize($dataPath) > 0) {
+                $metadata['OCR']['Data'][] = file_get_contents($dataPath);
+            }
+        }
+
+        // Extract the process via the stylesheet.
+        if ($this->_getParameter('fill_ocr_process')) {
+            // Process the xml file via the stylesheet.
+            $processPath = $this->_processXslt($file, $this->_xslOcrProcess);
+            if (filesize($processPath) > 0) {
+                $metadata['OCR']['Process'][] = file_get_contents($processPath);
+            }
+        }
+
+        return $metadata;
     }
 }

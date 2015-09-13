@@ -795,7 +795,7 @@ abstract class ArchiveFolder_Mapping_Abstract
         @chmod($output, 0640);
 
         // In Shell, 0 is a correct result.
-        return ($result == 1) ? NULL : $output;
+        return ($result == 1) ? null : $output;
     }
 
     /**
@@ -827,7 +827,7 @@ abstract class ArchiveFolder_Mapping_Abstract
         $result = $proc->transformToURI($domXml, $output);
         @chmod($output, 0640);
 
-        return ($result === FALSE) ? NULL : $output;
+        return ($result === false) ? null : $output;
     }
 
     /**

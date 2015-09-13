@@ -101,6 +101,9 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             'unreferenced_files',
             'exclude_extensions',
             'element_delimiter',
+            'fill_ocr_text',
+            'fill_ocr_data',
+            'fill_ocr_process',
             'records_for_files',
             'oai_identifier_format',
             // The item_type_id is in _postData().

@@ -352,10 +352,17 @@ abstract class ArchiveFolder_Format_Abstract
      * @param string $elementName
      * @param string $string
      * @param array $attributes Optional attributes.
+     * @param boolean $isRawXml If true, write raw xml, because string is
+     * already escaped. It is useful specially to avoid escape of quotes for
+     * json. This is automatically done if string is an xml one.
      * @return void
      */
-    protected function _writeElement($elementName, $string, $attributes = array())
-    {
+    protected function _writeElement(
+        $elementName,
+        $string,
+        $attributes = array(),
+        $isRawXml = false
+    ) {
         $writer = $this->_writer;
 
         if ($this->_isCdata($string)) {
@@ -363,25 +370,22 @@ abstract class ArchiveFolder_Format_Abstract
         }
 
         // TODO Check if cdata is needed (and add prefix if needed).
-        // Previously, Xml was protected by a cdata and writeRaw() is not used,
-        // because the default prefix may be managed or not, and it is not
-        // checked.
+        // Check if the default prefix is managed or not.
 
-        if ($this->_isXml($string)) {
-            $writer->startElement($elementName);
+        // writeRaw() is used instead of text() to avoid the useless escape of
+        // quotes, that makes the base heavier. Quotes are automatically managed
+        // by Zend during import and by Omeka in the theme.
+        // Previously, Xml was protected by a cdata.
+        if (!$isRawXml && !$this->_isXml($string)) {
+            $string = htmlspecialchars($string, ENT_NOQUOTES);
+        }
+
+        $writer->startElement($elementName);
+        if ($attributes) {
             $this->_writeAttributes($attributes);
-            $writer->writeRaw($string);
-            $writer->endElement();
         }
-        elseif (empty($attributes)) {
-            $writer->writeElement($elementName, $string);
-        }
-        else {
-            $writer->startElement($elementName);
-            $this->_writeAttributes($attributes);
-            $writer->text($string);
-            $writer->endElement();
-        }
+        $writer->writeRaw($string);
+        $writer->endElement();
     }
 
     /**

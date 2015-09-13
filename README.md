@@ -181,6 +181,8 @@ from Omeka. Note: the official [OAI-PMH Repository] has been completed in an
 [improved fork], in particular with a human interface, and until merge of the
 commits, the latter is recommended.
 
+The plugin [OcrElementSet] can be installed too to import ocr data.
+
 Then uncompress files and rename plugin folder `ArchiveFolder`.
 
 Then install it like any other Omeka plugin and follow the config instructions.
@@ -233,9 +235,10 @@ they should be allowed in the page "/admin/settings/edit-security".
 * XSLT processor
 
 The xslt processor of php is a slow xslt 1 one. So it's recommended to use an
-external xslt 2 processor, ten to twenty times faster. The command can be
-configured in the configuration page of the plugin. Use "%1$s", "%2$s", "%3$s",
-without escape, for the file input, the stylesheet, and the output.
+external xslt 2 processor, ten times faster. It's required with stylesheets
+designed for xslt 2.0. The command can be configured in the configuration page
+of the plugin. Use "%1$s", "%2$s", "%3$s", without escape, for the file input,
+the stylesheet, and the output.
 
 Examples for Debian / Ubuntu / Mint:
 ```
@@ -247,6 +250,8 @@ Example for Fedora / RedHat / Centos / Mandriva:
 ```
 saxon -ext:on -versionmsg:off -s:%1$s -xsl:%2$s -o:%3$s
 ```
+
+Note: Only saxon is currently supported.
 
 
 Formats of metadata
@@ -395,10 +400,18 @@ static repository contains only full records;
 - the only available `action` is `delete`, used only with the harvest format
 `Documents`.
 
-### METS XML
+### METS and ALTO XML
 
 Any METS file can be imported as long as the profile uses Dublin Core metadata.
 Else, the class should be extended.
+
+The associated [Alto] file, an OCR format, can be ingested too as text. The
+plugin [OcrElementSet] should be installed first to create fields for it,
+because texts are saved at file level. Else, a hook can be used to import data
+somewhere else.
+
+Note: The namespace of the xslt stylesheets may need to be changed according to
+your files.
 
 
 Add a custom format
@@ -587,6 +600,11 @@ The harvester may have issues if files are available through "https", but cached
 by a proxy. In that case, you will have to wait some minutes (or days) before
 re-harvest, or to check settings of the proxy and the server.
 
+### Xml Alto
+
+The namespace of the xslt stylesheets may need to be changed according to your
+files.
+
 ### TODO
 
 - List element texts set by the harvester in the table harvest_records, for the
@@ -656,6 +674,8 @@ Copyright
 [fork]: https://github.com/Daniel-KM/OaipmhHarvester
 [fixed release]: https://github.com/Daniel-KM/Geolocation
 [Mets]: https://www.loc.gov/standards/mets
+[Alto]: https://www.loc.gov/standards/alto
+[OcrElementSet]: https://github.com/Daniel-KM/OcrElementSet
 [Geolocation]: https://omeka.org/add-ons/plugins/geolocation
 [Apache httpd]: https://httpd.apache.org
 [Archive Folder Document]: https://github.com/Daniel-KM/ArchiveFolderDocument

@@ -93,6 +93,37 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             'value' => '|',
         ));
 
+        if (plugin_is_active('OcrElementSet')) {
+            $this->addElement('checkbox', 'fill_ocr_text', array(
+                'label' => __('Fill OCR text'),
+                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : text" too.'),
+                'value' => true,
+            ));
+            $this->addElement('checkbox', 'fill_ocr_data', array(
+                'label' => __('Fill OCR Data'),
+                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : data" too.')
+                    . ' ' . __('This field is needed only if it is reused somewhere else (highlight, correction, search...).')
+                    . ' ' . __('Warning: Data can be heavy and they are duplicated by default in the search table of the base.'),
+                'value' => true,
+            ));
+            $this->addElement('checkbox', 'fill_ocr_process', array(
+                'label' => __('Fill processing data for OCR'),
+                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Process" too.'),
+                'value' => false,
+            ));
+        }
+        else {
+            $this->addElement('hidden', 'fill_ocr_text', array(
+                'value' => false,
+            ));
+            $this->addElement('hidden', 'fill_ocr_data', array(
+                'value' => false,
+            ));
+            $this->addElement('hidden', 'fill_ocr_process', array(
+                'value' => false,
+            ));
+        }
+
         // Only the "short_name" format of identifier allows to do update,
         // because it's stable and doesn't depend on position in the list of
         // files, it manages files and files defined by metadata files, and it's
@@ -238,6 +269,9 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'records_for_files',
                 'exclude_extensions',
                 'element_delimiter',
+                'fill_ocr_text',
+                'fill_ocr_data',
+                'fill_ocr_process',
                 'oai_identifier_format',
                 'item_type_id',
             ),
