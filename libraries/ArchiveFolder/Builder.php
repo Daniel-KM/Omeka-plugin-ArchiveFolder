@@ -1409,7 +1409,7 @@ class ArchiveFolder_Builder
         if ($scheme == 'file' || $uri[0] == '/') {
             // Check the security setting.
             $settings = Zend_Registry::get('archive_folder');
-            if ($settings->local_folders->allow !== '1') {
+            if ($settings->local_folders->allow != '1') {
                 return __('Local paths are not allowed by the administrator.');
             }
 
@@ -1421,10 +1421,12 @@ class ArchiveFolder_Builder
             }
 
             // Check the uri.
-            if (strpos(realpath($uri), $realpath) !== 0
-                    || !in_array(substr($uri, strlen($realpath), 1), array('', '/'))
-                ) {
-                return __('The uri "%s" is not allowed.', $uri);
+            if ($settings->local_folders->check_realpath == '1') {
+                if (strpos(realpath($uri), $realpath) !== 0
+                        || !in_array(substr($uri, strlen($realpath), 1), array('', '/'))
+                    ) {
+                    return __('The uri "%s" is not allowed.', $uri);
+                }
             }
 
             // The uri is allowed.

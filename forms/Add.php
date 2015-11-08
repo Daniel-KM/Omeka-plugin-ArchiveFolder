@@ -26,7 +26,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         );
         $defaultUpdateFiles = 'full';
 
-        $allowLocalPaths = Zend_Registry::get('archive_folder')->local_folders->allow === '1';
+        $allowLocalPaths = Zend_Registry::get('archive_folder')->local_folders->allow == '1';
 
         $this->setAttrib('id', 'archive-folder');
         $this->setMethod('post');
