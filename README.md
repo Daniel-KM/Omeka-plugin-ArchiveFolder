@@ -115,17 +115,17 @@ as an item with multiple files.
 
 ```
     My Nested Folder
-    ├── Item_1
-    │   ├── Item_2
-    │   │   ├── my_image_1.jpg
-    │   │   └── my_image_2.jpg
-    │   ├── my_image_1.jpg
-    │   └── my_image_2.jpg
-    ├── Item_3
-    │   ├── my_image_3.jpg
-    │   └── my_image_4.jpg
-    ├── my_image_5.jpg
-    └── my_image_6.jpg
+    ├──┬─ Item_1
+    │  ├───┬─ Item_2
+    │  │   ├──── my_image_1.jpg
+    │  │   └──── my_image_2.jpg
+    │  ├──── my_image_1.jpg
+    │  └──── my_image_2.jpg
+    ├──┬─ Item_3
+    │  ├──── my_image_3.jpg
+    │  └──── my_image_4.jpg
+    ├──── my_image_5.jpg
+    └──── my_image_6.jpg
 ```
 
 ### Metadata ingest
@@ -139,19 +139,19 @@ specificities of Omeka. Other ones can be easily added via a simple class.
 
 ```
     My Digitized Books
-    ├── Book_1.xml
-    ├── External.metadata.txt
-    ├── Book 1
-    │   ├── Page_1.tiff
-    │   ├── Page_2.tiff
-    │   ├── Page_3.tiff
-    │   └── Page_4.tiff
-    └── Book 2
-        ├── Book_2.metadata.txt
-        ├── Page_1.tiff
-        ├── Page_2.tiff
-        ├── Page_3.tiff
-        └── Page_4.tiff
+    ├──── Book_1.xml
+    ├──── External.metadata.txt
+    ├──┬─ Book 1
+    │  ├──── Page_1.tiff
+    │  ├──── Page_2.tiff
+    │  ├──── Page_3.tiff
+    │  └──── Page_4.tiff
+    └──┬─ Book 2
+       ├──── Book_2.metadata.txt
+       ├──── Page_1.tiff
+       ├──── Page_2.tiff
+       ├──── Page_3.tiff
+       └──── Page_4.tiff
 ```
 
 Notes for metadata files:
@@ -162,6 +162,44 @@ Notes for metadata files:
 referenced files urls are absolute or relative to it.
 
 See below for more details on metadata files.
+
+### Standard digitized books and serials (Mets / Alto)
+
+Books and serials are often digitized with an undesctructive compression via the
+format [Jpeg 2000], the metadata are saved in [Mets] and the content texts (OCR)
+are saved in [Alto]. All of them can be imported automagically.
+
+```
+    My Digitized Books
+    ├──┬─ Book_1
+    │  ├───── Book_1.mets.xml
+    │  ├───┬─ master
+    │  │   ├──── Book_1_001.jp2
+    │  │   ├──── Book_1_002.jp2
+    │  │   ├──── Book_1_003.jp2
+    │  │   └──── Book_1_004.jp2
+    │  └───┬─ ocr
+    │      ├──── Book_1_001.alto.xml
+    │      ├──── Book_1_002.alto.xml
+    │      ├──── Book_1_003.alto.xml
+    │      └──── Book_1_004.alto.xml
+    ├──┬─ Book_2
+    │  ├───── Book_2.mets.xml
+    │  ├───┬─ master
+    │  │   ├──── Book_2_001.jp2
+
+```
+
+The xml Mets file contains path to each subordinate file (master, ocr, etc.), so
+the structure may be different.
+
+The plugin [OcrElementSet] should be installed to import ocr data, if any.
+
+If there are other files in folders, for example old xml [refNum] or any other
+old texts files that may have been used previously for example for a conversion
+from refNum to Mets via the tool [refNum2Mets], they need to be skipped via
+the option "Unreferenced files" and/or the option "File extensions to exclude",
+with "refnum.xml ods txt" for example.
 
 
 Installation
@@ -681,6 +719,9 @@ Copyright
 [OcrElementSet]: https://github.com/Daniel-KM/OcrElementSet
 [Geolocation]: https://omeka.org/add-ons/plugins/geolocation
 [Apache httpd]: https://httpd.apache.org
+[Jpeg 2000]: http://www.jpeg.org/jpeg2000
+[refNum]: http://bibnum.bnf.fr/refNum
+[refNum2Mets]: https://github.com/Daniel-KM/refNum2Mets
 [Archive Folder Document]: https://github.com/Daniel-KM/ArchiveFolderDocument
 [OAI-PMH Repository]: https://omeka.org/add-ons/plugins/oai-pmh-repository
 [plugin issues]: https://github.com/Daniel-KM/ArchiveFolder/issues
