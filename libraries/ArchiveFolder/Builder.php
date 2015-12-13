@@ -890,6 +890,7 @@ class ArchiveFolder_Builder
     {
         return;
 
+        $writer = $this->_writer;
         $writer->startElement('oai:about');
         $writer->startElement('oai:provenance');
         $writer->writeAttribute('xmlns', 'http://www.openarchives.org/OAI/2.0/provenance');

@@ -67,10 +67,10 @@
         </div>
         <div class="inputs five columns omega">
             <div class="input-block">
+                <ul style="list-style-type: none;">
                 <?php
                     $currentRoles = unserialize(get_option('archive_folder_allow_roles')) ?: array();
                     $userRoles = get_user_roles();
-                    echo '<ul>';
                     foreach ($userRoles as $role => $label) {
                         echo '<li>';
                         echo $this->formCheckbox('archive_folder_allow_roles[]', $role,
@@ -78,8 +78,8 @@
                         echo $label;
                         echo '</li>';
                     }
-                    echo '</ul>';
                 ?>
+                </ul>
             </div>
         </div>
     </div>

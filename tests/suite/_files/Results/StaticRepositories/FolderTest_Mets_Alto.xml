@@ -16,8 +16,8 @@
       <oai:metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</oai:metadataNamespace>
     </oai:metadataFormat>
     <oai:metadataFormat>
-      <oai:metadataPrefix>oai_dcq</oai:metadataPrefix>
-      <oai:schema>http://localhost</oai:schema>
+      <oai:metadataPrefix>oai_dcterms</oai:metadataPrefix>
+      <oai:schema>http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd</oai:schema>
       <oai:metadataNamespace>urn:dc:qdc:container</oai:metadataNamespace>
     </oai:metadataFormat>
     <oai:metadataFormat>
@@ -27,7 +27,7 @@
     </oai:metadataFormat>
     <oai:metadataFormat>
       <oai:metadataPrefix>doc</oai:metadataPrefix>
-      <oai:schema>http://localhost</oai:schema>
+      <oai:schema>http://localhost/documents.xsd</oai:schema>
       <oai:metadataNamespace>http://localhost/documents/</oai:metadataNamespace>
     </oai:metadataFormat>
   </ListMetadataFormats>

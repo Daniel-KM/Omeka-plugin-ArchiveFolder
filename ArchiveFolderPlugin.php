@@ -151,7 +151,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
             if (in_array($optionKey, array(
                     'archive_folder_allow_roles',
                 ))) {
-               $post[$optionKey] = serialize($post[$optionKey]) ?: serialize(array());
+                $post[$optionKey] = serialize($post[$optionKey]) ?: serialize(array());
             }
             if (isset($post[$optionKey])) {
                 set_option($optionKey, $post[$optionKey]);

@@ -41,7 +41,7 @@ echo head(array(
         </div>
         <?php echo common('quick-filters'); ?>
         <div class="pagination"><?php echo $paginationLinks = pagination_links(); ?></div>
-        <table id="archive-folders" cellspacing="0" cellpadding="0">
+        <table id="archive-folders">
             <thead>
                 <tr>
                     <?php if (is_allowed('ArchiveFolder_Index', 'edit')): ?>
@@ -76,7 +76,9 @@ echo head(array(
                             </div>
                         <?php else: ?>
                             <ul class="action-links group">
-                                <a href="<?php echo ADMIN_BASE_URL; ?>" id="archive-folder-<?php echo $folder->id; ?>" class="archive-folder-details"><?php echo __('Last Messages'); ?></a>
+                                <li>
+	                            <a href="<?php echo ADMIN_BASE_URL; ?>" id="archive-folder-<?php echo $folder->id; ?>" class="archive-folder-details"><?php echo __('Last Messages'); ?></a>
+                                </li>
                             </ul>
                             <div class="details" style="display: none;">
                                 <?php  echo nl2br(str_replace(']', "]\n", substr($folder->messages, -400))); ?>

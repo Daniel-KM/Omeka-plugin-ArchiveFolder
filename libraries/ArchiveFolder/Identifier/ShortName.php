@@ -20,7 +20,7 @@ class ArchiveFolder_Identifier_ShortName extends ArchiveFolder_Identifier_Abstra
         foreach ($data as $resource) {
             $record = reset($resource);
             if (!isset($record['name'])) {
-                throw ArchiveFolder_BuilderException(__('A name is missing for record %s.', key($data[0])));
+                throw new ArchiveFolder_BuilderException(__('A name is missing for record %s.', key($data[0])));
             }
 
             $list[] = $record['name'];
