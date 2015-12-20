@@ -18,6 +18,11 @@
     <oai:metadataFormat>
       <oai:metadataPrefix>oai_dcterms</oai:metadataPrefix>
       <oai:schema>http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd</oai:schema>
+      <oai:metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dcterms/</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>oai_dcq</oai:metadataPrefix>
+      <oai:schema>http://localhost</oai:schema>
       <oai:metadataNamespace>urn:dc:qdc:container</oai:metadataNamespace>
     </oai:metadataFormat>
     <oai:metadataFormat>
@@ -34,8 +39,8 @@
   <ListRecords metadataPrefix="oai_dc">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2qzpriulbo53aop0nm23pt52g</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -51,8 +56,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:9xhpx1z4uhrpvtnzubgm5zdk7</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:8vy8wea1a2loiqk4kmmozcdrc</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -64,8 +69,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:9hdqi7mci0m4g8l8c28hybz69</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:68aw1vkap78svl3wo1pvw8uti</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -77,8 +82,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:0xaqaq8n3txi640tch2r3ud73</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:admpee39kg3zg08fbja6ojkg5</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -90,8 +95,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:87c3p0dim7f4tiv54rmkufoc6</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:0zim99nnqvbq25faasj29cdfv</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -102,11 +107,78 @@
 </oai:metadata>
     </oai:record>
   </ListRecords>
+  <ListRecords metadataPrefix="oai_dcterms">
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2qzpriulbo53aop0nm23pt52g</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Image #2 of Subdir B-B Alto</dc:title>
+  <dc:description>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</dc:description>
+  <dc:identifier>http://www.example.com/repository/Folder_Test_Mets_Alto/my_obj_id_1</dc:identifier>
+  <dcterms:requires>http://www.example.com/repository/Folder_Test_Mets_Alto/master/image_Subdir_B-B_1.png</dcterms:requires>
+  <dcterms:requires>http://www.example.com/repository/Folder_Test_Mets_Alto/master/image_Subdir_B-B_2.png</dcterms:requires>
+  <dcterms:requires>http://www.example.com/repository/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_1.alto.xml</dcterms:requires>
+  <dcterms:requires>http://www.example.com/repository/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_2.alto.xml</dcterms:requires>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:8vy8wea1a2loiqk4kmmozcdrc</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Image #1 of Subdir B-B Alto</dc:title>
+  <dc:description>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</dc:description>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:68aw1vkap78svl3wo1pvw8uti</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Image #2 of Subdir B-B Alto</dc:title>
+  <dc:description>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</dc:description>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:admpee39kg3zg08fbja6ojkg5</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Image #1 of Subdir B-B Alto</dc:title>
+  <dc:description>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</dc:description>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:0zim99nnqvbq25faasj29cdfv</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Image #2 of Subdir B-B Alto</dc:title>
+  <dc:description>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</dc:description>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+  </ListRecords>
   <ListRecords metadataPrefix="oai_dcq">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2qzpriulbo53aop0nm23pt52g</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -122,8 +194,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:9xhpx1z4uhrpvtnzubgm5zdk7</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:8vy8wea1a2loiqk4kmmozcdrc</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -134,8 +206,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:9hdqi7mci0m4g8l8c28hybz69</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:68aw1vkap78svl3wo1pvw8uti</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -146,8 +218,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:0xaqaq8n3txi640tch2r3ud73</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:admpee39kg3zg08fbja6ojkg5</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -158,8 +230,8 @@
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:87c3p0dim7f4tiv54rmkufoc6</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:0zim99nnqvbq25faasj29cdfv</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -172,8 +244,8 @@
   <ListRecords metadataPrefix="mets">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2qzpriulbo53aop0nm23pt52g</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:premis="info:lc/xmlns/premis-v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:niso="http://www.niso.org/Z39-87-2006.pdf" xmlns:textmd="info:lc/xmlns/textMD-v3" OBJID="my_obj_id_1" LABEL="Test of Mets via Archive Folder" TYPE="Text">
@@ -261,11 +333,11 @@
   <ListRecords metadataPrefix="doc">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2ctu4rxkcijp6s6ezsrm3ax04</oai:identifier>
-        <oai:datestamp>2015-09-16</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Mets_Alto:2qzpriulbo53aop0nm23pt52g</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
-<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
+<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost/documents.xsd">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Image #2 of Subdir B-B Alto</data>

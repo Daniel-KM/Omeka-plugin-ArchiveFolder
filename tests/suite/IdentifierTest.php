@@ -31,11 +31,11 @@ class ArchiveFolder_IdentifierTest extends ArchiveFolder_Test_AppTestCase
         );
 
         $expecteds = array(
-            'short_name' => array(':a85lrkuyv4icmhbmni53h8qfs', ':4nis6eyfqeco5pzqisj5ngx82'),
+            'short_name' => array(':9gsktam27m2b6qc3f0qvct663', ':9w2ruxi1q72ussj1rd4ljt8gj'),
             'position_folder' => array(':5', ':10:20'),
             'position' => array(':1', ':2'),
-            'hash_md5' => array('118aeb43a76f4178e7de9ab46f12ee4b', 'c13d4094cd91bc63758bb2a643afaca5'),
-            'hash_sha1' => array('e72ac88f201566e19109f35c6dd086365bc634b9', '38ef282a04cf110fa74709da632e8a740f1ade91'),
+            'hash_md5' => array('8b635db74f5b38930bcaf7c882623afb', '0ae250b2f914d555b897defc64f37a0c'),
+            'hash_sha1' => array('2347cf2fcb31e6382318a3fdd7c69c97a98d2ac1', '236acf22539b7ec3c65fdf78372686c48ce868dd'),
         );
 
         foreach ($this->_identifiers as $prefix => $identifier) {

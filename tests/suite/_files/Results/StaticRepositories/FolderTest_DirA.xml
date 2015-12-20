@@ -18,6 +18,11 @@
     <oai:metadataFormat>
       <oai:metadataPrefix>oai_dcterms</oai:metadataPrefix>
       <oai:schema>http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd</oai:schema>
+      <oai:metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dcterms/</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>oai_dcq</oai:metadataPrefix>
+      <oai:schema>http://localhost</oai:schema>
       <oai:metadataNamespace>urn:dc:qdc:container</oai:metadataNamespace>
     </oai:metadataFormat>
     <oai:metadataFormat>
@@ -34,8 +39,8 @@
   <ListRecords metadataPrefix="oai_dc">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:e2yh0tqbnxeqkfq3xr2hmumww</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -56,8 +61,8 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:6jlzmjf0e41mmvp964wf6mxi2</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -67,11 +72,47 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
 </oai:metadata>
     </oai:record>
   </ListRecords>
+  <ListRecords metadataPrefix="oai_dcterms">
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Dir_A:e2yh0tqbnxeqkfq3xr2hmumww</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Title of the document of the Directory A (from "Directory_A.metadata.txt")</dc:title>
+  <dc:creator>John Smith</dc:creator>
+  <dc:creator>Mary Smith</dc:creator>
+  <dc:description>This is the Dublin Core Description of this document.
+This is the second line of the description, after a line break.
+
+   This is the fourth line, after an empty paragraph.
+The spaces at the start of the fourth line, after the first two, are not trimmed, because they are inside the description and belongs to it.</dc:description>
+  <dc:date>2015</dc:date>
+  <dc:identifier>http://www.example.com/repository/Dir_A/Directory_A.metadata.txt</dc:identifier>
+  <dc:identifier>http://www.example.com/repository/Dir_A/image_Dir_A_1.png</dc:identifier>
+  <dc:identifier>http://www.example.com/repository/Dir_A/image_Dir_A_2.png</dc:identifier>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Dir_A:6jlzmjf0e41mmvp964wf6mxi2</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Second document of "Directory_A.metadata.txt", without attached file</dc:title>
+  <dc:identifier>http://www.example.com/repository/Dir_A/Document%202</dc:identifier>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+  </ListRecords>
   <ListRecords metadataPrefix="oai_dcq">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:e2yh0tqbnxeqkfq3xr2hmumww</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -92,8 +133,8 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:6jlzmjf0e41mmvp964wf6mxi2</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -106,12 +147,12 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   <ListRecords metadataPrefix="mets">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:e2yh0tqbnxeqkfq3xr2hmumww</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
+  <metsHdr CREATEDATE="2015-01-01T09:14:04Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -154,12 +195,12 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:6jlzmjf0e41mmvp964wf6mxi2</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
+  <metsHdr CREATEDATE="2015-01-01T09:14:04Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -186,11 +227,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   <ListRecords metadataPrefix="doc">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:7b3fdnzo5kyhdrxaqmtkrsog6</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:e2yh0tqbnxeqkfq3xr2hmumww</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
-<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
+<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost/documents.xsd">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Title of the document of the Directory A (from "Directory_A.metadata.txt")</data>
@@ -218,11 +259,11 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     </oai:record>
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Dir_A:egakrwrwufglxp3ftyhq613rc</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Dir_A:6jlzmjf0e41mmvp964wf6mxi2</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
-<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
+<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost/documents.xsd">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Second document of "Directory_A.metadata.txt", without attached file</data>

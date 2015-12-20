@@ -18,6 +18,11 @@
     <oai:metadataFormat>
       <oai:metadataPrefix>oai_dcterms</oai:metadataPrefix>
       <oai:schema>http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd</oai:schema>
+      <oai:metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dcterms/</oai:metadataNamespace>
+    </oai:metadataFormat>
+    <oai:metadataFormat>
+      <oai:metadataPrefix>oai_dcq</oai:metadataPrefix>
+      <oai:schema>http://localhost</oai:schema>
       <oai:metadataNamespace>urn:dc:qdc:container</oai:metadataNamespace>
     </oai:metadataFormat>
     <oai:metadataFormat>
@@ -34,8 +39,8 @@
   <ListRecords metadataPrefix="oai_dc">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:9yomfsftsos9ux9o9zr7foud8</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:ezkh3i5zf9p9ph31uz6mml9jh</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -49,11 +54,29 @@
 </oai:metadata>
     </oai:record>
   </ListRecords>
+  <ListRecords metadataPrefix="oai_dcterms">
+    <oai:record>
+      <oai:header>
+        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:ezkh3i5zf9p9ph31uz6mml9jh</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+<oai_dcterms:dcterms xmlns:oai_dcterms="http://www.openarchives.org/OAI/2.0/oai_dcterms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dcterms/ http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd">
+  <dc:title>Title of a document with non-latin characters (from "Non-Latin - Local.metadata.txt")</dc:title>
+  <dc:creator>Anonymous</dc:creator>
+  <dc:description>This filename contains spaces and non-alphanumeric and non-recommended characters, and can be ingested via local path only.</dc:description>
+  <dc:date>2015</dc:date>
+  <dc:identifier>http://www.example.com/repository/Folder_Test_Characters_Local/Non-Latin%20-%20Local.metadata.txt</dc:identifier>
+  <dc:identifier>http://www.example.com/repository/Folder_Test_Characters_Local/With%20non-latin/Caf%C3%A9%20%231%20%282%E2%82%AC%29.png</dc:identifier>
+</oai_dcterms:dcterms>
+</oai:metadata>
+    </oai:record>
+  </ListRecords>
   <ListRecords metadataPrefix="oai_dcq">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:9yomfsftsos9ux9o9zr7foud8</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:ezkh3i5zf9p9ph31uz6mml9jh</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <oai_dcq:dcterms xmlns:oai_dcq="urn:dc:qdc:container" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:dc:qdc:container http://localhost">
@@ -70,12 +93,12 @@
   <ListRecords metadataPrefix="mets">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:9yomfsftsos9ux9o9zr7foud8</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:ezkh3i5zf9p9ph31uz6mml9jh</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <metsHdr CREATEDATE="2015-09-15T04:04:01Z">
+  <metsHdr CREATEDATE="2015-01-01T09:14:05Z">
     <agent ROLE="CREATOR">
       <name>foobar@example.com</name>
       <note>Archive Folder for Omeka</note>
@@ -111,11 +134,11 @@
   <ListRecords metadataPrefix="doc">
     <oai:record>
       <oai:header>
-        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:9yomfsftsos9ux9o9zr7foud8</oai:identifier>
-        <oai:datestamp>2015-09-15</oai:datestamp>
+        <oai:identifier>oai:www.example.com:Folder_Test_Characters_Local:ezkh3i5zf9p9ph31uz6mml9jh</oai:identifier>
+        <oai:datestamp>2015-01-01</oai:datestamp>
       </oai:header>
       <oai:metadata>
-<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost">
+<record xmlns="http://localhost/documents/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/documents/ http://localhost/documents.xsd">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Title of a document with non-latin characters (from "Non-Latin - Local.metadata.txt")</data>

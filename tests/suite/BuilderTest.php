@@ -32,7 +32,7 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
             $parameters['repository_name']);
         $this->assertEquals(
             array(
-                'oai_dc', 'oai_dcq', 'mets', 'doc',
+                'oai_dc', 'oai_dcterms', 'oai_dcq', 'mets', 'doc',
             ),
             $parameters['metadata_formats']);
         $this->assertEquals('Folder_Test', $parameters['repository_identifier']);
