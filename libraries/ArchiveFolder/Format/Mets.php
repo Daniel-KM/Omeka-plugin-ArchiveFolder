@@ -22,7 +22,7 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
     protected $_metadataNamespace = self::METADATA_NAMESPACE;
 
     protected $_parametersFormat = array(
-        'use_qdc' => false,
+        'use_dcterms' => false,
         'link_to_files' => false,
         'support_separated_files' => false,
         'compare_directly' => false,
@@ -50,8 +50,8 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
 
         // Mets can use simple or qualified Dublin Core, so prepare it if
         // needed.
-        if (!empty($this->_getParameter('use_qdc'))) {
-            $this->_parametersFormat['use_qdc'] = true;
+        if (!empty($this->_getParameter('use_dcterms'))) {
+            $this->_parametersFormat['use_dcterms'] = true;
             $this->_loadDcmiElements();
         }
     }
@@ -193,7 +193,7 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
         // Fill the oai record with Dublin Core metadata.
         $writer->startElement('xmlData');
         $writer->writeAttribute('xmlns:dc', self::DUBLIN_CORE_NAMESPACE);
-        if (!empty($this->_parametersFormat['use_qdc'])) {
+        if (!empty($this->_parametersFormat['use_dcterms'])) {
             $writer->writeAttribute('xmlns:dcterms', self::DCTERMS_NAMESPACE);
         }
 

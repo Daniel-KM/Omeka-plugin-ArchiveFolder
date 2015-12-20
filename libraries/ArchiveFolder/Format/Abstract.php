@@ -41,7 +41,7 @@ abstract class ArchiveFolder_Format_Abstract
 
     // Parameters that depends on the format.
     protected $_parametersFormat = array(
-        'use_qdc' => false,
+        'use_dcterms' => false,
         'link_to_files' => false,
         'support_separated_files' => false,
         'compare_directly' => true,
@@ -96,7 +96,7 @@ abstract class ArchiveFolder_Format_Abstract
         require PLUGIN_DIR
             . DIRECTORY_SEPARATOR . 'ArchiveFolderDocument'
             . DIRECTORY_SEPARATOR . 'libraries'
-            . DIRECTORY_SEPARATOR . 'elements_qdc.php';
+            . DIRECTORY_SEPARATOR . 'elements_dcterms.php';
         foreach ($elements as $element) {
             $this->_dcmiTerms[$element['name']] = $element['label'];
         }
@@ -268,7 +268,7 @@ abstract class ArchiveFolder_Format_Abstract
             // Add metadata is different when item and files are separated.
             $recordsForFiles = (boolean) $this->_getParameter('records_for_files');
             if ($recordsForFiles) {
-                $fileLink = $this->_parametersFormat['use_qdc'] ? 'Requires' : 'Relation';
+                $fileLink = $this->_parametersFormat['use_dcterms'] ? 'Requires' : 'Relation';
             }
             else {
                 $fileLink = 'Identifier';
@@ -299,7 +299,7 @@ abstract class ArchiveFolder_Format_Abstract
 
         $metadata = isset($file['metadata']) ? $file['metadata'] : array();
 
-        $fileLink = $this->_parametersFormat['use_qdc'] ? 'isRequiredBy' : 'Relation';
+        $fileLink = $this->_parametersFormat['use_dcterms'] ? 'isRequiredBy' : 'Relation';
         $url = $this->_managePaths->getAbsoluteUrl($doc['name']);
         if (empty($metadata['Dublin Core'][$fileLink])
                 || !in_array($url, $metadata['Dublin Core'][$fileLink])
@@ -333,14 +333,14 @@ abstract class ArchiveFolder_Format_Abstract
     protected function _fillDublinCore($metadata)
     {
         // Simple Dublin Core.
-        if (empty($this->_parametersFormat['use_qdc'])) {
+        if (empty($this->_parametersFormat['use_dcterms'])) {
             return $this->_fillMetadataSet($metadata, $this->_dcTerms, 'Dublin Core', 'dc');
         }
 
         // Qualified Dublin Core.
         foreach ($this->_dcmiTerms as $name => $term) {
             if (isset($metadata['Dublin Core'][$term])) {
-                if ($this->_parametersFormat['use_qdc']) {
+                if ($this->_parametersFormat['use_dcterms']) {
                     $prefixFormat = isset($this->_dcTerms[$name]) ? 'dc' : 'dcterms';
                 }
                 $elementName = $prefixFormat . ':' . $name;

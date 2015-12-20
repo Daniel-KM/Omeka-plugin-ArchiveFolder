@@ -19,7 +19,7 @@ class ArchiveFolder_Format_OaiDc extends ArchiveFolder_Format_Abstract
 
     protected $_parametersFormat = array(
         'link_to_files' => true,
-        'use_qdc' => false,
+        'use_dcterms' => false,
         'support_separated_files' => true,
         'compare_directly' => true,
     );

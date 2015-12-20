@@ -112,7 +112,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             'repository_name',
             'admin_emails',
             'metadata_formats',
-            'use_qdc',
+            'use_dcterms',
 
             'repository_remote',
             'repository_domain',

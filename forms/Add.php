@@ -180,8 +180,8 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             'value' => array('oai_dc', 'doc'),
         ));
 
-        $this->addElement('checkbox', 'use_qdc', array(
-            'label' => __('Use Qualified Dublin Core if possible'),
+        $this->addElement('checkbox', 'use_dcterms', array(
+            'label' => __('Use Dublin Core Terms when possible'),
             'description' => __('For formats like "Mets", if files metadata are filled, the process can use "Relation" or "Requires" / "Is Required By" to identify the relation between each item and associated files.'),
             'value' => true,
         ));
@@ -293,7 +293,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'repository_name',
                 'admin_emails',
                 'metadata_formats',
-                'use_qdc'
+                'use_dcterms'
             ),
             'archive_folder_repository',
             array(

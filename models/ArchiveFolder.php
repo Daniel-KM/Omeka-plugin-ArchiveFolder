@@ -281,7 +281,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
             'repository_name' => '[' . $this->uri . ']',
             'admin_emails' => get_option('administrator_email'),
             'metadata_formats' => array_keys(apply_filters('archive_folder_formats', array())),
-            'use_qdc' => true,
+            'use_dcterms' => true,
 
             'repository_remote' => false,
             'repository_scheme' => '',
@@ -382,7 +382,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
             array_unshift($parameters['metadata_formats'], 'oai_dc');
         }
 
-        $parameters['use_qdc'] = (boolean) $parameters['use_qdc'];
+        $parameters['use_dcterms'] = (boolean) $parameters['use_dcterms'];
 
         $parameters['records_for_files'] = (boolean) $parameters['records_for_files'];
 

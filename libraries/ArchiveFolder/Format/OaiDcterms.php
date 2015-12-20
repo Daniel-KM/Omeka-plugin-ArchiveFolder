@@ -1,14 +1,14 @@
 <?php
 /**
- * Metadata format map for the oai_dcq Qualified Dublin Core format.
+ * Metadata format map for the oai_dcterms Dublin Core Terms format.
  *
  * @package ArchiveFolder
  */
-class ArchiveFolder_Format_OaiDcq extends ArchiveFolder_Format_Abstract
+class ArchiveFolder_Format_OaiDcterms extends ArchiveFolder_Format_Abstract
 {
-    const METADATA_PREFIX = 'oai_dcq';
-    const METADATA_SCHEMA = 'http://localhost';
-    const METADATA_NAMESPACE = 'urn:dc:qdc:container';
+    const METADATA_PREFIX = 'oai_dcterms';
+    const METADATA_SCHEMA = 'http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd';
+    const METADATA_NAMESPACE = 'http://www.openarchives.org/OAI/2.0/oai_dcterms/';
 
     // Namespaces for simple and qualified Dublin Core.
     const DUBLIN_CORE_NAMESPACE = 'http://purl.org/dc/elements/1.1/';
@@ -44,8 +44,8 @@ class ArchiveFolder_Format_OaiDcq extends ArchiveFolder_Format_Abstract
         }
 
         // Prepare the oai record.
-        $writer->startElement('oai_dcq:dcterms');
-        $writer->writeAttribute('xmlns:oai_dcq', self::METADATA_NAMESPACE);
+        $writer->startElement('oai_dcterms:dcterms');
+        $writer->writeAttribute('xmlns:oai_dcterms', self::METADATA_NAMESPACE);
         $writer->writeAttribute('xmlns:dc', self::DUBLIN_CORE_NAMESPACE);
         $writer->writeAttribute('xmlns:dcterms', self::DCTERMS_NAMESPACE);
         $writer->writeAttribute('xmlns:' . self::XSI_PREFIX, self::XSI_NAMESPACE);

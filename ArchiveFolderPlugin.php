@@ -356,10 +356,15 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
             'class' => 'ArchiveFolder_Format_OaiDc',
             'description' => __('Dublin Core'),
         );
+        $archiveFolderFormats['oai_dcterms'] = array(
+            'prefix' => 'oai_dcterms',
+            'class' => 'ArchiveFolder_Format_OaiDcterms',
+            'description' => __('Dublin Core Terms'),
+        );
         $archiveFolderFormats['oai_dcq'] = array(
             'prefix' => 'oai_dcq',
             'class' => 'ArchiveFolder_Format_OaiDcq',
-            'description' => __('Qualified Dublin Core'),
+            'description' => __('Qualified Dublin Core (deprecated)'),
         );
         $archiveFolderFormats['mets'] = array(
             'prefix' => 'mets',
