@@ -17,6 +17,6 @@ class ArchiveFolder_Identifier_HashMd5 extends ArchiveFolder_Identifier_Abstract
      */
     protected function _create($data)
     {
-        return md5(json_encode($data));
+        return md5($this->_getParameter('repository_identifier') . ':' . $this->_number . ':' . json_encode($data));
     }
 }

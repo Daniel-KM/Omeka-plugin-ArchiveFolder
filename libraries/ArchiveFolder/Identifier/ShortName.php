@@ -42,7 +42,7 @@ class ArchiveFolder_Identifier_ShortName extends ArchiveFolder_Identifier_Abstra
      */
     protected function _shortMd5($string)
     {
-        $string = md5($string);
+        $string = md5($this->_getParameter('repository_identifier') . ':' . $this->_number . ':' . $string);
         $string = strtolower($string);
         $fromBase = '0123456789abcdef';
         // The oai identifier should be case insensitive and universal.

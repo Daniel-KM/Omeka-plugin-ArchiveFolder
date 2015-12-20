@@ -17,6 +17,6 @@ class ArchiveFolder_Identifier_HashSha1 extends ArchiveFolder_Identifier_Abstrac
      */
     protected function _create($data)
     {
-        return sha1(json_encode($data));
+        return sha1($this->_getParameter('repository_identifier') . ':' . $this->_number . ':' . json_encode($data));
     }
 }
