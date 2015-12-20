@@ -55,6 +55,7 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
             $settings = (object) array(
                 'local_folders' => (object) array(
                     'allow' => '1',
+                    'check_realpath' => '0',
                     'base_path' => TEST_FILES_DIR,
                 ),
             );
@@ -65,6 +66,7 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
             $settings = (object) array(
                 'local_folders' => (object) array(
                     'allow' => '0',
+                    'check_realpath' => '0',
                     'base_path' => '/var/path/to/the/folder',
                 ),
             );
