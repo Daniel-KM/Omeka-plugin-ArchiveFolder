@@ -5,17 +5,6 @@ Archive Folder (plugin for Omeka)
 and/or metadata and to create or update items in Omeka. Files can be local or
 remote.
 
-Instead of using a specific import schema for a specific API, it follows the
-standard [OAI-PMH static repository]. By this way, the folder can be fetched by
-any standard OAI-PMH harvesters, in particular the one available for Omeka,
-[OAI-PMH Harvester], through any standard OAI-PMH gateway, in particular another
-plugin for Omeka, [OAI-PMH Gateway]. In other words, you can self-harvest, or
-ingest, your own directories, files and metadata via a standard process.
-
-Concretely, just install these three plugins, set a local folder or a remote
-one with files and/or metadata, then they will be harvested automatically and
-available directly in Omeka (see the included example below).
-
 In the true world, this tool is designed for people and institutions who store
 folders of files somewhere on hard drives or servers, who manage them with a
 simple file manager and with some metadata in various files (text, spreadsheet,
@@ -31,12 +20,13 @@ and Omeka elements) and hooks (for special data).
 Examples
 --------
 
+An example is included, but you can build your own before importing true files
+and metadata.
+
 ### Included Example
 
 A sample folder with some metadata is available in "tests/suite/_files/Folder_test".
 To test it, follow these steps:
-- install the fixed and improved [fork] of [OAI-PMH Harvester], [OAI-PMH Gateway]
-and this plugin;
 - if you want to test import of extra data, install [Geolocation] too;
 - if you want to import all metadata that are in examples, allow the formats
 `xml` and `json` and check the default extensions for `ods`, `odt` and `txt` in
@@ -44,31 +34,27 @@ the page `/admin/settings/edit-security`, and the same too for the respective
 media types `application/xml`, `text/xml`, `application/json`, and default
 `application/vnd.oasis.opendocument.spreadsheet`, `application/vnd.oasis.opendocument.text`
 and `text/plain`;
-- copy the folder outside of the Omeka install, somewhere the server can access;
-- click on "Add Folder" in the "Archive Folders" tab;
+- copy the folder outside of the folder where Omeka is installed, somewhere the
+server can access (or in a subdirectory of `files`.
+- click on "Add a new archive folder" in the "Archive Folders" tab;
 - fill the base uri, something like `http://localhost/path/to/the/Folder_Test`;
+- select "One item by repository" (all files in a subfolder belong to one item);
+- select "Dublin Core : Identifier" as Identifier field (this allows update);
 - don't care about other parameters, they will be default;
 - click on the submit button;
 - click on "Check" to check the folder (results are displayed when the page is
 refreshed);
-- if there is no issue, click "Update" to process the folder.
+- if there is no issue, click "Process" to process the folder.
 
-After a few seconds, the static repository will be automatically available via
-the OAI-PMH Gateway, and the harvest will be launched.
+After a few seconds, the items and files will be automatically created.
 
-It can take a few tens of seconds for the harvester to import documents in Omeka,
-according to the server. Furthermore, in order to preserve memory and cpu, the
-harvest process can be done in multiple steps so if the twenty items are not
-loaded in one time, just re-launch the harvester (without updating folder) or
-increase values of parameters of the harvester.
+In order to preserve memory and cpu, the process is done one record by one, via
+a background job. In case of error, the process can be relaunched at the last
+record.
 
 See the notes below for other issues.
 
-You can try the update of this harvest too:
-- replace file "Dir_B/Subdir_B-A/document.xml" and/or "Dir_B/Subdir_B-A/document_external.xml"
-of your copied directory by the matching ones that are prepared in the directory
-"tests/suite/_files/Update_files/";
-- click on "Update" in the "Archive folders" tab.
+Currently, the update process is not available.
 
 ### Simple folder
 
@@ -83,30 +69,10 @@ standard way and makes it available. So, the existing folder of files:
     └── image_n4.jpg
 ```
 
-will be available as a standard OAI-PMH Repository (simplified here):
-
-```xml
-    <Repository>
-      <Identify>
-        <oai:repositoryName>My Folder</oai:repositoryName>
-        <oai:baseURL>http://example.org/gateway/example.org/repository/my_folder.xml</oai:baseURL>
-      </Identify>
-      <ListRecords metadataPrefix="oai_dc">
-        <oai:record>
-          <oai:header>
-            <oai:identifier>oai:example.org:1</oai:identifier>
-          </oai:header>
-          <oai:metadata>
-            <oai_dc:dc>
-              <dc:title>image_n1</dc:title>
-              <dc:identifier>http://exemple.org/repository/My_Folder/image_n1.jpg</dc:identifier>
-            </oai_dc:dc>
-          </oai:metadata>
-        </oai:record>
-    [...]
-      </ListRecords>
-    </Repository>
-```
+will be imported as four items (parameter: "One item by file") or as one item
+with four files (parameter "One item by directory"). The Dublin Core Title,
+Source and Identifier will be automatically set. The identifier is important for
+automatic update of metadata.
 
 ### Nested folders
 
@@ -128,14 +94,17 @@ as an item with multiple files.
     └──── my_image_6.jpg
 ```
 
+Here, there are 4 or 8 items according to the parameter `unreferenced files`.
+
 ### Metadata ingest
 
 The metadata of each item can be imported if they are available in files in a
 supported format. Currently, some formats are implemented: a simple text one
-(as raw text or as OpenDocument Text `odt`), a simple json format, a table one
-(as OpenDocument Spreadsheet `ods`), the [Mets] xml, if the profile is based on
-Dublin Core, and an internal xml one, `Documents`, that allows to manage all
-specificities of Omeka. Other ones can be easily added via a simple class.
+(as raw text or as OpenDocument Text `odt`, for testing purpose), a simple json
+format, a table one (as OpenDocument Spreadsheet `ods`), the [Mets] xml, if the
+profile is based on Dublin Core, and an internal xml one, `Documents`, that
+allows to manage all specificities of Omeka. Other ones can be easily added via
+a simple class, like [Ead] with the plugin [Ead for Omeka].
 
 ```
     My Digitized Books
@@ -156,10 +125,11 @@ specificities of Omeka. Other ones can be easily added via a simple class.
 
 Notes for metadata files:
 
-- A metadata file can contain multiple documents.
+- A metadata file can contain one or multiple documents.
 - Referenced files in metadata files can be external to the original folder.
 - Metadata files can be anywhere in the folder, as long as the paths to the
-referenced files urls are absolute or relative to it.
+referenced files urls are absolute or relative to it and that the server has
+access to it.
 
 See below for more details on metadata files.
 
@@ -205,25 +175,13 @@ with "refnum.xml ods txt" for example.
 Installation
 ------------
 
-Install first the plugins [Archive Folder Document], [OAI-PMH Harvester], and
-['Oai-PMH Gateway]. Even if only the first one is required, the latter are used
-to import data inside the Omeka database.
-
-Note: the official [OAI-PMH Harvester] can only ingest standard metadata
-(elements). If you want to ingest other standards, files and metadata of files,
-extra data, and to manage records, you should use the fixed and improved [fork]
-of it.
-
-The optional plugin [OAI-PMH Repository] can be used to expose data directly
-from Omeka. Note: the official [OAI-PMH Repository] has been completed in an
-[improved fork], in particular with a human interface, and until merge of the
-commits, the latter is recommended.
-
-The plugin [OcrElementSet] can be installed too to import ocr data.
-
-Then uncompress files and rename plugin folder `ArchiveFolder`.
+Uncompress files and rename plugin folder `ArchiveFolder`.
 
 Then install it like any other Omeka plugin and follow the config instructions.
+
+The plugin [OcrElementSet] can be installed to import ocr data (xml Alto).
+The plugin [Ead for Omeka] can be installed to import Ead data.
+The plugin [Dublin Core Extended] can be installed too.
 
 Some points should be checked too.
 
@@ -272,24 +230,30 @@ they should be allowed in the page "/admin/settings/edit-security".
 
 * XSLT processor
 
-The xslt processor of php is a slow xslt 1 one. So it's recommended to use an
-external xslt 2 processor, ten times faster. It's required with stylesheets
-designed for xslt 2.0. The command can be configured in the configuration page
-of the plugin. Use "%1$s", "%2$s", "%3$s", without escape, for the file input,
-the stylesheet, and the output.
+Xslt has two main versions:  xslt 1.0 and xslt 2.0. The first is often installed
+with php via the extension "php-xsl" or the package "php5-xsl", depending on
+your system. It is until ten times slower than xslt 2.0 and sheets are more
+complex to write.
 
-Examples for Debian / Ubuntu / Mint:
+So it's recommended to install an xslt 2 processor, that can process xslt 1.0
+and xslt 2.0 sheets. The command can be configured in the configuration page of
+the plugin. Use "%1$s", "%2$s", "%3$s", without escape, for the file input, the
+stylesheet, and the output.
+
+Examples for Debian 6, 7, 8 / Ubuntu / Mint (with the package "libsaxonb-java"):
 ```
 saxonb-xslt -ext:on -versionmsg:off -s:%1$s -xsl:%2$s -o:%3$s
+```
+
+Examples for Debian 8 / Ubuntu / Mint (with the package "libsaxonhe-java"):
+```
 CLASSPATH=/usr/share/java/Saxon-HE.jar java net.sf.saxon.Transform -ext:on -versionmsg:off -s:%1$s -xsl:%2$s -o:%3$s
 ```
 
-Example for Fedora / RedHat / Centos / Mandriva:
+Example for Fedora / RedHat / Centos / Mandriva / Mageia:
 ```
 saxon -ext:on -versionmsg:off -s:%1$s -xsl:%2$s -o:%3$s
 ```
-
-Note: Only saxon is currently supported.
 
 
 Formats of metadata
@@ -297,41 +261,48 @@ Formats of metadata
 
 ### Common notes
 
-* See examples in the folder "tests/suite/_files" of the plugin.
+* See examples in the folder "tests/suite/_files" of the plugin. Most of the
+examples are formatted with strange keys or values, but this is to test uncommon
+metadata. Of course, normal metadata files are simpler and more coherent.
+Furthermore, some have missing metadata that are completed by another file for
+testing purpose too.
 
-* `Dublin Core` (simple or qualified if wanted) is the default element set. The
-element `Title` corresponds to `Dublin Core : Title`.
+* Keys are case sensitive, except for specific fields ("record type"... and
+Dublin Core elements without the element set.
 
-* If the element set name is not set, the check is case insensitive; `title`
-will be imported as `Dublin Core : Title`. Else, the check is case sensitive:
-`Dublin Core : title` will not be identified.
+* `Dublin Core` (simple or qualified if wanted) is the default element set. So
+the element `Title` corresponds to "Dublin Core:Title".
+
+* If the element set name is not set, the check is case insensitive; `Table of contents`
+will be imported as "Dublin Core:Table Of Contents". Else, the check is case
+sensitive: "Dublin Core:Table of contents" won't be identified.
 
 * If the element name contains a `:`, it will be interpreted as a standard
-element, else as an extra data, that will be harvested via format `Documents`
-(see below). Extra data can be the `Item type`, the `collection`, the `tags`,
-`featured`, `public`, etc.
+element, else as an extra data, that may be processed via a hook or by a special
+plugin. Extra data can be the `Item type`, the `collection`, the `tags`,
+`featured`, `public`, or any other values, like for geolocation (see below).
 
-* A static repository does not allow sets, so there will be only one collection
-by folder. Nevertheless, the use of the format of harvesting `Documents` allows
-to ingest records in other collections (see below).
+* If an element doesn't exist in Omeka, for example an element such "Dublin Core:Abstract"
+when [Dublin Core Extended] is not installed, it will processed as extra data,
+so a specific plugin can handle it.
+
+* Some terms are reserved, like `public`, `featured`, `collection`, `tags`, etc.
+They  should not be used for extra data.
 
 * Internal relative paths should be relative to the metadata file where they are
-referenced.
-
-* Xml files can be imgested as this in the static repository, as long as there
-is an associated class, that is needed to convert the metadata to the required
-Dublin Core format.
+referenced, not to the root of the main folder that is imported.
 
 ### Documents XML
 
-This internal and simple format is a pivot format and is designed to be internal
-only, not to be exposed.
+A internal and simple xml format is used as a pivot. It is designed to be used
+internaly only, not to be exposed. Other xml formats should be converted to it
+be imported.
 
 It has only the five tags `record`, `elementSet`, `element`, `extra` and `data`
 under the root tag `documents` allows to import all metadata and specific fields
-of Omeka, so this is the one that is set by default for the harvesting. For
-compatibilty purposes, it supports the tags of the Dublin Core (simple or
-qualified). Standard attributes of the record can be set as extra data.
+of Omeka. For compatibilty purposes, it supports too the tags of the Dublin Core
+(simple or qualified). Standard attributes of the record can be set as extra
+data too.
 
 Here is the structure (see true examples for details):
 
@@ -358,17 +329,85 @@ Here is the structure (see true examples for details):
 </record>
 ```
 
-### Text
+### METS and ALTO XML
 
-The text format for the metadata is a simple tagged file format, very similar to
-`.ini` formats: a metadata is a line that starts with the name of the element
-set (`Dublin Core` by default), followed by a colon `:` and by the name of the
-element (`Title`). The value is separated from the field name with an equal sign
-`=`. If this character is not present, the line is ignored, so it can be a
-comment. If an element has multiple lines, next lines start with two non
-significant spaces. Fields names and values are trimmed. Because values are
-trimmed, an empty line between two fields is not taken into account. Fields are
-repeatable.
+Any METS file can be imported as long as the profile uses Dublin Core metadata.
+Else, the class should be extended.
+
+The associated [Alto] file, an OCR format, can be ingested too as text. The
+plugin [OcrElementSet] should be installed first to create fields for it,
+because texts are saved at file level. Else, a hook can be used to import data
+somewhere else.
+
+The plugin [OcrElementSet] saves ocr about each image at file level, so the
+option "File Metadata" should be set.
+
+Note: The namespace of the xslt stylesheets may need to be changed according to
+your files.
+
+### Table via OpenDocument Spreadsheet (`ods`)
+
+See examples in `tests/suite/_files/Folder_Test/External_Metadata.ods` and
+`tests/suite/_files/Folder_Test_Update/External_Metadata_Update.ods`.
+
+The first row of each sheet represents the element to import. Order of columns
+is not important. Unknown headers should be managed by the formats.
+
+One row can represent multiple records and multiple rows can represent one
+record. This is the case for example for a file without metadata that is set on
+a row for an item, or when there is a new collection on the same row, or when
+there are multiple files attached to an item.
+
+To add multiple values to the same element, for example multiple authors, three
+ways can be used:
+
+1. Set them in one or multiple columns with the same header;
+2. Fill the cell with multiple values separated by an element delimiter, like
+pipe `|` or a character `end of line`;
+3. Repeat the data in some other rows, as long as the identifier is set and that
+there is no column "action", in which case each row is processed separately.
+
+Metadata for a file should be set after the item ones and require a column
+`Document` that indicates the item to which the file is attached.
+
+Beside [Csv Import], some headers changed:
+
+- `ItemType` and `RecordType` are replaced by `Item Type` and `Record Type`;
+- `FileUrl` is replaced by `Files` (or `File`);
+- Extra data are now written with the array notation, so they are different from
+standard elements: for example, `geolocation : latitude` is replaced by `geolocation [ latitude ]`;
+- The standard delimiter ":" can still be used for extra data, but the value
+will be an array like other elements, not a string;
+- As identifier, it's recommended to use a true value from an element field like
+the "Dubliin Core:Identifier";
+- To enter an empty value, that may be required by some extra data like the
+standard [Geolocation] plugin, enter the value "Empty value" (case sensitive) or
+the one you specified; This may be required when the action is "replace" too.
+- if an extra data has only one value, it will be a string. To force an array,
+add an element delimiter ("|" by default).
+- TODO Convert OpenDocument styles into html ones.
+
+Three modes allows to link collections, items and files between rows.
+
+- The recommended format is the cleares: fill a column "Collection" for items
+and a column "Item" for files, where the value is the identifier, that is
+generally the "Dublin Core:Identifier".
+- An index may be used with the column "name". All rows with the same name
+belong to the same document.
+- Else, the documents are processed as ordered, so a file belong to the previous
+item. This is always the case if there is a column "action".
+
+### Text (example for testing purpose)
+
+The text format for the metadata is just an example to try the plugin.It's a
+simple tagged file format, very similar to `.ini` formats: a metadata is a line
+that starts with the name of the element set (`Dublin Core` by default),
+followed by a colon `:` and by the name of the element (`Title`). The value is
+separated from the field name with an equal sign `=`. If this character is not
+present, the line is ignored, so it can be a comment. If an element has multiple
+lines, next lines start with two non significant spaces. Fields names and values
+are trimmed. Because values are trimmed, an empty line between two fields is not
+taken into account. Fields are repeatable. All documents in a file are merged.
 
 The `File` field, with the path to the file (absolute or relative to the
 metadata file), is needed only for a flat folder or when there are metadata for
@@ -403,188 +442,60 @@ Item = Document 2
 Title = Second Document
 ```
 
-### OpenDocument Text (`odt`)
+### OpenDocument Text (`odt`) (example for testing purpose)
 
-This format is the same than the text one, except that the two spaces is
-replaced by two underscores `__`.
-
-### OpenDocument Spreadsheet (`ods`)
-
-The first row of each sheet represents the element to import. Order of columns
-is not important. Unknown headers should be managed by the formats.
-
-To add multiple values to the same elements, for example multiple authors,
-three ways can be used:
-
-1. Set them in one or multiple columns with the same header;
-2. Repeat the data in some other rows, as long as there is a name in a column
-`Document`, or, if this is a file, to the file attached to the current document;
-3. Fill the cell with multiple values separated by an element delimiter, like
-pipe `|` or a character `end of line`.
-
-Metadata for a file should be set after the item ones and require a column
-`Document` that indicates the item to which the file is attached.
-
-Beside [Csv Import], some headers changed:
-
-- `ItemType` and `RecordType` are replaced by `Item Type` and `Record Type`;
-- `FileUrl` is replaced by `Files` (or `File`);
-- extra data are now written with the array notation, so they are different from
-standard elements: for example, `geolocation:latitude` is replaced by `geolocation[latitude]`;
-- all headers used to update a record are replaced by a unique extra identifier
-`Name` (or `Document`);
-- the update of a record always overwrites all of previous data, because the
-static repository contains only full records;
-- the only available `action` is `delete`, used only with the harvest format
-`Documents`.
-
-### METS and ALTO XML
-
-Any METS file can be imported as long as the profile uses Dublin Core metadata.
-Else, the class should be extended.
-
-The associated [Alto] file, an OCR format, can be ingested too as text. The
-plugin [OcrElementSet] should be installed first to create fields for it,
-because texts are saved at file level. Else, a hook can be used to import data
-somewhere else.
-
-The plugin [OcrElementSet] saves ocr about each image at file level, so the
-option "File Metadata" should be set.
-
-Note: The namespace of the xslt stylesheets may need to be changed according to
-your files.
+This format is the same than the text one, except that the two spaces are
+replaced by two underscores `__`. It is only added as an example.
 
 
 Add a custom format
 -------------------
 
-Three filters and associated classes are available to create static repositories
-for custom formats.
+Two filters and associated classes are available to create xml documents for
+custom formats.
 
 * `archive_folder_mappings`
 
 This filter makes the mapping between the metadata files and the elements that
 exists in Omeka. This filter is required to process metadata files. The mapping
 should be done at least for Dublin Core, because this is the base format of
-Omeka and OAI-PMH.
+Omeka.
 
-If the format is an xml one, it can be copied as this in the final static
-repository. In that case, the ingest should use this format and the mapping
-should be done with the filter `oai_pmh_harvester_maps`.
+If the format is an xml one, it can be copied as this in the final xml document.
 
 Note: In Omeka, all metadata are flat by default, so the hierarchical structure
-of a complex XML file should be interpreted.
+of a complex XML file should be interpreted. For [Ead], the element "Dublin Core:Relation"
+is used. It's recommended to use [Dublin Core Extended] to improve the meaning
+of links.
 
-* `archive_folder_formats`
+* `archive_folder_ingesters`
 
-This filter specifies a class that defines a format that will be used as a
-metadata format in the static repository. It is not needed as long as all data
-are mapped into the Omeka format with the filter `archive_folder_mappings` so
-that the import can be done with default formats, in particular the `Documents`
-one. On the contrary, of course, It's required if the import is done with this
-format, in particular when the xml is raw copied.
-
-* `oai_pmh_harvester_maps`
-
-This filter processes the import inside Omeka. It is required only if the format
-is designed to be ingested by an harvester.
-
-
-Harvesting extra data and metadata inside original files
---------------------------------------------------------
-
-The import into Omeka is done via the [OAI-PMH Harvester] plugin. Because this
-is a standard, only standard elements are imported via the standard formats
-(Dublin Core and [METS]). The format `Documents` allows to import extra data,
-for example the collection, the item type, the featured and public status, the
-tags, and any other data that are managed by specific plugins.
-
-With the [OAI-PMH Harvester] plugin and the "documents" format, extra data are
-imported via two ways.
-
-* Standard "Post": the name should be the same that is used in the form of the
-original plugin, for example `geolocation[latitude]` for the latitude of an item
-in array notation with the plugin [Geolocation].
-* If this is not possible, the hook `archive_folder_ingest_data` should be set
-and managed in a plugin. This hook is called after the harvest of each record.
-
-Furthermore, this hook can be used to ingest data that are contained inside
-original files, in particular for audio, photo and video files.
+This filter makes the mapping for specific files that are part of another file.
+Currently, this filter is used only to import Alto xml files for OCR.
 
 
 Update of documents
 -------------------
 
-According to the specifications of OAI-PMH protocol, the static repository can
-be updated. The update is done for a whole record: it's not possible to add or
-remove a specific element.
-
-In practice, there are two updates: the update of records inside a folder, that
-builds the static repository, and the update inside Omeka, realized througn the
-harvester.
-
-The update is based on the oai identifier and the date stamp of each record.
-
-### OAI identifier
-
-This identifier is built with the original path of each document and files and
-their name. For records defined in metadata files, the path (for files) and the
-name (for document) are used too. When there is no path and no name, the order
-in the folder and in the metadata file is used.
-
-So, when using metadata files, it's recommended to use a unique name for each
-document (unique across all the folder). If not, new documents should be added
-at the end of the list of records. If not, you shouldn't update metadata files
-in the static repository, else updates may be applied on wrong records.
+To be updated, a document should contains an unique identifier. Commonly, this
+is a value in the element "Dublin Core:Identifier", but it may be another one,
+like the title.
 
 ### Update of metadata (standard elements)
 
-The update process updates all metadata of each item and files. It uses the
-core functions of Omeka. When a metadata doesn't exist any more, Omeka keeps
-them by default. It is useful if you add other metadata inside Omeka, but it can
-cause synchronisation issues if you re-harvest the metadata.
+The update process updates all metadata of each record. It uses the core
+functions of Omeka. When a metadata doesn't exist any more, Omeka keeps them by
+default. It is useful if you add other metadata inside Omeka, but it can cause
+synchronisation issues if you re-process the metadata after updating them.
 
-So, when you set up a harvest, three choices are possible:
-- keep all old metadata, updated or not (Omeka default);
-- remove only metadata from elements that have been updated, so specific
-metadata that have been added in other elements are kept (plugin default);
-- remove all old metadata, so the items will be strictly the same that in the
-static repository.
-
-Tip: The good process depends on the static repository, but, generally, when you
-want to add or to modify metadata, the better is to update records directly in
-the folder and in metadata files.
-
-### Date stamp
-
-A static repository requires a date stamp without time, because the finality of
-such a repository is to be static and stable.
-
-Therefore, if the static repository is updated the same day but after an harvest
-has been done, the updated metadata will never be harvested. This issue applies
-too for badly formatted repositories.
-
-A checkbox allows to bypass this limitation when the harvester uses the default
-`Documents` format, because it is designed for internal management only.
-
-This constraint applies only to the harvest: the update of the static repository
-itself can be done at any time.
+So, three modes of update are possible:
+- update only metadata that are set and keep other ones (action "update");
+- add metadata that are set and keep other ones (action "add";
+- replace all metadata that are set (action "replace").
 
 ### Deletion of documents
 
-A static repository doesn't manage the deleted status. A record can be deleted
-and removed from the repository, but the harvester won't see it, so it won't be
-removed from Omeka.
-
-This limitation can be bypassed only when the harvester uses the `Documents`
-format and that there is an extra data `action` with the value `delete`.
-
-### Harvesting Throttle
-
-if the request exceeds the threshold (5 seconds by default), the harvest is not
-processed. A shorter or longer delay can be set in the main "config.ini" file:
-`plugins.OaipmhHarvester.wait = 5`.
-
+A record can be deleted with the action "delete".
 
 Known issues
 ------------
@@ -592,25 +503,38 @@ Known issues
 ### Extra data: Geolocation
 
 The official [Geolocation] requires five fields to be able to ingest location.
-So, for all formats, you should set all of them:
+So, for all formats, you should set all of them, even with an empty string for
+the map type and the address (case sensitive):
 
 ```
-    geolocation[latitude]
-    geolocation[longitude]
-    geolocation[zoom_level]
-    geolocation[map_type]
-    geolocation[address]
+    geolocation [latitude]
+    geolocation [longitude]
+    geolocation [zoom_level]
+    geolocation [map_type]
+    geolocation [address]
 ```
 
 For the format Open Document Spreadsheet (ods), a value should be set in all of
 these cells, because, empty cells are skipped.
 
-| geolocation[latitude] | geolocation[longitude] | geolocation[zoom_level] | geolocation[map_type] | geolocation[address] |
-| ---------------------:| ----------------------:| -----------------------:| --------------------- | -------------------- |
-|            48.8583701 |              2.2944813 |                      17 | Google Maps v3.x      | -                    |
+| geolocation [latitude] | geolocation [longitude] | geolocation [zoom_level] | geolocation [map_type] | geolocation [address] |
+| ----------------------:| -----------------------:| ------------------------:| ---------------------- | --------------------- |
+|             48.8583701 |               2.2944813 |                       17 | hybrid                 | Empty value           |
 
-If you use a spreadsheet and don't want to set a false address or map type,
-you should use the [fixed release] of Geolocation.
+Because in a cell, an empty value is not different from an absent value, the
+selected string ("Empty value" by default, case sensitive) should be used. To
+avoid this issue, you should use the [fixed release] of Geolocation.
+
+If you want to import multiple points by item with the [fork of Geolocation],
+this can be used too:
+
+```
+    geolocation [0] [latitude]
+    geolocation [0] [longitude]
+    geolocation [0] [zoom_level]
+    geolocation [0] [map_type]
+    geolocation [0] [address]
+```
 
 ### Open Document Text and Spreadsheet
 
@@ -620,36 +544,25 @@ merged into one space.
 ### Import of metadata files with the same extension than files
 
 Import of files `ods` and `odt` are not possible, because these files are
-ingested as metadata files.
+ingested as metadata files. If wanted, currently, they should be disabled
+via the filter directly in the code of the plugin.
 
 ### Extensions and Media types
 
 Files are checked with the white-list of extensions set in in the page "/admin/settings/edit-security",
-but the media type is currently not checked when the static repository is built.
-Anyway, it is checked during the harvest.
-
-### Oai identifiers
-
-If names inside metadata files are not unique across all the folder, the plugin
-can't determine which record may be updated. So, if using metadata files, it's
-recommended to use a unique name for each document (unique across all the
-folder).
+but the media type is currently not checked when the folder is prepared. Anyway,
+it is checked during the import.
 
 ### Proxy and https
 
 The harvester may have issues if files are available through "https", but cached
 by a proxy. In that case, you will have to wait some minutes (or days) before
-re-harvest, or to check settings of the proxy and the server.
+re-process, or to check settings of the proxy and the server.
 
 ### Xml Alto
 
 The namespace of the xslt stylesheets may need to be changed according to your
 files.
-
-### TODO
-
-- List element texts set by the harvester in the table harvest_records, for the
-item and attached files in order to keep other ones, manually changed in Omeka?
 
 
 Warning
@@ -701,29 +614,26 @@ Current maintainers:
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015
+* Copyright Daniel Berthereau, 2015-2016
 
 
 [Archive Folder]: https://github.com/Daniel-KM/ArchiveFolder
 [Omeka]: https://www.omeka.org
-[OAI-PMH static repository]: https://www.openarchives.org/OAI/2.0/guidelines-static-repository.htm
-[OAI-PMH Harvester]: https://omeka.org/add-ons/plugins/oai-pmh-harvester
-[OAI-PMH Gateway]: https://github.com/Daniel-KM/OaiPmhGateway
 [fork of Csv Import]: https://github.com/Daniel-KM/CsvImport
 [Xml Import]: https://github.com/Daniel-KM/XmlImport
-[improved fork]: https://github.com/Daniel-KM/OaiPmhRepository
-[fork]: https://github.com/Daniel-KM/OaipmhHarvester
 [fixed release]: https://github.com/Daniel-KM/Geolocation
 [Mets]: https://www.loc.gov/standards/mets
+[Ead]: https://www.loc.gov/standards/ead
+[Ead for Omeka]: https://github.com/Daniel-KM/Ead4Omeka
+[Dublin Core Extended]: https://github.com/omeka/plugin-DublinCoreExtended
 [Alto]: https://www.loc.gov/standards/alto
 [OcrElementSet]: https://github.com/Daniel-KM/OcrElementSet
 [Geolocation]: https://omeka.org/add-ons/plugins/geolocation
+[fork of Geolocation]: https://github.com/Daniel-KM/Geolocation
 [Apache httpd]: https://httpd.apache.org
 [Jpeg 2000]: http://www.jpeg.org/jpeg2000
 [refNum]: http://bibnum.bnf.fr/refNum
 [refNum2Mets]: https://github.com/Daniel-KM/refNum2Mets
-[Archive Folder Document]: https://github.com/Daniel-KM/ArchiveFolderDocument
-[OAI-PMH Repository]: https://omeka.org/add-ons/plugins/oai-pmh-repository
 [plugin issues]: https://github.com/Daniel-KM/ArchiveFolder/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
