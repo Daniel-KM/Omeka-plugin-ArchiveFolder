@@ -314,8 +314,7 @@ class ArchiveFolder_Builder
         foreach ($this->_files as $filepath => $file) {
             if (!$this->_isExtensionAllowed($filepath)) {
                 unset($this->_files[$filepath]);
-                $extension = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
-                $unsetExtensions[$extension] = isset($unsetExtensions[$extension]) ? ++$unsetExtensions[$extension] : 1;
+                $unsetExtensions[] = pathinfo($file, PATHINFO_BASENAME);
                 continue;
             }
 
@@ -326,15 +325,15 @@ class ArchiveFolder_Builder
         }
 
         if (count($unsetExtensions) > 0) {
-            $message = __('%d files with extensions "%s" were skipped.',
-                array_sum($unsetExtensions), implode('", "', array_keys($unsetExtensions)));
+            $message = __('%d files were skipped because of a forbidden extension: "%s".',
+                count($unsetExtensions), implode('", "', $unsetExtensions));
             $this->_folder->addMessage($message);
             _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
                 $this->_folder->id, $this->_folder->uri, $message));
         }
 
         if (count($unsets) > 0) {
-            $message = __('At least %d forbidden files "%s" were skipped.',
+            $message = __('%d forbidden files were skipped: "%s".',
                 count($unsets), implode('", "', $unsets));
             $this->_folder->addMessage($message);
             _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
@@ -508,12 +507,13 @@ class ArchiveFolder_Builder
     {
         $documents = &$this->_documents;
 
+        $unsetExtensions = array();
         $unsets = array();
         foreach ($documents as $key => $document) {
             foreach ($document['files'] as $order => $file) {
                 if (!$this->_isExtensionAllowed($file['specific']['path'])) {
                     unset($documents[$key]);
-                    $unsets[] = $document['process']['name'];
+                    $unsetExtensions[] = pathinfo($document['process']['name'], PATHINFO_BASENAME);
                     break;
                 }
 
@@ -525,17 +525,19 @@ class ArchiveFolder_Builder
             }
         }
 
-        if (count($unsets) > 0) {
-            if (count($unsets) == 1) {
-                $message = __('%d document with forbidden files (extension or uri) was skipped: %s.',
-                    count($unsets), '"' . implode('", "', $unsets) . '"');
-            }
-            else {
-                $message = __('%d documents with forbidden files (extension or uri) were skipped: %s.',
-                    count($unsets), '"' . implode('", "', $unsets) . '"');
-            }
+        if (count($unsetExtensions) > 0) {
+            $message = __('%d documents were skipped because of a forbidden extension: "%s".',
+                count($unsetExtensions), implode('", "', $unsetExtensions));
             $this->_folder->addMessage($message);
             _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
+                $this->_folder->id, $this->_folder->uri, $message));
+        }
+
+        if (count($unsets) > 0) {
+            $message = __('%d forbidden documents were skipped: "%s".',
+                count($unsets), '"' . implode('", "', $unsets) . '"');
+            $this->_folder->addMessage($message);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: "%s"',
                 $this->_folder->id, $this->_folder->uri, $message));
         }
     }
@@ -921,7 +923,7 @@ class ArchiveFolder_Builder
     }
 
     /**
-     * Check if extension of a uri is allowed.
+     * Check if extension (single or complex) of a uri is allowed.
      *
      * @param string $uri
      * @return boolean
@@ -930,21 +932,35 @@ class ArchiveFolder_Builder
     {
         static $whiteList;
         static $blackList;
+        static $longBlackListPattern;
 
-        // Prepare the white list of extensions.
+        // Prepare the white, black and long list of extensions.
         if (is_null($whiteList)) {
             $extensions = (string) get_option(Omeka_Validate_File_Extension::WHITELIST_OPTION);
             $whiteList = $this->_prepareListOfExtensions($extensions);
-        }
 
-        // Prepare the black list of extensions.
-        if (is_null($blackList)) {
             $extensions = (string) $this->_getParameter('exclude_extensions');
             $blackList = $this->_prepareListOfExtensions($extensions);
+            $longBlackList = array_filter($blackList, function($v) {
+                return strpos($v, '.') !== false;
+            });
+            $blackList = array_diff($blackList, $longBlackList);
+            if ($longBlackList) {
+                $longBlackListPattern = '#('
+                    . implode(
+                        '|',
+                        array_map(
+                            function ($v) { return preg_quote($v, '#'); },
+                            $longBlackList))
+                    . ')$#i';
+            }
         }
 
         $extension = strtolower(pathinfo($uri, PATHINFO_EXTENSION));
         if (!empty($blackList) && in_array($extension, $blackList)) {
+            return false;
+        }
+        elseif (!empty($longBlackListPattern) && preg_match($longBlackListPattern, $uri)) {
             return false;
         }
         elseif (!empty($whiteList) && !in_array($extension,$whiteList)) {

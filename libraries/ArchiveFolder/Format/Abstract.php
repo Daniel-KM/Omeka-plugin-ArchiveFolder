@@ -542,6 +542,7 @@ abstract class ArchiveFolder_Format_Abstract
             case 'jpg':
             case 'jpeg':
             case 'png':
+            case 'tif':
             case 'tiff':
                 return 'Still Image';
             case 'doc':

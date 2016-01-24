@@ -65,7 +65,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
 
         $this->addElement('text', 'exclude_extensions', array(
             'label' => __('File extensions to exclude'),
-            'description' => __('A black-list of extensions to exclude from the source, separated by a space or a comma and without the initial dot.')
+            'description' => __('A black-list of extensions (normal or double) to exclude from the source, separated by a space or a comma and without the initial dot.')
                 . ' ' . __('The white-list is the Omeka one, defined in the security page.'),
         ));
 
