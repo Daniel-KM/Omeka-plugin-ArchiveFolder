@@ -282,6 +282,11 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     {
         // Available mappings in the plugin at first place to keep order.
         $archiveFolderMappings = array();
+        // The internal format that is required as a dependancy.
+        $mappings['doc'] = array(
+            'class' => 'ArchiveFolder_Mapping_Document',
+            'description' => __('Documents xml (simple format that manages all features of Omeka)'),
+        );
         // Available default mappings in the plugin.
         $archiveFolderMappings['text'] = array(
             'class' => 'ArchiveFolder_Mapping_Text',
