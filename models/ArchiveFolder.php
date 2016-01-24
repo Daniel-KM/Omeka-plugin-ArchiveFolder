@@ -61,7 +61,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     public $added;
     public $modified;
 
-    // Temporary unserialized parameters.
+    // Temporary unjsoned parameters.
     private $_parameters;
 
     // Temporary total of items and files.
@@ -95,7 +95,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     public function getParameters()
     {
         if ($this->_parameters === null) {
-            $parameters = unserialize($this->parameters);
+            $parameters = json_decode($this->parameters, true);
             if (empty($parameters)) {
                 $parameters = array();
             }
@@ -333,7 +333,9 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     protected function beforeSave($args)
     {
         $values = $this->getParameters();
-        $this->parameters = serialize($values);
+        $this->parameters = version_compare(phpversion(), '5.4.0', '<')
+            ? json_encode($values)
+            : json_encode($values, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if (is_null($this->messages)) {
             $this->messages = '';
