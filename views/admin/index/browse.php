@@ -21,7 +21,7 @@ echo head(array(
         <div class="table-actions batch-edit-option">
             <?php if (is_allowed('ArchiveFolder_Index', 'edit')): ?>
             <input type="submit" class="small green batch-action button" name="submit-batch-check" value="<?php echo __('Check'); ?>">
-            <input type="submit" class="small green batch-action button" name="submit-batch-update" value="<?php echo __('Update'); ?>">
+            <input type="submit" class="small green batch-action button" name="submit-batch-process" value="<?php echo __('Process'); ?>">
             <?php endif; ?>
             <?php
                 $actionUri = $this->url(array(
@@ -127,13 +127,13 @@ echo head(array(
                         <a href="<?php echo html_escape($actionUri); ?>" class="check button green"><?php echo $action; ?></a>
                         <?php
                                     $actionUri = $this->url(array(
-                                            'action' => 'update',
+                                            'action' => 'process',
                                             'id' => $folder->id,
                                         ),
                                         'default');
-                                    $action = __('Update');
+                                    $action = __('Process');
                         ?>
-                        <a href="<?php echo html_escape($actionUri); ?>" class="update button green"><?php echo $action; ?></a>
+                        <a href="<?php echo html_escape($actionUri); ?>" class="process button green"><?php echo $action; ?></a>
                         <?php
 
                                     if (!in_array($folder->status, array(ArchiveFolder_Folder::STATUS_ADDED, ArchiveFolder_Folder::STATUS_COMPLETED))):

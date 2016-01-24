@@ -50,11 +50,16 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'skip' => __("Skip"),
         )));
 
+        /*
         $this->addElement('checkbox', 'records_for_files', array(
             'label' => __('Files Metadata'),
             'description' => __('Create metadata for files, not only for items.')
                 . ' ' . __('Metadata for files may be useless if there is only one file by item.')
                 . ' ' . __('This parameter may be bypassed when a metadata file is directly included in the folder.'),
+            'value' => true,
+        ));
+        */
+        $this->addElement('hidden', 'records_for_files', array(
             'value' => true,
         ));
 
@@ -65,8 +70,8 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         ));
 
         $this->addElement('text', 'element_delimiter', array(
-            'label' => __('Spreadsheet element separator'),
-            'description' => __('If metadata are available in a table (Open Document Spreadsheet ods), multiple elements can be set within one cell for the same field.')
+            'label' => __('Table/Spreadsheet element separator'),
+            'description' => __('If metadata are available in a table (as Open Document Spreadsheet ods), multiple elements can be set within one cell for the same field.')
                 . ' ' . __('This character or this string, for example the pipe "|", can be used to delimite them.')
                 . ' ' . __('If the delimiter is empty, then the whole text will be used.')
                 . ' ' . __('Anyway, multiple columns can be mapped to the same element and multiple rows can manage multiple values for the same field of the same record.'),
@@ -74,28 +79,29 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         ));
 
         $this->addElement('text', 'empty_value', array(
-            'label' => __('Spreadsheet empty value'),
-            'description' => __('If metadata are available in a table (Open Document Spreadsheet ods), an empty cell can be an empty value or no value.')
+            'label' => __('Table/Spreadsheet empty value'),
+            'description' => __('If metadata are available in a table (as Open Document Spreadsheet ods), an empty cell can be an empty value or no value.')
                 . ' ' . __('To distinct these two cases, an empty value can be replaced by this string (case sensitive).'),
             'value' => ArchiveFolder_Mapping_Table::DEFAULT_EMPTY_VALUE,
         ));
 
         if (plugin_is_active('OcrElementSet')) {
             $this->addElement('checkbox', 'fill_ocr_text', array(
-                'label' => __('Fill OCR text'),
-                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : text" too.'),
+                'label' => __('Fill OCR Text'),
+                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Text" too.'),
                 'value' => true,
             ));
             $this->addElement('checkbox', 'fill_ocr_data', array(
                 'label' => __('Fill OCR Data'),
-                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : data" too.')
+                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Data" too.')
                     . ' ' . __('This field is needed only if it is reused somewhere else (highlight, correction, search...).')
                     . ' ' . __('Warning: Data can be heavy and they are duplicated by default in the search table of the base.'),
                 'value' => true,
             ));
             $this->addElement('checkbox', 'fill_ocr_process', array(
-                'label' => __('Fill processing data for OCR'),
-                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Process" too.'),
+                'label' => __('Fill OCR Process'),
+                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Process" too.')
+                    . ' ' . __('These values are useless for end user.'),
                 'value' => true,
             ));
         }
@@ -148,7 +154,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         $this->addElement('select', 'identifier_field', array(
             'label' => __('Identifier field (required)'),
             'description' => __('The identifier field is used to simplify the update of records.')
-                . ' ' . __('This is the relation between the folder and the Omeka base.'),
+                . ' ' . __('This is the link between the files in the folder and the records in the Omeka base.'),
             'multiOptions' => $values,
             'value' => $identifierField,
         ));
@@ -185,24 +191,17 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             array(
                 'legend' => __('Archive Folder URI'),
         ));
-
-        // Parameters to create each record.
         $this->addDisplayGroup(
             array(
                 'unreferenced_files',
                 'records_for_files',
                 'exclude_extensions',
-                'element_delimiter',
-                'empty_value',
-                'fill_ocr_text',
-                'fill_ocr_data',
-                'fill_ocr_process',
                 'item_type_id',
             ),
             'archive_folder_records',
             array(
                 'legend' => __('Archive Folder Records and files'),
-                'description' => __('Set parameters fo create each record from files.')
+                'description' => __('Set parameters to create each record from files.')
                     . ' ' . __('Note:')
                     . ' ' . __('An item can have multiple files, and items and files can have different metadata.')
                     . ' ' . __('For example, a record of a book can have each digitalized page attached to it.')
@@ -210,6 +209,32 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                     . ' ' . __('In that case, it is recommended to separate the metadata, for example to add data about each page or the different authors of the view.')
                     . ' ' . __("Conversely, an image of a paint, a photography, or a book digitalized as a pdf and e-book files doesn't need to have separate records."),
         ));
+
+        // Parameters to create each record.
+        $this->addDisplayGroup(
+            array(
+                'element_delimiter',
+                'empty_value',
+            ),
+            'archive_folder_table',
+            array(
+                'legend' => __('Tables'),
+                'description' => __('Set specific parameters for table or spreadsheets.'),
+        ));
+
+        if (plugin_is_active('OcrElementSet')) {
+            $this->addDisplayGroup(
+                array(
+                    'fill_ocr_text',
+                    'fill_ocr_data',
+                    'fill_ocr_process',
+                ),
+                'archive_folder_ocr',
+                array(
+                    'legend' => __('OCR'),
+                    'description' => __('Set specific parameters for OCR.'),
+            ));
+        }
 
         // Parameters for the folder of original files.
         $this->addDisplayGroup(
@@ -219,7 +244,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             ),
             'archive_folder_process',
             array(
-                'legend' => __('Import Process'),
+                'legend' => __('Process'),
         ));
 
         $this->applyOmekaStyles();

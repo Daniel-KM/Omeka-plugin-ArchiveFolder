@@ -45,11 +45,6 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
 
     public function addAction()
     {
-        require dirname(__FILE__)
-            . DIRECTORY_SEPARATOR . '..'
-            . DIRECTORY_SEPARATOR . 'forms'
-            . DIRECTORY_SEPARATOR . 'Add.php';
-
         $this->view->form = new ArchiveFolder_Form_Add();
         $this->view->form->setAction($this->_helper->url('add'));
 
@@ -160,11 +155,9 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
     }
 
     /**
-     * Update a folder.
-     *
-     * Currently, a first process is the same than update (no token or check).
+     * Process a folder.
      */
-    public function updateAction()
+    public function processAction()
     {
         $result = $this->_launchJob(ArchiveFolder_Builder::TYPE_UPDATE);
         $this->_helper->redirector->goto('browse');
@@ -184,7 +177,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
         // Normal process.
         else {
             // Action can be Check (default) or Update.
-            $action = $this->getParam('submit-batch-update')
+            $action = $this->getParam('submit-batch-process')
                 ? ArchiveFolder_Builder::TYPE_UPDATE
                 : ArchiveFolder_Builder::TYPE_CHECK;
 
