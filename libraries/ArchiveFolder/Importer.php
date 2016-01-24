@@ -38,15 +38,6 @@ class ArchiveFolder_Importer
     protected $_mapper;
 
     /**
-     * Prepare the importer.
-     */
-    public function __construct()
-    {
-        $uri = get_option('archive_folder_static_dir');
-        $this->_mapper = new ArchiveFolder_Mapping_Document($uri, array());
-    }
-
-    /**
      * Process import of a folder.
      *
      * @internal Pre-checks are done by Archive Folder.
@@ -57,18 +48,27 @@ class ArchiveFolder_Importer
     public function process(ArchiveFolder_Folder $folder)
     {
         $this->_folder = $folder;
+        $this->_mapper = new ArchiveFolder_Mapping_Document($folder->uri, $folder->getParameters());
 
         $index = $folder->countImportedRecords() + 1;
         $recordXml = $this->_getXmlRecord($index);
         if (!is_object($recordXml)) {
-            $message = __('There is no record #%d.', $document['process']['index']);
+            $message = __('There is no record #%d.', $index);
             throw new ArchiveFolder_ImporterException($message);
         }
-        // This is an empty record.
+
+        // Check if this is an empty record.
         if (empty($recordXml)) {
-            $message = __('The record #%d is empty.', $document['process']['index']);
-            $this->_folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
-            return true;
+            // Do a special check with Dublin Core values.
+            $recordXml->registerXPathNamespace(ArchiveFolder_Format_Document::DC_PREFIX, ArchiveFolder_Format_Document::DC_NAMESPACE);
+            $recordXml->registerXPathNamespace(ArchiveFolder_Format_Document::DCTERMS_PREFIX, ArchiveFolder_Format_Document::DCTERMS_NAMESPACE);
+            $xpath = 'dc:*|dcterms:*';
+            $dcs = $recordXml->xpath($xpath);
+            if (empty($dcs)) {
+                $message = __('The record #%d is empty.', $index);
+                $this->_folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+                return true;
+            }
         }
 
         // Set the default identifier field, that may be bypassed by a record.
@@ -84,26 +84,43 @@ class ArchiveFolder_Importer
             return true;
         }
 
-        // Get the existing record if any.
+        // Get the existing Omeka record if any.
         $record = $this->_getExistingRecordFromDocument($document);
 
         // When there is no identifier or record, the only available action is
         // "Create", else all actions are available.
         if (empty($record)) {
-            if (!in_array($document['process']['action'], array(
-                    ArchiveFolder_Importer::ACTION_UPDATE_ELSE_CREATE,
-                    ArchiveFolder_Importer::ACTION_CREATE,
+            if ($document['process']['action'] == ArchiveFolder_Importer::ACTION_DELETE) {
+                $message = __("The record #%d doesn't exist.", $document['process']['index'])
+                    . ' ' . __('The action "%s" has no effect.', $document['process']['action']);
+                $this->_folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+                return true;
+            }
+            if (in_array($document['process']['action'], array(
+                    ArchiveFolder_Importer::ACTION_UPDATE,
+                    ArchiveFolder_Importer::ACTION_ADD,
+                    ArchiveFolder_Importer::ACTION_REPLACE,
                 ))) {
-                $message = __('Cannot process action "%s" for the record #%d: such a record does not exist in the base.',
-                    $document['process']['action'], $document['process']['index']);
-                throw new ArchiveFolder_ImporterException($message);
+                $message = __("The record #%d doesn't exist.", $document['process']['index'])
+                    . ' ' . __('The action "%s" is replaced by a creation.', $document['process']['action']);
+                $this->_folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
             }
             $document['process']['action'] = ArchiveFolder_Importer::ACTION_CREATE;
+        }
+        // When there is a record, it can't be re-created.
+        else {
+            if (in_array($document['process']['action'], array(
+                    ArchiveFolder_Importer::ACTION_CREATE,
+                ))) {
+                $message = __('Cannot process action "%s" for record #%d: the record exists (%s id %d) ).',
+                    $document['process']['action'], $document['process']['index'], get_class($record), $record->id);
+                throw new ArchiveFolder_ImporterException($message);
+            }
         }
 
         // TODO Add an option to check or not the existing elements and to warn.
         // Move unexisting elements into extra data.
-        $document = $this->_checkExistingMetadata($document);
+        $document = $this->_checkExistingMetadataElements($document);
 
         // Process the action.
         switch ($document['process']['action']) {
@@ -111,10 +128,12 @@ class ArchiveFolder_Importer
                 // Check if a duplicate is to be created (here, there is a record).
                 // A same identifier is possible only for different record
                 // (internal id) and even in that case, this is not recommended.
-                if ($document['process']['identifier field'] != ArchiveFolder_Importer::IDFIELD_INTERNAL_ID
-                        || get_class($record) == $document['process']['record type']
+                if (!empty($record)
+                        && !empty($document['process']['identifier'])
+                        && ($document['process']['identifier field'] != ArchiveFolder_Importer::IDFIELD_INTERNAL_ID
+                            || get_class($record) == $document['process']['record type'])
                     ) {
-                    $message = __('Cannot create a second record with the same identifier (record #d).',
+                    $message = __('Cannot create a second record with the same identifier (record #%d).',
                         $document['process']['index']);
                     throw new ArchiveFolder_ImporterException($message);
                 }
@@ -190,10 +209,10 @@ class ArchiveFolder_Importer
         // Check and create collection if needed.
         // TODO Add an option to create or not a default collection.
         $collection = null;
-        if (!empty($document['extra']['collection'])) {
-            $collection = $this->_createCollectionFromIdentifier($document['extra']['collection']);
+        if (!empty($document['specific']['collection'])) {
+            $collection = $this->_createCollectionFromIdentifier($document['specific']['collection']);
             $document['specific'][Builder_Item::COLLECTION_ID] = $collection->id;
-            unset($document['extra']['collection']);
+            unset($document['specific']['collection']);
         }
 
         $record = $this->_insertItem($document['specific'], $document['metadata'], array(), $document['extra']);
@@ -370,7 +389,7 @@ class ArchiveFolder_Importer
                 if (!empty($document['specific']['collection'])) {
                     $collection = $this->_createCollectionFromIdentifier($document['specific']['collection']);
                     $document['specific'][Builder_Item::COLLECTION_ID] = $collection->id;
-                    unset($document['extra']['collection']);
+                    unset($document['specific']['collection']);
                 }
 
                 // Update specific data of the item.
@@ -485,6 +504,7 @@ class ArchiveFolder_Importer
                 // keep it for next process.
                 $currentRecord = $reader->readOuterXml();
                 $currentRecordXml = @simplexml_load_string($currentRecord, 'SimpleXMLElement');
+
                 if ($firstLevel) {
                     $this->_firstLevelRecord = $currentRecordXml;
                     $this->_indexFirstLevelRecord = $total;
@@ -568,7 +588,7 @@ class ArchiveFolder_Importer
         }
 
         // Name may be the Identifier.
-        elseif ($identifierField == ArchiveFolder_Importer::IDFIELD_INTERNAL_NAME) {
+        elseif ($identifierField == ArchiveFolder_Importer::IDFIELD_NAME) {
             $document['process']['identifier'] = empty($document['process']['name']) ? '' : $document['process']['name'];
         }
 
@@ -589,12 +609,12 @@ class ArchiveFolder_Importer
                 $element = $this->_getElementFromIdentifierField($document['process']['identifier field']);
                 if ($element) {
                     $elementSetName = $element->getElementSet()->name;
-                    if (empty($document[$elementSetName][$element->name])) {
+                    if (empty($document['metadata'][$elementSetName][$element->name])) {
                         $document['process']['identifier'] = null;
                     }
-                    // Here, the value is a list of simple strings.
+                    // Here, the value is still a list of simple strings.
                     else {
-                        $document['process']['identifier'] = $document[$elementSetName][$element->name];
+                        $document['process']['identifier'] = $document['metadata'][$elementSetName][$element->name];
                     }
                 }
                 // The identifier doesn't exist.
@@ -634,19 +654,22 @@ class ArchiveFolder_Importer
      *
      * This avoids an error during import, because Omeka checks it too.
      *
+     * @internal Elements depend on the record type.
      * @internal Move it earlier during checking / normalization?
      * @todo Warn if some elements move to extra (this may be an error).
      *
      * @param array $document A normalized document.
      * @param array The checked document.
      */
-    protected function _checkExistingMetadata($document)
+    protected function _checkExistingMetadataElements($document)
     {
         $db = get_db();
 
         // Prepare the list of names of element sets.
         // Function findPairsForSelectForm() is not used because it's filtered.
-        $elementSets = $db->getTable('ElementSet')->findAll();
+        $elementSets = empty($document['process']['record type'])
+            ? $db->getTable('ElementSet')->findAll()
+            : $db->getTable('ElementSet')->findByRecordType($document['process']['record type'], true);
         $elementSetNames = array();
         foreach ($elementSets as $elementSet) {
             $elementSetNames[$elementSet->name] = null;
@@ -682,7 +705,6 @@ class ArchiveFolder_Importer
                         $elementText = $elementText['text'];
                     }
                 }
-
                 $document['extra'] = array_merge_recursive($document['extra'], $extraMetadata);
             }
         }
@@ -790,24 +812,33 @@ class ArchiveFolder_Importer
     /**
      * Return the element from an identifier.
      *
-     * @return Element|boolean
+     * @param integer|string $identifierField
+     * @return Element|null
      */
     private function _getElementFromIdentifierField($identifierField)
     {
         static $elements = array();
 
+        if (empty($identifierField)) {
+            return;
+        }
+
         if (!isset($elements[$identifierField])) {
-            $elements[$identifierField] = null;
-            $parts = explode(':', $identifierField);
-            if (count($parts) == 2) {
-                $elementSetName = trim($parts[0]);
-                $elementName = trim($parts[1]);
-                $element = get_db()->getTable('Element')
-                    ->findByElementSetNameAndElementName($elementSetName, $elementName);
-                if ($element) {
-                    $elements[$identifierField] = $element;
+            $element = null;
+            if (is_numeric($identifierField)) {
+                $element = get_db()->getTable('Element')->find($identifierField);
+            }
+            // This is a string.
+            else {
+                $parts = explode(':', $identifierField);
+                if (count($parts) == 2) {
+                    $elementSetName = trim($parts[0]);
+                    $elementName = trim($parts[1]);
+                    $element = get_db()->getTable('Element')
+                        ->findByElementSetNameAndElementName($elementSetName, $elementName);
                 }
             }
+            $elements[$identifierField] = $element;
         }
 
         return $elements[$identifierField];
@@ -916,7 +947,9 @@ class ArchiveFolder_Importer
      */
     private function _isXml($string)
     {
-        return strpos($string, '<') !== false
+        $string = trim($string);
+        return !empty($string)
+            && strpos($string, '<') !== false
             && strpos($string, '>') !== false
             // A main tag is added to allow inner ones.
             && (boolean) simplexml_load_string('<xml>' . $string . '</xml>', 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);

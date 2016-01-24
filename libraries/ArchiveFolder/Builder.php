@@ -567,6 +567,7 @@ class ArchiveFolder_Builder
         $writer->startDocument('1.0', 'UTF-8');
 
         // Prepare the static repository.
+        $this->_format->setWriter($writer);
         $this->_startStaticRepository();
 
         // Prepare the document writer, that will be emptied for each document.
@@ -616,7 +617,8 @@ class ArchiveFolder_Builder
     {
         $writer = $this->_writer;
 
-        $writer->startElement('documents');
+        $format = $this->_format;
+        $format->startRoot();
     }
 
     /**

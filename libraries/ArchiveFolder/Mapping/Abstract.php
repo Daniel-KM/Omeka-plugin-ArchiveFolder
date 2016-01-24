@@ -127,25 +127,24 @@ abstract class ArchiveFolder_Mapping_Abstract
         $this->_uri = $uri;
         $this->_parameters = $parameters;
 
-        $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($uri, $parameters);
+        $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($this->_uri, $this->_parameters);
         $this->_validateFile = new ArchiveFolder_Tool_ValidateFile();
         $this->_processXslt = new ArchiveFolder_Tool_ProcessXslt();
 
         $this->_elementNameSeparator = $this->_getParameter('element_name_separator') ?: ':';
 
-        if ($this->_getParameter('use_dcterms')) {
-            // Prepare labels of dc terms.
-            require PLUGIN_DIR
-                . DIRECTORY_SEPARATOR . 'ArchiveFolder'
-                . DIRECTORY_SEPARATOR . 'libraries'
-                . DIRECTORY_SEPARATOR . 'ArchiveFolder'
-                . DIRECTORY_SEPARATOR . 'elements_dcterms.php';
-            $this->_dcTerms = array();
-            foreach ($elements as $element) {
-                // Checks are done on lower case names and labels.
-                $this->_dcTerms[strtolower($element['name'])] = $element['label'];
-                $this->_dcTerms[strtolower($element['label'])] = $element['label'];
-            }
+        // Prepare labels of dc terms. Dublin Core Terms can be always checked
+        // with the mapping process (method "getDataName()").
+        require PLUGIN_DIR
+            . DIRECTORY_SEPARATOR . 'ArchiveFolder'
+            . DIRECTORY_SEPARATOR . 'libraries'
+            . DIRECTORY_SEPARATOR . 'ArchiveFolder'
+            . DIRECTORY_SEPARATOR . 'elements_dcterms.php';
+        $this->_dcTerms = array();
+        foreach ($elements as $element) {
+            // Checks are done on lower case names and labels.
+            $this->_dcTerms[strtolower($element['name'])] = $element['label'];
+            $this->_dcTerms[strtolower($element['label'])] = $element['label'];
         }
     }
 
@@ -284,18 +283,22 @@ abstract class ArchiveFolder_Mapping_Abstract
     protected function _validateDocuments()
     {
         $documents = &$this->_processedFiles[$this->_metadataFilepath];
-
         // Check file paths and names (if one is absent, the other is used).
         $nameBase = $this->_managePaths->getRelativePathToFolder($this->_metadataFilepath);
         foreach ($documents as $key => &$document) {
             $document = $this->_normalizeDocument($document, 'Item');
             // Check if the document is empty.
-            if (empty($document['metadata'])
+            if (empty($document['specific'])
+                    && empty($document['metadata'])
                     && empty($document['extra'])
                     && empty($document['files'])
                 ) {
-                unset($documents[$key]);
-                continue;
+                // Special check for process: remove xml, automatically added.
+                $check = array_diff_key($document['process'], array('xml' => true, 'format_xml' => true));
+                if (empty($check)) {
+                    unset($documents[$key]);
+                    continue;
+                }
             }
 
             // Add an internal name if needed.
@@ -677,7 +680,7 @@ abstract class ArchiveFolder_Mapping_Abstract
                 $elementSetName = 'Dublin Core';
                 $elementName = $this->_dcTerms[$lowerName];
             }
-            // Empty element set name.
+            // Empty element set name (extra data).
             else {
                 $elementName = $name;
             }
@@ -716,14 +719,14 @@ abstract class ArchiveFolder_Mapping_Abstract
     }
 
     /**
-     * Remove duplicate metadata of a single record.
+     * Remove duplicate metadata of a single document.
      *
-     * @param array $record A document or a file.
-     * @return array
+     * @param array $document A document.
+     * @return array The cleaned document/
      */
-    protected function _removeDuplicateMetadataForRecord($record)
+    protected function _removeDuplicateMetadataForRecord($document)
     {
-        foreach ($record as $key => &$value) {
+        foreach ($document as $key => &$value) {
             switch ($key) {
                 case 'metadata':
                     foreach ($value as &$elements) {
@@ -750,16 +753,65 @@ abstract class ArchiveFolder_Mapping_Abstract
                     break;
 
                 case 'specific':
-                case 'extra':
                     foreach ($value as &$data) {
                         if (is_array($data)) {
                             $data = array_unique($data);
                         }
                     }
                     break;
+
+                case 'extra':
+                    foreach ($value as &$data) {
+                        // Data may be a simple array of strings or a recursive
+                        // array. In all cases, only non-mixed integer keys are
+                        // managed.
+                        $data = $this->_recursiveArrayNumericUnique($data);
+                    }
+                    break;
             }
         }
-        return $record;
+        return $document;
+    }
+
+
+    /**
+     * Get unique values in a recursive associative array. Only integer keys may
+     * be removed, not string ones. When keys are mixed, all values are kept.
+     *
+     * @param array $array
+     * @return array
+     */
+    protected function _recursiveArrayNumericUnique($array)
+    {
+        if (empty($array)) {
+            return $array;
+        }
+
+        if (!is_array($array)) {
+            return $array;
+        }
+
+        // Check if keys are mixed: if true, keep them all.
+        $countKeys = count($array);
+        $countIntegerKeys = count(array_filter(array_keys($array), 'is_integer'));
+        if ($countIntegerKeys != $countKeys) {
+            return array_map(array($this, '_recursiveArrayNumericUnique') , $array);
+        }
+
+        // Array _unique works only on scalar values.
+        $subArrays = array_filter($array, 'is_array');
+        $countSubArrays = count($subArrays);
+        if ($countSubArrays == 0) {
+            return array_unique($array);
+        }
+
+        if ($countSubArrays != $countKeys) {
+            $subScalars = array_unique(array_diff_key($array, $subArrays));
+            $subArrays = array_map(array($this, '_recursiveArrayNumericUnique'), $subArrays);
+            return array_merge($subScalars, $subArrays);
+        }
+
+        return array_map(array($this, '_recursiveArrayNumericUnique') , $array);
     }
 
     /**
@@ -841,7 +893,9 @@ abstract class ArchiveFolder_Mapping_Abstract
      */
     protected function _isXml($string)
     {
-        return strpos($string, '<') !== false
+        $string = trim($string);
+        return !empty($string)
+            && strpos($string, '<') !== false
             && strpos($string, '>') !== false
             // A main tag is added to allow inner ones.
             && (boolean) simplexml_load_string('<xml>' . $string . '</xml>', 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);

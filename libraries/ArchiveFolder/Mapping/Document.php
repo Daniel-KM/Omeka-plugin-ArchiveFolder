@@ -26,6 +26,9 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
 
     // List of normalized special fields (attributes or extra data).
     // They are unique values, except tags.
+    // Important: extra data can't start with these reserved terms, except if
+    // they are not used together.
+    // TODO Add a warn when special data and extra data start the same.
     protected $_specialData = array(
         // For any record (allow to manage process).
         'action' => true,
@@ -50,13 +53,6 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
         'featured' => true,
         'public' => true,
     );
-
-    public function __construct($uri, array $parameters)
-    {
-        // The use_dcterms is forced to simplify process.
-        $parameters['use_dcterms'] = true;
-        parent::__construct($uri, $parameters);
-    }
 
     /**
      * Prepare the list of documents set inside the current metadata file.
@@ -220,43 +216,86 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
             }
         }
 
-        // Normalize special data.
+        // Normalize special data, keeping original order.
+        // Filling data during loop is unpredictable.
+        $extraLower = array();
         foreach ($current['extra'] as $field => $data) {
             $lowerField = $this->_spaceFromUppercase($field);
             if (isset($this->_specialData[$lowerField])) {
-                // Only one value is allowed.
+                // Only one value is allowed: keep last value.
                 if ($this->_specialData[$lowerField]) {
-                    $current['extra'][$lowerField] = reset($data);
+                    $extraLower[$lowerField] = array_pop($data);
                 }
-                // Multiple values are allowed (only for tags in fact).
+                // Multiple values are allowed (for example tags). Keep order.
                 else {
-                    $current['extra'][$lowerField] = empty($current['extra'][$lowerField])
-                            || $lowerField == $field
-                        ? array_unique($data)
-                        : array_unique(array_merge($current['extra'][$lowerField], $data));
+                    // Manage the tags exception (may be "tags" or "tag").
+                    if ($lowerField == 'tag') {
+                        $lowerField = 'tags';
+                    }
+
+                    $extraLower[$lowerField] = empty($extraLower[$lowerField])
+                        ? $data
+                        : array_merge($extraLower[$lowerField], $data);
                 }
-                if ($lowerField != $field) {
-                    unset($current['extra'][$field]);
-                }
+                unset($current['extra'][$field]);
             }
+        }
+        if ($extraLower) {
+            $current['extra'] = array_merge($current['extra'], $extraLower);
         }
 
         // Exceptions.
-
-        // Normalize "tags".
-        if (isset($current['extra']['tag'])) {
-            $current['extra']['tags'] = empty($current['extra']['tags'])
-                ? $current['extra']['tag']
-                : array_merge($current['extra']['tags'], $current['extra']['tag']);
-            $current['extra']['tags'] = array_unique($current['extra']['tags']);
-            unset($current['extra']['tag']);
-        }
 
         // Normalize "path" (exception: can be "file" or "path").
         if (isset($current['extra']['file'])) {
             $current['specific']['path'] = $current['extra']['file'];
             unset($current['extra']['file']);
         }
+
+        // Normalize true extra data.
+        if (!empty($current['extra'])) {
+            $extraData = array_diff_key($current['extra'], $this->_specialData);
+            if ($extraData) {
+                // Step 1: set single value as string, else let it as array.
+                $value = null;
+                foreach ($extraData as $name => &$value) {
+                    if (is_array($value)) {
+                        // Normalize empty value.
+                        if (count($value) == 0) {
+                            $value = '';
+                        }
+                        // Make unique value a single string.
+                        elseif (count($value) == 1) {
+                            $value = reset($value);
+                        }
+                    }
+                }
+                // Required, because $value is a generic reference used just before.
+                unset($value);
+
+                // Step 2: Normalize extra data names like geolocation[latitude]
+                // (array notation). They will be imported via a pseudo post.
+                $extra = array();
+                foreach ($extraData as $key => $value) {
+                    $array = $this->_convertArrayNotation($key);
+                    $array = $this->_nestArray($array, $value);
+                    $value = reset($array);
+                    $name = key($array);
+                    $extra[] = array($name => $value);
+                }
+                $finalExtraData = array();
+                foreach ($extra as $data) {
+                    $finalExtraData = array_merge_recursive($finalExtraData, $data);
+                }
+
+                $specialData = array_intersect_key($current['extra'], $this->_specialData);
+                $current['extra'] = array_merge($finalExtraData, $specialData);
+            }
+        }
+
+        // Avoid useless metadata.
+        unset($current['extra']['xmlns:' . self::DC_PREFIX]);
+        unset($current['extra']['xmlns:' . self::DCTERMS_PREFIX]);
 
         return $current;
     }
@@ -292,7 +331,80 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
         $output = $xml->asXml();
         $pos = strpos($output, '>') + 1;
         $len = strrpos($output, '<') - $pos;
-        return trim(substr($output, $pos, $len));
+        $output = trim(substr($output, $pos, $len));
+
+        // Only main CDATA is managed, not inside content: if this is an xml or
+        // html, it will be managed automatically by the display; if this is a
+        // text, the cdata is a text too.
+        $simpleXml = simplexml_load_string($output, 'SimpleXMLElement', LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+        // Non XML data.
+        if (empty($simpleXml)) {
+            // Check if this is a CDATA.
+            if ($this->_isCdata($output)) {
+                $output = substr($output, 9, strlen($output) - 12);
+            }
+            // Check if this is a json data.
+            elseif (json_decode($output) !== null) {
+                $output = html_entity_decode($output, ENT_NOQUOTES);
+            }
+            // Else this is a normal data.
+            else {
+                $output = html_entity_decode($output);
+            }
+        }
+        // Else this is an xml value, so no change because it's xml escaped.
+
+        return trim($output);
+    }
+
+    /**
+     * Check if a string is an xml cdata one.
+     *
+     * @param string $string
+     * @return boolean
+     */
+    protected function _isCdata($string)
+    {
+        $string = trim($string);
+        return !empty($string)
+            && strpos($string, '<![CDATA[') === 0 && strpos($string, ']]>') === strlen($string) - 3;
+    }
+
+    /**
+     * Return an array of names from a string in array notation.
+     */
+    protected function _convertArrayNotation($string)
+    {
+        // Bail early if no array notation detected.
+        if (!strstr($string, '[')) {
+            $array = array($string);
+        }
+        // Convert array notation.
+        else {
+            if ('[]' == substr($string, -2)) {
+                $string = substr($string, 0, strlen($string) - 2);
+            }
+            $string = str_replace(']', '', $string);
+            $array = explode('[', $string);
+        }
+        return $array;
+    }
+
+    /**
+     * Convert a flat array into a nested array via recursion.
+     *
+     * @param array $keys Flat array.
+     * @param mixed $value The last value
+     * @return array The nested array.
+     */
+    protected function _nestArray($keys, $value)
+    {
+       $nextKey = array_pop($keys);
+       if (count($keys)) {
+            $temp = array($nextKey => $value);
+            return $this->_nestArray($keys, $temp);
+        }
+        return array($nextKey => $value);
     }
 
     /**

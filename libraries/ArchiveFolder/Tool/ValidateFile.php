@@ -88,7 +88,7 @@ class ArchiveFolder_Tool_ValidateFile
         if (empty($xmlRoot)) {
             return false;
         }
-        // XmlReader is the quickest and the simplest for such a check, locaaly
+        // XmlReader is the quickest and the simplest for such a check, localy
         // or remotely.
         $reader = new XMLReader;
         $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
@@ -119,7 +119,7 @@ class ArchiveFolder_Tool_ValidateFile
         if (empty($xmlRoot) || empty($xmlNamespace)) {
             return false;
         }
-        // XmlReader is the quickest and the simplest for such a check, locaaly
+        // XmlReader is the quickest and the simplest for such a check, localy
         // or remotely.
         $reader = new XMLReader;
         $result = $reader->open($filepath, null, LIBXML_NSCLEAN);

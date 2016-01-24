@@ -15,6 +15,9 @@ abstract class ArchiveFolder_Format_Abstract
     protected $_metadataSchema;
     protected $_metadataNamespace;
 
+    // The root of the xml document.
+    protected $_root = 'XMLROOT';
+
     // Tools that will be used.
     protected $_managePaths;
 
@@ -76,6 +79,11 @@ abstract class ArchiveFolder_Format_Abstract
 
     public function __construct($uri, $parameters)
     {
+        // Set the default value.
+        if (plugin_is_active('DublinCoreExtended')) {
+            $this->_parametersFormat['use_dcterms'] = true;
+        }
+
         $this->_uri = $uri;
         $this->_parameters = $parameters;
 
@@ -83,7 +91,7 @@ abstract class ArchiveFolder_Format_Abstract
             $this->_loadDcmiElements();
         }
 
-        $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($uri, $parameters);
+        $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($this->_uri, $this->_parameters);
     }
 
     /**
@@ -133,6 +141,15 @@ abstract class ArchiveFolder_Format_Abstract
     protected function _getParameter($name)
     {
         return isset($this->_parameters[$name]) ? $this->_parameters[$name] : null;
+    }
+
+    public function startRoot()
+    {
+        $writer = $this->_writer;
+        $writer->startElement($this->_root);
+        $writer->writeAttribute('xmlns', $this->_metadataNamespace);
+        $writer->writeAttribute('xmlns:' . self::XSI_PREFIX, self::XSI_NAMESPACE);
+        $writer->writeAttribute('xsi:schemaLocation', $this->_metadataNamespace . ' ' . $this->_metadataSchema);
     }
 
     public function fillMetadataFormat()
@@ -236,7 +253,10 @@ abstract class ArchiveFolder_Format_Abstract
         $doc = &$this->_document;
 
         $metadata = array();
-        $metadata['Dublin Core']['Title'][] = pathinfo($file['specific']['path'], PATHINFO_BASENAME);
+        $path = $this->_managePaths->isRemote($file['process']['fullpath'])
+            ? urldecode($file['specific']['path'])
+            : $file['specific']['path'];
+        $metadata['Dublin Core']['Title'][] = pathinfo($path, PATHINFO_BASENAME);
 
         $this->_document['files'][$order]['metadata'] = $metadata;
     }
@@ -436,7 +456,9 @@ abstract class ArchiveFolder_Format_Abstract
      */
     protected function _isCdata($string)
     {
-        return strpos($string, '<![CDATA[') === 0 && strpos($string, ']]>') === strlen($string) - 3;
+        $string = trim($string);
+        return !empty($string)
+            && strpos($string, '<![CDATA[') === 0 && strpos($string, ']]>') === strlen($string) - 3;
     }
 
     /**
@@ -448,7 +470,8 @@ abstract class ArchiveFolder_Format_Abstract
     protected function _isXml($string)
     {
         $string = trim($string);
-        return strpos($string, '<') !== false
+        return !empty($string)
+            && strpos($string, '<') !== false
             && strpos($string, '>') !== false
             // A main tag is added to allow inner ones.
             && (boolean) simplexml_load_string('<xml>' . $string . '</xml>', 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
