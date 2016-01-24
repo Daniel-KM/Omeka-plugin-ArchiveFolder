@@ -123,12 +123,10 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         ) + get_table_options('ItemType');
         $this->addElement('select', 'item_type_id', array(
             'label' => __('Default Item Type'),
-            'description' => __('The default type is defined according to the type '
-                . 'of the first file and the number of files.')
-                . ' ' . __('("Still image" for an item with a single Image, "Text" for an item with multiple '
-                . 'image or a pdf, "Sound" for an audio file, "Moving Image" for a video file and none in all other cases.')
-                . ' ' . __('In fact, it only adds the value in the field "Dublin Core : Type", and the harvester may or may not add it as a special value.')
-                . ' ' . __('This field can be bypassed by special formats.'),
+            'description' => __('Set  the item type during import as Omeka Item Type and Dublin Core Type.')
+                . ' ' . __('For the second option (type of the first file and the number of files, it can be:')
+                . ' ' . __('"Still image" for an item with a single Image, "Text" for an item with multiple image or a pdf, '
+                . '"Sound" for an audio file, "Moving Image" for a video file and none in all other cases.'),
             'multiOptions' => $values,
             'value' => '',
         ));
@@ -196,7 +194,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'unreferenced_files',
                 'records_for_files',
                 'exclude_extensions',
-                'item_type_id',
             ),
             'archive_folder_records',
             array(
@@ -240,6 +237,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         $this->addDisplayGroup(
             array(
                 'identifier_field',
+                'item_type_id',
                 'action',
             ),
             'archive_folder_process',

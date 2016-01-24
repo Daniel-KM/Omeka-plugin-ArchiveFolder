@@ -183,8 +183,20 @@ abstract class ArchiveFolder_Format_Abstract
         }
 
         // Add default item type if not set.
-        if (!isset($this->_document['metadata']['Dublin Core']['Type'])) {
-           $this->_addItemType();
+        if ($this->_document['process']['record type'] == 'Item') {
+            $itemTypeName = $this->_getItemTypeName($this->_document);
+            if ($itemTypeName) {
+                if (!isset($this->_document['metadata']['Dublin Core']['Type'])) {
+                    if (empty($doc['metadata']['Dublin Core']['Type'])
+                            || !in_array($itemTypeName, $doc['metadata']['Dublin Core']['Type'])
+                        ) {
+                        $doc['metadata']['Dublin Core']['Type'][] = $itemTypeName;
+                    }
+                }
+                if (empty($this->_document['specific']['item_type_name'])) {
+                   $this->_document['specific']['item_type_name'] = $itemTypeName;
+                }
+            }
         }
 
         // Add identifier and relations to files if needed.
