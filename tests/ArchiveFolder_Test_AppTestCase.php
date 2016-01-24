@@ -80,10 +80,7 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
             . DIRECTORY_SEPARATOR . '_files');
 
         $pluginHelper = new Omeka_Test_Helper_Plugin;
-        // ArchiveDocument is a required plugin.
-        $pluginHelper->setUp('ArchiveDocument');
-        $pluginHelper->setUp(self::PLUGIN_NAME);
-        // OcrElementSet is an optional plugin.
+        // OcrElementSet is an optional plugin required for tests.
         $pluginHelper->setUp('OcrElementSet');
         $pluginHelper->setUp(self::PLUGIN_NAME);
 
