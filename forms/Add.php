@@ -122,6 +122,55 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             'value' => '',
         ));
 
+        $identifierField = get_option('archive_folder_identifier_field');
+        if (!empty($identifierField) && $identifierField != ArchiveFolder_Importer::IDFIELD_INTERNAL_ID) {
+            $currentIdentifierField = $this->_getElementFromIdentifierField($identifierField);
+            if ($currentIdentifierField) {
+                $identifierField = $currentIdentifierField->id;
+            }
+        }
+        $values = get_table_options('Element', null, array(
+            'record_types' => array('All'),
+            'sort' => 'alphaBySet',
+        ));
+        unset($values['']);
+        $values = array(
+            ArchiveFolder_Importer::IDFIELD_NONE => __('No default identifier field'),
+            ArchiveFolder_Importer::IDFIELD_INTERNAL_ID => __('Internal id'),
+            // 'filename' => __('Imported filename (to import files only)'),
+            // 'original filename' => __('Original filename (to import files only)'),
+        ) + $values;
+        $this->addElement('select', 'identifier_field', array(
+            'label' => __('Identifier field (required)'),
+            'description' => __('The identifier field is used to simplify the update of records.')
+                . ' ' . __('This is the relation between the folder and the Omeka base.'),
+            'multiOptions' => $values,
+            'value' => $identifierField,
+        ));
+
+        $this->addElement('select', 'action', array(
+            'label' => __('Action'),
+            'multiOptions' => label_table_options(array(
+                ArchiveFolder_Importer::ACTION_UPDATE_ELSE_CREATE
+                    => __('Update the record if it exists, else create one'),
+                ArchiveFolder_Importer::ACTION_CREATE
+                    => __('Create a new record'),
+                ArchiveFolder_Importer::ACTION_UPDATE
+                    => __('Update values of specific fields'),
+                ArchiveFolder_Importer::ACTION_ADD
+                    => __('Add values to specific fields'),
+                ArchiveFolder_Importer::ACTION_REPLACE
+                    => __('Replace values of all fields'),
+                ArchiveFolder_Importer::ACTION_DELETE
+                    => __('Delete the record'),
+                ArchiveFolder_Importer::ACTION_SKIP
+                    => __('Skip process of the record'),
+            ), __('No default action')),
+            'description' => __('The action defines how records and metadara are processed.')
+                . ' ' . __('The record can be created, updated, deleted or skipped.')
+                . ' ' . __('The metadata of an existing record can be updated, appended or replaced.'),
+        ));
+
         // Parameters for the folder of original files.
         $this->addDisplayGroup(
             array(
@@ -154,6 +203,17 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                     . ' ' . __('An object can have multiple pictures under different views or taken by different photographers.')
                     . ' ' . __('In that case, it is recommended to separate the metadata, for example to add data about each page or the different authors of the view.')
                     . ' ' . __("Conversely, an image of a paint, a photography, or a book digitalized as a pdf and e-book files doesn't need to have separate records."),
+        ));
+
+        // Parameters for the folder of original files.
+        $this->addDisplayGroup(
+            array(
+                'identifier_field',
+                'action',
+            ),
+            'archive_folder_process',
+            array(
+                'legend' => __('Import Process'),
         ));
 
         $this->applyOmekaStyles();
@@ -193,5 +253,28 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         }
 
         return $values;
+    }
+
+    /**
+     * Return the element from an identifier.
+     *
+     * @return Element|boolean
+     */
+    private function _getElementFromIdentifierField($identifierField)
+    {
+        if (strlen($identifierField) > 0) {
+            $parts = explode(
+                    CsvImport_ColumnMap_MixElement::DEFAULT_COLUMN_NAME_DELIMITER,
+                    $identifierField);
+            if (count($parts) == 2) {
+                $elementSetName = trim($parts[0]);
+                $elementName = trim($parts[1]);
+                $element = get_db()->getTable('Element')
+                    ->findByElementSetNameAndElementName($elementSetName, $elementName);
+                if ($element) {
+                    return $element;
+                }
+            }
+        }
     }
 }

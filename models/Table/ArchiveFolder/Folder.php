@@ -5,14 +5,14 @@
  *
  * @package ArchiveFolder
  */
-class Table_ArchiveFolder extends Omeka_Db_Table
+class Table_ArchiveFolder_Folder extends Omeka_Db_Table
 {
     /**
      * Retrieve a folder by its uri, that should be unique.
      *
      * @uses Omeka_Db_Table::getSelectForFindBy()
      * @param string $uri
-     * @return ArchiveFolder|null The existing folder or null.
+     * @return ArchiveFolder_Folder|null The existing folder or null.
      */
     public function findByUri($uri)
     {
@@ -27,7 +27,7 @@ class Table_ArchiveFolder extends Omeka_Db_Table
      *
      * @uses Omeka_Db_Table::getSelectForFindBy()
      * @param string $identifier
-     * @return ArchiveFolder|null The existing folder or null.
+     * @return ArchiveFolder_Folder|null The existing folder or null.
      */
     public function findByIdentifier($identifier)
     {
@@ -75,19 +75,19 @@ class Table_ArchiveFolder extends Omeka_Db_Table
                     switch ($value) {
                         case 'ready':
                             $genericParams['status'] = array(
-                                ArchiveFolder::STATUS_ADDED,
-                                ArchiveFolder::STATUS_RESET,
-                                ArchiveFolder::STATUS_PAUSED,
-                                ArchiveFolder::STATUS_STOPPED,
-                                ArchiveFolder::STATUS_KILLED,
-                                ArchiveFolder::STATUS_COMPLETED,
+                                ArchiveFolder_Folder::STATUS_ADDED,
+                                ArchiveFolder_Folder::STATUS_RESET,
+                                ArchiveFolder_Folder::STATUS_PAUSED,
+                                ArchiveFolder_Folder::STATUS_STOPPED,
+                                ArchiveFolder_Folder::STATUS_KILLED,
+                                ArchiveFolder_Folder::STATUS_COMPLETED,
                             );
                             break;
                         case 'processing':
                             $genericParams['status'] = array(
-                                ArchiveFolder::STATUS_QUEUED,
-                                ArchiveFolder::STATUS_PROGRESS,
-                                ArchiveFolder::STATUS_PAUSED,
+                                ArchiveFolder_Folder::STATUS_QUEUED,
+                                ArchiveFolder_Folder::STATUS_PROGRESS,
+                                ArchiveFolder_Folder::STATUS_PAUSED,
                             );
                             break;
                         default:

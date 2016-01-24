@@ -101,7 +101,7 @@ abstract class ArchiveFolder_Format_Abstract
     {
         // Prepare labels of dc terms.
         require PLUGIN_DIR
-            . DIRECTORY_SEPARATOR . 'ArchiveFolderDocument'
+            . DIRECTORY_SEPARATOR . 'ArchiveDocument'
             . DIRECTORY_SEPARATOR . 'libraries'
             . DIRECTORY_SEPARATOR . 'elements_dcterms.php';
         foreach ($elements as $element) {

@@ -10,13 +10,13 @@ class ArchiveFolder_RequestTest extends ArchiveFolder_Test_AppTestCase
 
         $url = '/repository/wrong_folder/' . 'wrong_image.png';
         $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
-        $this->assertEquals(ArchiveFolder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
         $this->dispatch($url);
         $this->assertResponseCode(404);
 
         $url = '/repository/Folder_Test/' . 'wrong_image.png';
         $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
-        $this->assertEquals(ArchiveFolder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
         $this->dispatch($url);
         $this->assertResponseCode(500);
 
@@ -56,7 +56,7 @@ class ArchiveFolder_RequestTest extends ArchiveFolder_Test_AppTestCase
 
         // Check before buildiing.
         $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
-        $this->assertEquals(ArchiveFolder::STATUS_COMPLETED, $folder->status, 'Folder check failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder check failed: ' . $folder->messages);
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
@@ -64,7 +64,7 @@ class ArchiveFolder_RequestTest extends ArchiveFolder_Test_AppTestCase
 
         // Check after buildiing.
         $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
-        $this->assertEquals(ArchiveFolder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
         $this->dispatch($url);
         $this->assertResponseCode(200);
     }

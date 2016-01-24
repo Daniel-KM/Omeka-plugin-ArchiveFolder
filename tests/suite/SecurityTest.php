@@ -24,7 +24,7 @@ class ArchiveFolder_SecurityTest extends ArchiveFolder_Test_AppTestCase
         $folder = $this->_folder;
 
         $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
-        $this->assertEquals(ArchiveFolder::STATUS_ERROR, $folder->status);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_ERROR, $folder->status);
         $this->assertStringEndsWith(__('Local paths are not allowed by the administrator.'), $folder->messages);
     }
 
@@ -84,6 +84,6 @@ class ArchiveFolder_SecurityTest extends ArchiveFolder_Test_AppTestCase
         $folder = $this->_folder;
 
         $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
-        $this->assertEquals(ArchiveFolder::STATUS_ERROR, $folder->status);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_ERROR, $folder->status);
     }
 }

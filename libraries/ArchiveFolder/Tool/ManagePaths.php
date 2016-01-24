@@ -92,7 +92,7 @@ class ArchiveFolder_Tool_ManagePaths
      */
     public function getAbsoluteUrl($filepath, $urlencode = true)
     {
-        // Check if this is aready an url.
+        // Check if this is already an url.
         if ($this->isRemote($filepath)) {
             return $filepath;
         }

@@ -33,19 +33,36 @@ class ArchiveFolder_UpdateJob extends Omeka_Job_AbstractJob
 
         // Resent jobs can remain queued after all the items themselves have
         // been deleted. Skip if that's the case.
-        if ($folder->status == ArchiveFolder::STATUS_DELETED) {
-            _log('[ArchiveFolder] '. __('The folder for uri "%s" (# %d) was deleted prior to running this job.',
+        if ($folder->status == ArchiveFolder_Folder::STATUS_DELETED) {
+            _log('[ArchiveFolder] ' . __('The folder for uri "%s" (# %d) was deleted prior to running this job.',
                 $folder->uri, $folder->id), Zend_Log::NOTICE);
             return;
         }
 
         try {
-            $folder->process($this->_processType);
+            // Builder.
+            if (in_array($this->_processType, array(
+                    ArchiveFolder_Builder::TYPE_CHECK,
+                    ArchiveFolder_Builder::TYPE_UPDATE,
+                 ))) {
+                // TODO Replace by a loop.
+                $folder->build($this->_processType);
+            }
+
+            // Importer.
+            else {
+                 // Don't use resend(), because it will nest process.
+                do {
+                     $folder->import();
+                }
+                while ($folder->countRecordsToImport()
+                    && !($folder->isError() || $folder->hasBeenStopped()));
+            }
         } catch (Exception $e) {
             $message = $e->getMessage();
-            $folder->setStatus(ArchiveFolder::STATUS_ERROR);
-            $folder->addMessage($message, ArchiveFolder::MESSAGE_CODE_ERROR);
-            _log('[ArchiveFolder] '. __('Error when processing folder "%s" (#%d): %s',
+            $folder->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+            $folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+            _log('[ArchiveFolder] ' . __('Error when processing folder "%s" (#%d): %s',
                 $folder->uri, $folder->id, $message), Zend_Log::ERR);
         }
     }
@@ -63,12 +80,12 @@ class ArchiveFolder_UpdateJob extends Omeka_Job_AbstractJob
     /**
      * Returns the folder to process.
      *
-     * @return ArchiveFolder The folder to process
+     * @return ArchiveFolder_Folder The folder to process
      */
     protected function _getFolder()
     {
         return $this->_db
-            ->getTable('ArchiveFolder')
+            ->getTable('ArchiveFolder_Folder')
             ->find($this->_folderId);
     }
 }

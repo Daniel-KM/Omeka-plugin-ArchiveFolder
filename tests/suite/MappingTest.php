@@ -53,7 +53,7 @@ class ArchiveFolder_MappingTest extends ArchiveFolder_Test_AppTestCase
                 $this->assertTrue($result, __('The file "%s" is not recognized as format "%s".', basename($filepath), $prefix));
 
                 $result = $mapping->listDocuments($filepath);
-                $result = json_encode($result, true);
+                $result = json_encode($result);
                 // Remove local paths before comparaison.
                 $jsonUri = trim(json_encode($uri), '"');
                 $expected = str_replace($jsonUri, '::ExampleBasePath::', $expected);

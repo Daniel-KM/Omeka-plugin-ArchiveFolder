@@ -21,6 +21,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_hooks = array(
         'initialize',
         'install',
+        'upgrade',
         'uninstall',
         'uninstall_message',
         'config_form',
@@ -47,6 +48,9 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         'archive_folder_processor' => '',
         // With roles, in particular if Guest User is installed.
         'archive_folder_allow_roles' => 'a:1:{i:0;s:5:"super";}',
+        // Options for a new archive folder.
+        'archive_folder_identifier_field' => ArchiveFolder_Importer::DEFAULT_IDFIELD,
+        'archive_folder_action' => ArchiveFolder_Importer::DEFAULT_ACTION,
     );
 
     /**
@@ -73,21 +77,38 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     {
         $db = $this->_db;
 
+        // Create a table for folders.
         $sql = "
-        CREATE TABLE IF NOT EXISTS `{$db->ArchiveFolder}` (
+        CREATE TABLE IF NOT EXISTS `{$db->ArchiveFolder_Folder}` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `uri` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             `identifier` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
             `parameters` text collate utf8_unicode_ci NOT NULL,
-            `status` enum('added', 'reset', 'queued', 'progress', 'paused', 'stopped', 'killed', 'completed', 'deleted', 'error') NOT NULL default 'added',
+            `status` enum('added', 'reset', 'queued', 'progress', 'paused', 'stopped', 'killed', 'completed', 'deleted', 'error') NOT NULL,
             `messages` longtext COLLATE utf8_unicode_ci NOT NULL,
             `owner_id` int unsigned NOT NULL DEFAULT '0',
-            `added` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+            `added` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
             `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`),
             INDEX `uri` (`uri`),
             UNIQUE `identifier` (`identifier`),
             INDEX `modified` (`modified`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+        ";
+        $db->query($sql);
+
+        // Create a table to list processed records.
+        $sql = "
+        CREATE TABLE IF NOT EXISTS `{$db->ArchiveFolder_Record}` (
+            `id` int(10) unsigned NOT NULL auto_increment,
+            `folder_id` int(10) unsigned NOT NULL,
+            `index` int(10) unsigned NOT NULL,
+            `record_type` varchar(50) collate utf8_unicode_ci NOT NULL,
+            `record_id` int(10) unsigned NOT NULL,
+            PRIMARY KEY  (`id`),
+            INDEX (`folder_id`),
+            INDEX `folder_id_index` (`folder_id`, `index`),
+            INDEX `record_type_record_id` (`record_type`, `record_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         ";
         $db->query($sql);
@@ -105,12 +126,48 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     /**
+     * Upgrade the plugin.
+     */
+    public function hookUpgrade($args)
+    {
+        $oldVersion = $args['old_version'];
+        $newVersion = $args['new_version'];
+        $db = $this->_db;
+
+        if (version_compare($oldVersion, '2.4', '<')) {
+            $sql = "
+                ALTER TABLE `{$db->prefix}archive_folders`
+                RENAME TO `{$db->ArchiveFolder_Folder}`;
+            ";
+            $db->query($sql);
+
+            // Create a table to list processed records.
+            $sql = "
+            CREATE TABLE IF NOT EXISTS `{$db->ArchiveFolder_Record}` (
+                `id` int(10) unsigned NOT NULL auto_increment,
+                `folder_id` int(10) unsigned NOT NULL,
+                `index` int(10) unsigned NOT NULL,
+                `record_type` varchar(50) collate utf8_unicode_ci NOT NULL,
+                `record_id` int(10) unsigned NOT NULL,
+                PRIMARY KEY  (`id`),
+                INDEX (`folder_id`),
+                INDEX `folder_id_index` (`folder_id`, `index`),
+                INDEX `record_type_record_id` (`record_type`, `record_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+            ";
+            $db->query($sql);
+        }
+    }
+
+    /**
      * Uninstalls the plugin.
      */
     public function hookUninstall()
     {
         $db = $this->_db;
-        $sql = "DROP TABLE IF EXISTS `$db->ArchiveFolder`";
+        $sql = "DROP TABLE IF EXISTS `$db->ArchiveFolder_Folder`";
+        $db->query($sql);
+        $sql = "DROP TABLE IF EXISTS `$db->ArchiveFolder_Record`";
         $db->query($sql);
 
         $this->_uninstallOptions();

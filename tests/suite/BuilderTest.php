@@ -20,7 +20,7 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $this->_prepareFolderTest();
 
         $folder = $this->_folder;
-        $folders = $this->db->getTable('ArchiveFolder')->findAll();
+        $folders = $this->db->getTable('ArchiveFolder_Folder')->findAll();
         $this->assertEquals(1, count($folders), 'There should be one archive folders.');
 
         $parameters = $folder->getParameters();
@@ -51,7 +51,7 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
             . DIRECTORY_SEPARATOR . 'Folder_Test',
             $folder->getCacheFolder());
 
-        $this->assertEquals(ArchiveFolder::STATUS_ADDED, $folder->status);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_ADDED, $folder->status);
     }
 
     public function testByFile()
@@ -94,7 +94,7 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
 
         // Update the folder (no change).
         $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
-        $this->assertEquals(ArchiveFolder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
     }
 
     public function testByDirectory()
@@ -244,10 +244,10 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $folder = $this->_folder;
 
         $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
-        $this->assertEquals(ArchiveFolder::STATUS_COMPLETED, $folder->status, 'Folder check failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder check failed: ' . $folder->messages);
 
         $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
-        $this->assertEquals(ArchiveFolder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
 
         if ($folder->uri == TEST_FILES_DIR . DIRECTORY_SEPARATOR . 'Folder_Test') {
             $this->_checkCache();

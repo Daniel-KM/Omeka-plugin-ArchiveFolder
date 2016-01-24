@@ -3,29 +3,38 @@
 /**
  * @package ArchiveFolder
  */
-class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
+class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
 {
     /**
-     * Notice message code, used for status messages.
-     */
-    const MESSAGE_CODE_NOTICE = 5;
-
-    /**
-     * Error message code, used for status messages.
+     * Error message codes, used for status messages.
+     *
+     * @see Zend_Log
      */
     const MESSAGE_CODE_ERROR = 3;
+    const MESSAGE_CODE_NOTICE = 5;
+    const MESSAGE_CODE_INFO = 6;
+    const MESSAGE_CODE_DEBUG = 7;
 
+    // Build.
     const STATUS_ADDED = 'added';
-    const STATUS_RESET = 'reset';
     const STATUS_QUEUED = 'queued';
     const STATUS_PROGRESS = 'progress';
+    const STATUS_COMPLETED = 'completed';
+    // Deletion of the xml document.
+    const STATUS_DELETED = 'deleted';
+    // Import.
+    const STATUS_IMPORTING = 'importing';
+    const STATUS_IMPORTED = 'imported';
+    // Process.
     const STATUS_PAUSED = 'paused';
     const STATUS_STOPPED = 'stopped';
     const STATUS_KILLED = 'killed';
-    const STATUS_COMPLETED = 'completed';
-    const STATUS_DELETED = 'deleted';
+    const STATUS_RESET = 'reset';
     const STATUS_ERROR = 'error';
 
+    /**
+     * @var int The record ID.
+     */
     public $id;
 
     /**
@@ -120,17 +129,6 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         return isset($parameters[$name]) ? $parameters[$name] : null;
     }
 
-    /**
-     * Indicate if the process of the folder has been stopped.
-     *
-     * @return boolean
-     */
-    public function hasBeenStopped()
-    {
-        $currentStatus = $this->getTable('ArchiveFolder')->getCurrentStatus($this->id);
-        return $currentStatus == ArchiveFolder::STATUS_STOPPED;
-    }
-
     public function getProperty($property)
     {
         switch($property) {
@@ -186,6 +184,28 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     }
 
     /**
+     * Indicate if there was an error.
+     *
+     * @return boolean
+     */
+    public function isError()
+    {
+        return $this->status == ArchiveFolder_Folder::STATUS_ERROR;
+    }
+
+    /**
+     * Indicate if the process of the folder has been stopped in the background.
+     *
+     * @return boolean
+     */
+    public function hasBeenStopped()
+    {
+        // Check the true status, that may have been updated in background.
+        $currentStatus = $this->getTable('ArchiveFolder_Folder')->getCurrentStatus($this->id);
+        return $currentStatus == ArchiveFolder_Folder::STATUS_STOPPED;
+    }
+
+    /**
      * Prepare parameters from a form, in order to make them coherent.
      *
      * @param array $parameters
@@ -204,6 +224,8 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
             'fill_ocr_process' => false,
             'records_for_files' => false,
             'item_type_name' => '',
+            'identifier_field' => ArchiveFolder_Importer::IDFIELD_NONE,
+            'action' => '',
         );
 
         $parameters = array_merge($defaults, $parameters);
@@ -228,13 +250,13 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         }
         // Else remove the protocol and the domain.
         elseif (parse_url($this->uri, PHP_URL_HOST)) {
-            $repositoryIdentifierBase = parse_url($foo, PHP_URL_PATH);
+            $repositoryIdentifierBase = parse_url($this->uri, PHP_URL_PATH);
         }
         // Else keep the full uri.
         else {
             $repositoryIdentifierBase = $this->uri;
         }
-        $repositoryIdentifierBase .= '-' . time() . rtrim(strtok(substr(microtime(), 2), ' '), '0');
+        $repositoryIdentifierBase .= '-' . date('Ymd-His') . '-' . rtrim(strtok(substr(microtime(), 2), ' '), '0');
         $parameters['repository_identifier'] = $this->_keepAlphanumericOnly($repositoryIdentifierBase);
 
         $parameters['records_for_files'] = (boolean) $parameters['records_for_files'];
@@ -299,6 +321,71 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         return FILES_DIR
             . DIRECTORY_SEPARATOR . get_option('archive_folder_static_dir')
             . DIRECTORY_SEPARATOR . $this->identifier . '.xml';
+    }
+
+    /**
+     * Get all archive folder records associated to this folder.
+     *
+     * @return array List of archive folder records, ordered by index.
+     */
+    public function getArchiveFolderRecords()
+    {
+        return $this->getTable('ArchiveFolder_Record')->findByFolder($this->id);
+    }
+
+    /**
+     * Get an archive folder record by index. If index is 0, get all records.
+     *
+     * @param integer $index
+     * @return Record|array List of archive folder records, ordered by index.
+     */
+    public function getArchiveFolderRecord($index)
+    {
+        return $this->getTable('ArchiveFolder_Record')->findByFolderAndIndex($this->id, $index);
+    }
+
+    /**
+     * Get all records associated to this folder.
+     *
+     * @return array List of records, ordered by index.
+     */
+    public function getRecords()
+    {
+        $archiveFolderRecords = $this->getArchiveFolderRecords();
+        if (empty($archiveFolderRecords)) {
+            return;
+        }
+
+        $records = array();
+        foreach ($archiveFolderRecords as $archiveFolderRecord) {
+            $records[] = $archiveFolderRecord->getRecord();
+        }
+        return array_filter($records);
+    }
+
+    /**
+     * Get a record by its index. If 0, return all records without index.
+     *
+     * @param integer $index
+     * @return Record|array List of records, ordered by index.
+     */
+    public function getRecord($index)
+    {
+        $archiveFolderRecords = $this->getArchiveFolderRecord($index);
+        if (empty($archiveFolderRecords)) {
+            return;
+        }
+
+        // Only one record (generic case: index is not 0).
+        if ($index) {
+            return $archiveFolderRecords->getRecord();
+        }
+
+        $records = array();
+        foreach ($archiveFolderRecords as $archiveFolderRecord) {
+            $records[] = $archiveFolderRecord->getRecord();
+        }
+        return array_filter($records);
     }
 
     /**
@@ -367,32 +454,35 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         }
 
         if (empty($this->id)) {
-            $folder = $this->getTable('ArchiveFolder')->findByUri($this->uri);
+            $folder = $this->getTable('ArchiveFolder_Folder')->findByUri($this->uri);
+            if (empty($this->uri)) {
+               $this->addError('uri', __('The uri is required.'));
+            }
             if (!empty($folder)) {
                $this->addError('uri', __('The folder for uri "%s" exists already.', $this->uri));
             }
 
-            $folder = $this->getTable('ArchiveFolder')->findByIdentifier($this->identifier);
+            $folder = $this->getTable('ArchiveFolder_Folder')->findByIdentifier($this->identifier);
             if (!empty($folder)) {
                $this->addError('repository_identifier', __('The repository identifier "%s" exists already.', $this->identifier));
             }
 
             if (trim($this->status) == '') {
-                $this->status = ArchiveFolder::STATUS_ADDED;
+                $this->status = ArchiveFolder_Folder::STATUS_ADDED;
             }
         }
 
         if (!in_array($this->status, array(
-                ArchiveFolder::STATUS_ADDED,
-                ArchiveFolder::STATUS_RESET,
-                ArchiveFolder::STATUS_QUEUED,
-                ArchiveFolder::STATUS_PROGRESS,
-                ArchiveFolder::STATUS_PAUSED,
-                ArchiveFolder::STATUS_STOPPED,
-                ArchiveFolder::STATUS_KILLED,
-                ArchiveFolder::STATUS_COMPLETED,
-                ArchiveFolder::STATUS_DELETED,
-                ArchiveFolder::STATUS_ERROR,
+                ArchiveFolder_Folder::STATUS_ADDED,
+                ArchiveFolder_Folder::STATUS_RESET,
+                ArchiveFolder_Folder::STATUS_QUEUED,
+                ArchiveFolder_Folder::STATUS_PROGRESS,
+                ArchiveFolder_Folder::STATUS_PAUSED,
+                ArchiveFolder_Folder::STATUS_STOPPED,
+                ArchiveFolder_Folder::STATUS_KILLED,
+                ArchiveFolder_Folder::STATUS_COMPLETED,
+                ArchiveFolder_Folder::STATUS_DELETED,
+                ArchiveFolder_Folder::STATUS_ERROR,
             ))) {
             $this->addError('status', __('The status "%s" does not exist.', $this->status));
         }
@@ -400,9 +490,24 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
 
     public function process($type = ArchiveFolder_Builder::TYPE_CHECK)
     {
-        _log('[ArchiveFolder] '. __('Folder #%d [%s]: Process started.', $this->id, $this->uri));
+        // Builder.
+        if (in_array($type, array(
+                ArchiveFolder_Builder::TYPE_CHECK,
+                ArchiveFolder_Builder::TYPE_UPDATE,
+             ))) {
+             $this->build($type);
+        }
+        // Importer.
+        else {
+             $this->import();
+        }
+    }
 
-        $this->setStatus(ArchiveFolder::STATUS_PROGRESS);
+    public function build($type = ArchiveFolder_Builder::TYPE_CHECK)
+    {
+        _log('[ArchiveFolder] ' . __('Folder #%d [%s]: Process started.', $this->id, $this->uri));
+
+        $this->setStatus(ArchiveFolder_Folder::STATUS_PROGRESS);
         $this->save();
 
         // Create collection if it is set to be the name of the repository. It
@@ -413,41 +518,41 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         try {
             $documents = $builder->process($this, $type);
         } catch (ArchiveFolder_BuilderException $e) {
-            $this->setStatus(ArchiveFolder::STATUS_ERROR);
+            $this->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
             $message = __('Error during process: %s', $e->getMessage());
-            $this->addMessage($message, ArchiveFolder::MESSAGE_CODE_ERROR);
-            _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
             return;
         } catch (Exception $e) {
-            $this->setStatus(ArchiveFolder::STATUS_ERROR);
+            $this->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
             $message = __('Unknown error during process: %s', $e->getMessage());
-            $this->addMessage($message, ArchiveFolder::MESSAGE_CODE_ERROR);
-            _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
             return;
         }
 
         if ($this->hasBeenStopped()) {
             $message = __('Process has been stopped by user.');
-            $this->addMessage($message);
-            _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_INFO);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
             return;
         }
 
         $message = $this->_checkDocuments($documents);
-        $this->addMessage($message, ArchiveFolder::MESSAGE_CODE_NOTICE);
-        _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
+        $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+        _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
 
         switch ($type) {
             case ArchiveFolder_Builder::TYPE_CHECK:
-                _log('[ArchiveFolder] '. __('Folder #%d [%s]: Check finished.', $this->id, $this->uri));
-                $this->setStatus(ArchiveFolder::STATUS_COMPLETED);
+                _log('[ArchiveFolder] ' . __('Folder #%d [%s]: Check finished.', $this->id, $this->uri));
+                $this->setStatus(ArchiveFolder_Folder::STATUS_COMPLETED);
                 $this->save();
                 break;
             case ArchiveFolder_Builder::TYPE_UPDATE:
-                $this->setStatus(ArchiveFolder::STATUS_COMPLETED);
-                $message = __('Update finished.');
-                $this->addMessage($message, ArchiveFolder::MESSAGE_CODE_NOTICE);
-                _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
+                $this->setStatus(ArchiveFolder_Folder::STATUS_COMPLETED);
+                $message = __('List of records ready.');
+                $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+                _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
 
                 $this->_postProcess();
                 break;
@@ -458,11 +563,57 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
      * The post process is the import process (harvesting) if set.
      *
      * @internal This process should be managed as a job.
-     *
-     * @param ArchiveFolder $folder
      */
     private function _postProcess()
     {
+        $folder = $this;
+
+        // TODO Manage all status.
+        if ($folder->status != ArchiveFolder_Folder::STATUS_COMPLETED) {
+            $message = __("The process can't be launched, because the folder is not ready.");
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
+            return false;
+        }
+
+        // Reset the total of imported records.
+        $this->setParameter('imported_records', 0);
+
+        $jobDispatcher = Zend_Registry::get('bootstrap')->getResource('jobs');
+        $jobDispatcher->setQueueName(ArchiveFolder_UpdateJob::QUEUE_NAME);
+
+        $options = array(
+            'folderId' => $this->id,
+            'processType' => 'import',
+        );
+
+        $flash = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+
+        // Short dispatcher if user wants it.
+        if (get_option('archive_folder_short_dispatcher')) {
+            try {
+                $jobDispatcher->send('ArchiveFolder_UpdateJob', $options);
+            } catch (Exception $e) {
+                $message = __('Error when processing folder.');
+                $folder->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+                $folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+                _log('[ArchiveFolder] ' . __('Folder "%s" (#%d): %s',
+                    $folder->uri, $folder->id, $message), Zend_Log::ERR);
+                $flash->addMessage($message, 'error');
+                return false;
+            }
+
+            $message = __('Folder "%s" has been processed.', $folder->uri);
+            $flash->addMessage($message, 'success');
+            return true;
+        }
+
+        // Normal dispatcher for long processes.
+        $jobDispatcher->sendLongRunning('ArchiveFolder_UpdateJob', $options);
+        $message = __('Folder "%s" is being processed.', $folder->uri)
+            . ' ' . __('This may take a while. Please check below for status.');
+        $flash->addMessage($message, 'success');
+        return true;
     }
 
     /**
@@ -478,7 +629,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         }
         // Computes total.
         else {
-            $this->countRecords($documents);
+            $this->countRecordsOfDocuments($documents);
             $message = __('Result: %d items and %d files.',
                 $this->_totalItems, $this->_totalFiles);
         }
@@ -493,7 +644,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
      * @param string $recordType "Item" or "File", else all types.
      * @return integer The total of the selected record type.
      */
-    public function countRecords($documents = null, $recordType = null)
+    public function countRecordsOfDocuments($documents = null, $recordType = null)
     {
         // Docs shouldn't be a null.
         if (empty($documents)) {
@@ -517,8 +668,8 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
                 $this->_totalFiles = $totalDocuments;
                 break;
             default:
-                $totalItems = $this->countRecords($documents, 'Item');
-                $totalFiles = $this->countRecords($documents, 'File');
+                $totalItems = $this->countRecordsOfDocuments($documents, 'Item');
+                $totalFiles = $this->countRecordsOfDocuments($documents, 'File');
                 $totalDocuments = $totalItems + $totalFiles;
                 break;
         }
@@ -575,6 +726,176 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         return $collection->id;
     }
 
+    /**
+     * Import the first record that is not yet imported.
+     *
+     * @internal The loop is managed by the job.
+     * @see ArchiveFolder_UpdateJob::perform()
+     *
+     * @return void
+     */
+    public function import()
+    {
+        $total = $this->countRecords();
+        if (!$total) {
+            $message = __('This folder has no record to process.');
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
+            return;
+        }
+
+        $toImport = $this->countRecordsToImport();
+        if (!$toImport) {
+            $message = __('All %d records have already been processed.', $total);
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
+            return;
+        }
+
+        if ($this->status != ArchiveFolder_Folder::STATUS_COMPLETED) {
+            $message = __('Folder is not ready to be processed.');
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
+            return;
+        }
+
+        $importeds = $this->countImportedRecords();
+        $message = __('Process of record #%d/%d started.', $importeds + 1, $total);
+        $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_DEBUG);
+        _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
+
+        $this->setStatus(ArchiveFolder_Folder::STATUS_PROGRESS);
+        $this->save();
+
+        $importer = new ArchiveFolder_Importer();
+
+        try {
+            $result = $importer->process($this);
+        } catch (ArchiveFolder_ImporterException $e) {
+            $this->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+            $message = __('Error during import of record #%d/%d: %s', $importeds + 1, $total, $e->getMessage());
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
+            return;
+        } catch (Exception $e) {
+            $this->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+            $message = __('Unknown error during import of record #%d/%d: %s', $importeds + 1, $total, $e->getMessage());
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
+            return;
+        }
+
+        // Check if there was an error.
+        if ($result) {
+            // Update the count to avoid to import the same record.
+            $this->setParameter('imported_records', $importeds + 1);
+            $this->setStatus(ArchiveFolder_Folder::STATUS_COMPLETED);
+            $message = __('Process of record #%d/%d finished.', $importeds + 1, $total);
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_DEBUG);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
+            if ($importeds + 1 == $total) {
+                $message = __('All %d records have been processed.', $total);
+                $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_INFO);
+                _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::INFO);
+            }
+        }
+        // Error: no import.
+        else {
+            $this->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+            $message = __('Process of record #%d/%d failed.', $importeds + 1, $total);
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message, Zend_Log::WARN));
+        }
+    }
+
+    public function countRecords()
+    {
+        $total = $this->getParameter('total_records');
+        if (is_null($total)) {
+            $total = $this->_countRecords();
+        }
+        return $total;
+    }
+
+    public function countImportedRecords()
+    {
+        return (integer) $this->getParameter('imported_records');
+    }
+
+    public function countRecordsToImport()
+    {
+        $records = $this->countRecords();
+        $importeds = $this->countImportedRecords();
+        return $records - $importeds;
+    }
+
+    /**
+     * Count all the records in the repository, at any level.
+     *
+     * @return integer|boolean
+     */
+    protected function _countRecords()
+    {
+        $reader = $this->_getXmlReader();
+        if (!$reader) {
+            return false;
+        }
+
+        $total = 0;
+        while ($reader->read()) {
+            if ($reader->nodeType == XMLReader::ELEMENT
+                    && $reader->name == 'record'
+                ) {
+                $total++;
+                // Count only first level records (items).
+                // $reader->next();
+            }
+        }
+
+        $reader->close();
+
+        return $total;
+    }
+
+    protected function _getXmlReader()
+    {
+        // Prepare the xml reader for the existing static repository.
+        // Don't use a static value to allow tests.
+        $localRepositoryFilepath = $this->getLocalRepositoryFilepath();
+        if (!file_exists($localRepositoryFilepath)) {
+            return false;
+        }
+
+        // Read the xml from the beginning.
+        $reader = new XMLReader;
+        $result = $reader->open($localRepositoryFilepath, null, LIBXML_NSCLEAN);
+        if (!$result) {
+            return false;
+        }
+
+        return $reader;
+    }
+
+    /**
+     * All of the custom code for deleting a folder.
+     */
+    protected function _delete()
+    {
+        $this->_deleteRecords();
+    }
+
+    /**
+     * Delete archive folder records associated with the folder.
+     */
+    protected function _deleteRecords()
+    {
+        $archiveRecordsToDelete = $this->getArchiveFolderRecords();
+
+        foreach ($archiveRecordsToDelete as $record) {
+            $record->delete();
+        }
+    }
+
     public function addMessage($message, $messageCode = null, $delimiter = PHP_EOL)
     {
         if (strlen($this->messages) == 0) {
@@ -594,13 +915,15 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
      */
     private function _getMessageCodeText($messageCode)
     {
-        switch ($messageCode) {
-            case ArchiveFolder::MESSAGE_CODE_ERROR:
-                return __('Error');
-            case ArchiveFolder::MESSAGE_CODE_NOTICE:
-            default:
-                return __('Notice');
-        }
+        $messagesCodes = array(
+            ArchiveFolder_Folder::MESSAGE_CODE_ERROR => __('Error'),
+            ArchiveFolder_Folder::MESSAGE_CODE_NOTICE => __('Notice'),
+            ArchiveFolder_Folder::MESSAGE_CODE_INFO => __('Info'),
+            ArchiveFolder_Folder::MESSAGE_CODE_DEBUG => __('Debug'),
+        );
+        return isset($messagesCodes[$messageCode])
+            ? $messagesCodes[$messageCode]
+            : $messagesCodes[ArchiveFolder_Folder::MESSAGE_CODE_NOTICE];
     }
 
     /**
@@ -612,7 +935,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
      */
     public function getResourceId()
     {
-        return 'ArchiveFolder';
+        return 'ArchiveFolder_Folders';
     }
 
     /**

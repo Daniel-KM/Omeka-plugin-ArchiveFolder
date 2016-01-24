@@ -78,11 +78,11 @@ class ArchiveFolder_Builder
     /**
      * Process update of a folder.
      *
-     * @param ArchiveFolder $folder The folder to process.
+     * @param ArchiveFolder_Folder $folder The folder to process.
      * @param string $type The type of process.
      * @return List of documents.
      */
-    public function process(ArchiveFolder $folder, $type = self::TYPE_CHECK)
+    public function process(ArchiveFolder_Folder $folder, $type = self::TYPE_CHECK)
     {
         $this->_folder = $folder;
         $this->_type = $type;
@@ -122,7 +122,7 @@ class ArchiveFolder_Builder
             throw new ArchiveFolder_BuilderException(__('Mappings cannot be checked: %s', $e->getMessage()));
         }
 
-        $this->_format = new ArchiveFolder_Format_Document();
+        $this->_format = new ArchiveFolder_Format_Document($this->_folder->uri, $this->_parameters);
 
         if ($this->_folder->hasBeenStopped()) return;
 
@@ -311,7 +311,7 @@ class ArchiveFolder_Builder
             $message = __('%d files with extensions "%s" were skipped.',
                 array_sum($unsetExtensions), implode('", "', array_keys($unsetExtensions)));
             $this->_folder->addMessage($message);
-            _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s',
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
                 $this->_folder->id, $this->_folder->uri, $message));
         }
 
@@ -319,7 +319,7 @@ class ArchiveFolder_Builder
             $message = __('At least %d forbidden files "%s" were skipped.',
                 count($unsets), implode('", "', $unsets));
             $this->_folder->addMessage($message);
-            _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s',
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
                 $this->_folder->id, $this->_folder->uri, $message));
         }
     }
@@ -501,7 +501,7 @@ class ArchiveFolder_Builder
                     count($unsets), '"' . implode('", "', $unsets) . '"');
             }
             $this->_folder->addMessage($message);
-            _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s',
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
                 $this->_folder->id, $this->_folder->uri, $message));
         }
     }
@@ -609,6 +609,7 @@ class ArchiveFolder_Builder
         // Default conversion.
         else {
             $format = $this->_format;
+            // Record type is an item.
             if ($recordType == 'Item') {
                 $format->fillRecord($document);
             }

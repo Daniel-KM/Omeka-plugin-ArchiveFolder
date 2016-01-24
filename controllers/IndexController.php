@@ -21,7 +21,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
     public function init()
     {
         $this->_db = $this->_helper->db;
-        $this->_db->setDefaultModelName('ArchiveFolder');
+        $this->_db->setDefaultModelName('ArchiveFolder_Folder');
     }
 
     /**
@@ -80,6 +80,8 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                 if ($successMessage != '') {
                     $this->_helper->flashMessenger($successMessage, 'success');
                 }
+                // Save the identifier field.
+                set_option('archive_folder_identifier_field', $parameters['identifier_field']);
                 $this->_redirectAfterAdd($record);
             } else {
                 $this->_helper->flashMessenger($record->getErrors());
@@ -107,6 +109,8 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             'records_for_files',
             // The item_type_id is in _postData().
             'item_type_name',
+            'identifier_field',
+            'action',
         ));
         foreach ($parameters as $parameter => &$value) {
             $value = isset($record->$parameter) ? $record->$parameter : null;
@@ -118,13 +122,14 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
     {
         $folder = $this->_db->findById();
         if (empty($folder)) {
-            $msg = __('Folder #%d does not exist.', $this->_getParam('id'));
-            $this->_helper->flashMessenger($msg, 'error');
+            $message = __('Folder #%d does not exist.', $this->_getParam('id'));
+            $this->_helper->flashMessenger($message, 'error');
             return $this->_helper->redirector->goto('browse');
         }
 
-        $folder->setStatus(ArchiveFolder::STATUS_STOPPED);
-        $folder->save();
+        $folder->setStatus(ArchiveFolder_Folder::STATUS_STOPPED);
+        $message = __('Process has been stopped.');
+        $folder->addMessage($message);
 
         $this->_helper->redirector->goto('browse');
     }
@@ -133,12 +138,12 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
     {
         $folder = $this->_db->findById();
         if (empty($folder)) {
-            $msg = __('Folder #%d does not exist.', $this->_getParam('id'));
-            $this->_helper->flashMessenger($msg, 'error');
+            $message = __('Folder #%d does not exist.', $this->_getParam('id'));
+            $this->_helper->flashMessenger($message, 'error');
             return $this->_helper->redirector->goto('browse');
         }
 
-        $folder->setStatus(ArchiveFolder::STATUS_RESET);
+        $folder->setStatus(ArchiveFolder_Folder::STATUS_RESET);
         $folder->save();
 
         $this->_helper->redirector->goto('browse');
@@ -203,19 +208,19 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
 
         $folder = $this->_db->find($id);
         if (empty($folder)) {
-            $msg = __('Folder # %d does not exist.', $id);
-            $this->_helper->flashMessenger($msg, 'error');
+            $message = __('Folder # %d does not exist.', $id);
+            $this->_helper->flashMessenger($message, 'error');
             return false;
         }
 
         if (in_array($folder->status, array(
-                ArchiveFolder::STATUS_QUEUED,
-                ArchiveFolder::STATUS_PROGRESS,
+                ArchiveFolder_Folder::STATUS_QUEUED,
+                ArchiveFolder_Folder::STATUS_PROGRESS,
             ))) {
             return true;
         }
 
-        $folder->setStatus(ArchiveFolder::STATUS_QUEUED);
+        $folder->setStatus(ArchiveFolder_Folder::STATUS_QUEUED);
         $folder->save();
 
         $options = array(
@@ -232,16 +237,16 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                 $jobDispatcher->send('ArchiveFolder_UpdateJob', $options);
             } catch (Exception $e) {
                 $message = __('Error when processing folder.');
-                $folder->setStatus(ArchiveFolder::STATUS_ERROR);
-                $folder->addMessage($message, ArchiveFolder::MESSAGE_CODE_ERROR);
-                _log('[ArchiveFolder] '. __('Folder "%s" (#%d): %s',
+                $folder->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+                $folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+                _log('[ArchiveFolder] ' . __('Folder "%s" (#%d): %s',
                     $folder->uri, $folder->id, $message), Zend_Log::ERR);
-                $this->_helper->flashMessenger($msg, 'error');
+                $this->_helper->flashMessenger($message, 'error');
                 return false;
             }
 
-            $msg = __('Folder "%s" has been updated.', $folder->uri);
-            $this->_helper->flashMessenger($msg, 'success');
+            $message = __('Folder "%s" has been updated.', $folder->uri);
+            $this->_helper->flashMessenger($message, 'success');
             return true;
         }
 

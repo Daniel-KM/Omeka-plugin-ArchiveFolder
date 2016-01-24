@@ -122,7 +122,7 @@ abstract class ArchiveFolder_Mapping_Abstract
      * @param array $parameters The parameters to use for the mapping.
      * @return void
      */
-    public function __construct($uri, $parameters)
+    public function __construct($uri, array $parameters)
     {
         $this->_uri = $uri;
         $this->_parameters = $parameters;
@@ -173,7 +173,7 @@ abstract class ArchiveFolder_Mapping_Abstract
                 'extension' => $this->_extension,
                 'xmlRoot' => $this->_xmlRoot,
                 'xmlNamespace' => $this->_xmlNamespace,
-            ));
+        ));
     }
 
     /**
@@ -193,6 +193,19 @@ abstract class ArchiveFolder_Mapping_Abstract
             $this->_removeDuplicateMetadata();
         }
         return $this->_processedFiles[$filepath];
+    }
+
+    /**
+     * Convert one record (e.g. one row of a spreadsheet) into a document.
+     *
+     * @internal Currently, this is used only with the Archive Document.
+     *
+     * @param var $record The record to process.
+     * @param boolean $withSubRecords Add sub records if any (files...).
+     * @return array The document.
+     */
+    public function getDocument($record, $withSubRecords = false)
+    {
     }
 
     /**

@@ -109,7 +109,7 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     public function assertPreConditions()
     {
-        $folders = $this->db->getTable('ArchiveFolder')->findAll();
+        $folders = $this->db->getTable('ArchiveFolder_Folder')->findAll();
         $this->assertEquals(0, count($folders), 'There should be no archive folders.');
     }
 
@@ -121,7 +121,7 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
             $parameters['element_delimiter'] = '|';
         }
 
-        $this->_folder = new ArchiveFolder();
+        $this->_folder = new ArchiveFolder_Folder();
         $this->_folder->uri = $uri ?: (TEST_FILES_DIR
             . DIRECTORY_SEPARATOR . 'Folder_Test');
         $this->_folder->prepareParameters($parameters);
@@ -130,11 +130,11 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     protected function _deleteAllRecords()
     {
-        $records = $this->db->getTable('ArchiveFolder')->findAll();
+        $records = $this->db->getTable('ArchiveFolder_Folder')->findAll();
         foreach($records as $record) {
             $record->delete();
         }
-        $records = $this->db->getTable('ArchiveFolder')->findAll();
+        $records = $this->db->getTable('ArchiveFolder_Folder')->findAll();
         $this->assertEquals(0, count($records), 'There should be no archive folders.');
     }
 

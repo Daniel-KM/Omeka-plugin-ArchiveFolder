@@ -1,4 +1,5 @@
 <?php
+$totalRecords = total_records('ArchiveFolder_Folder');
 $pageTitle = __('Archive Folders (%d total)', $total_results);
 queue_css_file('archive-folder');
 queue_js_file('archive-folder-browse');
@@ -15,7 +16,7 @@ echo head(array(
     <?php endif; ?>
     <h2><?php echo __('Status of Archive Folders'); ?></h2>
     <?php echo flash(); ?>
-<?php if (iterator_count(loop('ArchiveFolder'))): ?>
+<?php if (iterator_count(loop('ArchiveFolder_Folder'))): ?>
     <form action="<?php echo html_escape(url('archive-folder/index/batch-edit')); ?>" method="post" accept-charset="utf-8">
         <div class="table-actions batch-edit-option">
             <?php if (is_allowed('ArchiveFolder_Index', 'edit')): ?>
@@ -52,7 +53,7 @@ echo head(array(
             </thead>
             <tbody>
                 <?php $key = 0; ?>
-                <?php foreach (loop('ArchiveFolder') as $folder): ?>
+                <?php foreach (loop('ArchiveFolder_Folder') as $folder): ?>
                 <tr class="archive-folder <?php if (++$key%2 == 1) echo 'odd'; else echo 'even'; ?>">
                     <?php if (is_allowed('ArchiveFolder_Index', 'edit')): ?>
                     <td class="batch-edit-check" scope="row">
@@ -85,8 +86,8 @@ echo head(array(
                     <td>
                     <?php
                         switch ($folder->status):
-                            case ArchiveFolder::STATUS_QUEUED:
-                            case ArchiveFolder::STATUS_PROGRESS:
+                            case ArchiveFolder_Folder::STATUS_QUEUED:
+                            case ArchiveFolder_Folder::STATUS_PROGRESS:
                                 $actionUri = $this->url(array(
                                         'action' => 'stop',
                                         'id' => $folder->id,
@@ -105,14 +106,14 @@ echo head(array(
                                 ?>
                         <a href="<?php echo html_escape($actionUri); ?>" class="refresh button blue"><?php echo $action; ?></a>
                             <?php break;
-                            case ArchiveFolder::STATUS_ADDED:
-                            case ArchiveFolder::STATUS_RESET:
-                            case ArchiveFolder::STATUS_PAUSED:
-                            case ArchiveFolder::STATUS_STOPPED:
-                            case ArchiveFolder::STATUS_KILLED:
-                            case ArchiveFolder::STATUS_COMPLETED:
-                            case ArchiveFolder::STATUS_DELETED:
-                            case ArchiveFolder::STATUS_ERROR:
+                            case ArchiveFolder_Folder::STATUS_ADDED:
+                            case ArchiveFolder_Folder::STATUS_RESET:
+                            case ArchiveFolder_Folder::STATUS_PAUSED:
+                            case ArchiveFolder_Folder::STATUS_STOPPED:
+                            case ArchiveFolder_Folder::STATUS_KILLED:
+                            case ArchiveFolder_Folder::STATUS_COMPLETED:
+                            case ArchiveFolder_Folder::STATUS_DELETED:
+                            case ArchiveFolder_Folder::STATUS_ERROR:
                             default:
 
                                  if (is_allowed('ArchiveFolder_Index', 'edit')):
@@ -135,7 +136,7 @@ echo head(array(
                         <a href="<?php echo html_escape($actionUri); ?>" class="update button green"><?php echo $action; ?></a>
                         <?php
 
-                                    if (!in_array($folder->status, array(ArchiveFolder::STATUS_ADDED, ArchiveFolder::STATUS_COMPLETED))):
+                                    if (!in_array($folder->status, array(ArchiveFolder_Folder::STATUS_ADDED, ArchiveFolder_Folder::STATUS_COMPLETED))):
                                         $actionUri = $this->url(array(
                                                 'action' => 'reset-status',
                                                 'id' => $folder->id,
@@ -176,11 +177,11 @@ echo head(array(
         Omeka.addReadyCallback(Omeka.ArchiveFolderBrowse.setupBatchEdit);
     </script>
 <?php else: ?>
-    <?php if (total_records('ArchiveFolder') == 0): ?>
-        <p><?php echo __('No url or path have been checked or exposed.'); ?></p>
-    <?php else: ?>
-        <p><?php echo __('The query searched %s records and returned no results.', total_records('ArchiveFolder')); ?></p>
+    <?php if ($totalRecords): ?>
+        <p><?php echo __('The query searched %s records and returned no results.', $totalRecords); ?></p>
         <p><a href="<?php echo url('archive-folder/index/browse'); ?>"><?php echo __('See all folders.'); ?></a></p>
+    <?php else: ?>
+        <p><?php echo __('No url or path have been checked or exposed.'); ?></p>
     <?php endif; ?>
 <?php endif; ?>
 </div>

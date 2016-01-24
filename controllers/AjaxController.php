@@ -14,7 +14,7 @@ class ArchiveFolder_AjaxController extends Omeka_Controller_AbstractActionContro
         // Don't render the view script.
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $this->_helper->db->setDefaultModelName('ArchiveFolder');
+        $this->_helper->db->setDefaultModelName('ArchiveFolder_Folder');
     }
 
     /**
