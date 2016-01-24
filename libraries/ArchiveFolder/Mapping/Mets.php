@@ -82,7 +82,7 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $this->_prepareFilesMetadata();
 
         // All records are imported: no check if empty.
-        $doc['xml'] = $this->_asXml();
+        $doc['process']['xml'] = $this->_asXml();
         $documents[] = $doc;
     }
 
@@ -171,8 +171,8 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             }
 
             $file = array();
-            $file['path'] = $path;
-            // These values are used internally only.
+            $file['specific']['path'] = $path;
+            // These values are used internally by mets and will be removed.
             $file['fileId'] = $fileId;
             $file['dmdId'] = $dmdId;
             $file['amdId'] = $amdId;
@@ -202,7 +202,7 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             $amdMetadata = $this->_getDCMetadataForSource($amdId) ?: array();
             $file['metadata'] = array_merge_recursive($file['metadata'], $amdMetadata);
 
-            $ocrMetadata = $altoIngester->extractMetadata($file['path']);
+            $ocrMetadata = $altoIngester->extractMetadata($file['specific']['path']);
             if ($ocrMetadata) {
                 if ($this->_getParameter('keep_ocr_with_alto_file')) {
                     $file['metadata'] = array_merge_recursive($file['metadata'], $ocrMetadata);

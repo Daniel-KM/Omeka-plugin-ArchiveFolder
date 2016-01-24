@@ -160,7 +160,7 @@ abstract class ArchiveFolder_Format_Abstract
         $this->_document = $document;
 
         // Prepare metadata if there are not set.
-        if (!isset($this->_document['metadata'])) {
+        if (empty($this->_document['metadata'])) {
            $this->_addDefaultMetadata();
         }
 
@@ -188,7 +188,7 @@ abstract class ArchiveFolder_Format_Abstract
         $this->_countFilledRecords++;
 
         // Prepare metadata if there are not set.
-        if (!isset($file['metadata'])) {
+        if (empty($file['metadata'])) {
             $this->_addDefaultFileMetadata($file, $order);
         }
 
@@ -219,7 +219,9 @@ abstract class ArchiveFolder_Format_Abstract
         $doc = &$this->_document;
 
         $metadata = array();
-        $metadata['Dublin Core']['Title'][] = $doc['name'] ?: '/';
+        $metadata['Dublin Core']['Title'][] = $doc['process']['name']
+            ? array('text' => $doc['process']['name'], 'html' => $this->_isXml($doc['process']['name']))
+            : array('text' => '/', 'html' => false);
 
         $doc['metadata'] = $metadata;
     }
@@ -235,7 +237,10 @@ abstract class ArchiveFolder_Format_Abstract
         $doc = &$this->_document;
 
         $metadata = array();
-        $metadata['Dublin Core']['Title'][] = pathinfo($file['path'], PATHINFO_BASENAME);
+        $metadata['Dublin Core']['Title'][] = array(
+            'text' => pathinfo($file['specific']['path'], PATHINFO_BASENAME),
+            'html' => false,
+        );
 
         $this->_document['files'][$order]['metadata'] = $metadata;
     }
@@ -249,10 +254,13 @@ abstract class ArchiveFolder_Format_Abstract
 
         $itemTypeName = $this->_getItemTypeName($doc);
         if ($itemTypeName) {
-            if (!isset($doc['metadata']['Dublin Core']['Type'])
-                    || !in_array($itemTypeName, $doc['metadata']['Dublin Core']['Type'])
+            if (empty($doc['metadata']['Dublin Core']['Type'])
+                    || !$this->_checkValueInMetadata($itemTypeName, $doc['metadata']['Dublin Core']['Type'])
                 ) {
-                $doc['metadata']['Dublin Core']['Type'][] = $itemTypeName;
+                $doc['metadata']['Dublin Core']['Type'][] = array(
+                    'text' => $itemTypeName,
+                    'html' => false,
+                );
             }
         }
     }
@@ -264,11 +272,14 @@ abstract class ArchiveFolder_Format_Abstract
     {
         $doc = &$this->_document;
 
-        $url = $this->_managePaths->getAbsoluteUrl($doc['name']);
+        $url = $this->_managePaths->getAbsoluteUrl($doc['process']['name']);
         if (empty($doc['metadata']['Dublin Core']['Identifier'])
-                || !in_array($url, $doc['metadata']['Dublin Core']['Identifier'])
+                || !$this->_checkValueInMetadata($url, $doc['metadata']['Dublin Core']['Identifier'])
             ) {
-            $doc['metadata']['Dublin Core']['Identifier'][] = $url;
+            $doc['metadata']['Dublin Core']['Identifier'][] = array(
+                'text' => $url,
+                'html' => false,
+            );
         }
 
         if (!empty($this->_parametersFormat['link_to_files'])) {
@@ -283,11 +294,14 @@ abstract class ArchiveFolder_Format_Abstract
 
             if (isset($doc['files'])) {
                 foreach ($doc['files'] as $file) {
-                    $url = $this->_managePaths->getAbsoluteUrl($file['name']);
+                    $url = $this->_managePaths->getAbsoluteUrl($file['process']['name']);
                     if (empty($doc['metadata']['Dublin Core'][$fileLink])
-                            || !in_array($url, $doc['metadata']['Dublin Core'][$fileLink])
+                            || !$this->_checkValueInMetadata($url, $doc['metadata']['Dublin Core'][$fileLink])
                         ) {
-                        $doc['metadata']['Dublin Core'][$fileLink][] = $url;
+                        $doc['metadata']['Dublin Core'][$fileLink][] = array(
+                            'text' => $url,
+                            'html' => false,
+                        );
                     }
                 }
             }
@@ -307,11 +321,14 @@ abstract class ArchiveFolder_Format_Abstract
         $metadata = isset($file['metadata']) ? $file['metadata'] : array();
 
         $fileLink = $this->_parametersFormat['use_dcterms'] ? 'isRequiredBy' : 'Relation';
-        $url = $this->_managePaths->getAbsoluteUrl($doc['name']);
+        $url = $this->_managePaths->getAbsoluteUrl($doc['process']['name']);
         if (empty($metadata['Dublin Core'][$fileLink])
-                || !in_array($url, $metadata['Dublin Core'][$fileLink])
+                || !$this->_checkValueInMetadata($url, $metadata['Dublin Core'][$fileLink])
             ) {
-            $metadata['Dublin Core'][$fileLink][] = $url;
+            $metadata['Dublin Core'][$fileLink][] = array(
+                'text' => $url,
+                'html' => false,
+            );
         }
 
         $this->_document['files'][$order]['metadata'] = $metadata;
@@ -331,7 +348,7 @@ abstract class ArchiveFolder_Format_Abstract
             if (isset($metadata[$elementSetName][$term])) {
                 $elementName = $prefix . ':' . $name;
                 foreach ($metadata[$elementSetName][$term] as $content) {
-                    $this->_writeElement($elementName, $content);
+                    $this->_writeElement($elementName, $content['text']);
                 }
             }
         }
@@ -352,7 +369,7 @@ abstract class ArchiveFolder_Format_Abstract
                 }
                 $elementName = $prefixFormat . ':' . $name;
                 foreach ($metadata['Dublin Core'][$term] as $content) {
-                    $this->_writeElement($elementName, $content);
+                    $this->_writeElement($elementName, $content['text']);
                 }
             }
         }
@@ -433,10 +450,28 @@ abstract class ArchiveFolder_Format_Abstract
      */
     protected function _isXml($string)
     {
+        $string = trim($string);
         return strpos($string, '<') !== false
             && strpos($string, '>') !== false
             // A main tag is added to allow inner ones.
-            && (boolean) simplexml_load_string("<xml>$string</xml>", 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
+            && (boolean) simplexml_load_string('<xml>' . $string . '</xml>', 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
+    }
+
+    /**
+     * Check if a value is set in a list of metadata.
+     *
+     * @param string $value
+     * @param array $elementTexts
+     * @return boolean
+     */
+    protected function _checkValueInMetadata($value, $elementTexts)
+    {
+        foreach ($elementTexts as $elementText) {
+            if ($elementText['text'] === $value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -452,7 +487,7 @@ abstract class ArchiveFolder_Format_Abstract
         if ($itemTypeName == 'default') {
             $file = reset($doc['files']);
             $itemTypeName = $file
-                ? $this->_getItemTypeNameFromFilename($file['path'])
+                ? $this->_getItemTypeNameFromFilename($file['specific']['path'])
                 : null;
         }
         return $itemTypeName;

@@ -21,6 +21,10 @@ class ArchiveFolder_Tool_ManagePaths
      */
     public function __construct($uri, $parameters)
     {
+        if (empty($uri)) {
+            $message = __('The main uri should be set to use the class "ArchiveFolder_Tool_ManagePaths".');
+            throw new Exception($message);
+        }
         $this->_uri = $uri;
         $this->_parameters = $parameters;
     }
@@ -79,6 +83,67 @@ class ArchiveFolder_Tool_ManagePaths
     }
 
     /**
+     * Returns the absolute encoded path or url.
+     *
+     * Five cases according to filepath and uri of fhe folder.
+     * - url => keep it as it, it is always encoded.
+     * - absolute path:
+     *      => for url: this is forbidden.
+     *      => for local: check it and keep it.
+     * - relative path:
+     *      => for url: encode it for # and ? and add the uri + relative.
+     *      => for local: add the uri + relative and check it.
+     *
+     * @todo Check under Windows.
+     * @todo Add an option to keep all paths inside the folder relative to it.
+     *
+     * @param string $filepath The path may be relative, absolute, local or url.
+     * @return string The absolute path or url. Empty if error.
+     */
+    public function getAbsoluteUri($filepath)
+    {
+        if (empty($filepath)) {
+            return '';
+        }
+
+        // Check if this is already an absolute url.
+        if ($this->isRemote($filepath)) {
+            return $filepath;
+        }
+
+        // Check if this is a relative or an absolute path.
+        $absolutePath = $this->getAbsolutePath($filepath);
+        if (empty($absolutePath)) {
+            return '';
+        }
+
+        // This is an absolute path.
+        if ($absolutePath == $filepath) {
+            if ($this->isRemote($this->_uri)) {
+                return '';
+            }
+            if (!$this->isInsideFolder($filepath)) {
+                return '';
+            }
+            return $absolutePath;
+        }
+
+        // The path is relative to the current document.
+        // Normalize the relative path.
+        $relativeFilepath = $this->getRelativePathToFolder($filepath);
+        if (empty($relativeFilepath)) {
+            return '';
+        }
+
+        if ($this->isRemote($this->_uri)) {
+            $path = $this->rawurlencodeRelativePath($relativeFilepath);
+            return $this->_uri . '/' . $path;
+        }
+
+        return $this->_uri . DIRECTORY_SEPARATOR . $relativeFilepath;
+    }
+
+    /**
      * Rebuild the url to a file and url-encode it if wanted.
      *
      * Note: The "#" and the"?" are url-encoded in all cases for easier use.
@@ -102,11 +167,10 @@ class ArchiveFolder_Tool_ManagePaths
             if ($this->_getParameter('transfer_strategy') == 'Filesystem') {
                 $filepath = $this->rawurlencodeRelativePath($filepath);
             }
-            return $this->_getParameter('repository_folder') . $filepath;
+            return $this->_uri . '/' . $filepath;
         }
 
-        return $this->_getParameter('repository_folder_human')
-            . str_replace(array('#', '?'), array('%23', '%3F'), $filepath);
+        return $this->_uri . '/' . str_replace(array('#', '?'), array('%23', '%3F'), $filepath);
     }
 
     /**
@@ -231,14 +295,14 @@ class ArchiveFolder_Tool_ManagePaths
         if ($urlencode) {
             $path = $this->rawurlencodeRelativePath($relativeFilepath);
             return $absolute
-                ? $this->_getParameter('repository_folder') . $path
+                ? $this->_uri . '/' . $path
                 : $path;
         }
 
         // A normal relative path.
         $path = str_replace(array('#', '?'), array('%23', '%3F'), $relativeFilepath);
         return $absolute
-            ? $this->_getParameter('repository_folder_human') . $path
+            ? $this->_uri . '/' . $path
             : $path;
     }
 

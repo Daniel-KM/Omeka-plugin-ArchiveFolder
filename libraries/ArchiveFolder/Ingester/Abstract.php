@@ -35,7 +35,7 @@ abstract class ArchiveFolder_Ingester_Abstract
         $this->_uri = $uri;
         $this->_parameters = $parameters;
 
-        $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($uri, $parameters);
+        $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($this->_uri, $this->_parameters);
         $this->_validateFile = new ArchiveFolder_Tool_ValidateFile();
         $this->_processXslt = new ArchiveFolder_Tool_ProcessXslt();
     }

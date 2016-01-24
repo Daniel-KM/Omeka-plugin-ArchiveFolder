@@ -20,4 +20,20 @@ class ArchiveFolder_Mapping_Json extends ArchiveFolder_Mapping_Abstract
         $content = file_get_contents($this->_metadataFilepath);
         $documents = json_decode($content, true);
     }
+
+    /**
+     * Convert one record (e.g. one row of a spreadsheet) into a document.
+     *
+     * @param var $record The record to process.
+     * @param boolean $withSubRecords Add sub records if any (files...).
+     * @return array The document.
+     */
+    protected function _getDocument($record, $withSubRecords)
+    {
+        $document = json_decode($record, true);
+        if (!$withSubRecords) {
+            unset($document['files']);
+        }
+        return $document;
+    }
 }

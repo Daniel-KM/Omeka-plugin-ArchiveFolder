@@ -73,23 +73,23 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
             if (empty($record['metadata'])
                     && empty($record['files'])
                     && empty($record['extra'])
-                    && empty($record['name'])
-                    && empty($record['item type'])
+                    && empty($record['process']['name'])
+                    && empty($record['specific']['item type'])
                 ) {
                 continue;
             }
 
             // Next steps depend on the record type.
             $recordType = $this->_getRecordType($record);
-            unset($record['record type']);
+            unset($record['process']['record type']);
             switch ($recordType) {
                 case 'Item':
-                    // Second: normalize the current record.
+                    // Second: pre-normalize the current record.
                     if (isset($record['files'])) {
                         $files = $record['files'];
                         $record['files'] = array();
                         foreach ($files as $filepath) {
-                            $record['files'][$filepath] = array('path' => $filepath);
+                            $record['files'][$filepath] = array('specific' => array('path' => $filepath));
                         }
                     }
                     // No files.
@@ -99,7 +99,7 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
 
                     // Third: add a new record or update an existing one.
                     // If the required name is not filled, this is a new record.
-                    if (empty($record['name'])) {
+                    if (empty($record['process']['name'])) {
                         $documents[] = $record;
                         end($documents);
                         $documentKey = key($documents);
@@ -107,8 +107,8 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                     // Check if this is an update of a document.
                     else {
                         // Check if this is a complement in order to merge it.
-                        if (isset($this->_names[$record['name']])) {
-                            $documentKey = $this->_names[$record['name']];
+                        if (isset($this->_names[$record['process']['name']])) {
+                            $documentKey = $this->_names[$record['process']['name']];
                             $documents[$documentKey] = $this->_mergeRecords($documents[$documentKey], $record);
                         }
                         // This is a new document.
@@ -119,7 +119,7 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                         }
 
                         // Remember the current record name as key if needed.
-                        $this->_names[$record['name']] = $documentKey;
+                        $this->_names[$record['process']['name']] = $documentKey;
                     }
 
                     // Remember the current record for next files, if needed.
@@ -130,8 +130,8 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                     // Second: normalize the current record.
                     // The path and the name will be validated later, but the
                     // path should exist.
-                    $record['path'] = empty($record['files']) ? null : reset($record['files']);
-                    if (!strlen($record['path'])) {
+                    $record['specific']['path'] = empty($record['files']) ? null : reset($record['files']);
+                    if (!strlen($record['specific']['path'])) {
                         throw new ArchiveFolder_BuilderException(__('There is no path for the file.'));
                     }
                     unset($record['files']);
@@ -148,19 +148,19 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                     }
                     // Get the referenced files if there is a name.
                     // It may repeat _getRecordType(), etc., but this is needed.
-                    elseif (!empty($record['name']) && isset($this->_names[$record['name']])) {
-                        $documentKey = $this->_names[$record['name']];
+                    elseif (!empty($record['process']['name']) && isset($this->_names[$record['process']['name']])) {
+                        $documentKey = $this->_names[$record['process']['name']];
                         $referencedFiles = &$documents[$documentKey]['files'];
                     }
                     // Else, this is the current referenced files.
 
                     // The name is a metadata for the document, not the file.
-                    unset($record['name']);
+                    unset($record['process']['name']);
 
                     // Check if this an update of a file in order update it.
-                    $referencedFiles[$record['path']] = isset($referencedFiles[$record['path']])
+                    $referencedFiles[$record['specific']['path']] = isset($referencedFiles[$record['specific']['path']])
                         // This is an update.
-                        ? $this->_mergeRecords($referencedFiles[$record['path']], $record)
+                        ? $this->_mergeRecords($referencedFiles[$record['specific']['path']], $record)
                         // This is anew record.
                         : $record;
                     break;
@@ -203,7 +203,7 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                     // Single values that are processed here.
                     case 'name':
                     case 'record type':
-                        $record[$header] = $row[$index];
+                        $record['process'][$header] = $row[$index];
                         break;
 
                     // Multiple values that are managed here.
@@ -291,9 +291,13 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                 $current[$key] = $value;
             }
 
-            // A merge is needed.
+            // A merge may be needed.
             else {
                 switch ($key) {
+                    case 'process':
+
+                    case 'specific':
+
                     case 'metadata':
                     case 'extra':
                         $current[$key] = array_merge_recursive($current[$key], $value);
@@ -329,12 +333,12 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
     protected function _getRecordType($record)
     {
         // Check if there is a "record type".
-        if (!empty($record['record type'])) {
-            return strtolower($record['record type']) == 'file' ? 'File' : 'Item';
+        if (!empty($record['process']['record type'])) {
+            return strtolower($record['process']['record type']) == 'file' ? 'File' : 'Item';
         }
 
         // Check if there is an "item type".
-        if (!empty($record['extra']['item type'])) {
+        if (!empty($record['specific']['item type'])) {
             return 'Item';
         }
 
@@ -347,14 +351,14 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
         // Indexed.
         if (in_array('name', $this->_headers)) {
             // Check if there is no name.
-            if (empty($record['name'])) {
+            if (empty($record['process']['name'])) {
                 return 'Item';
             }
 
             // Here, there are a document name, one filepath, no record type and no
             // item type, so a simple context of previous rows is needed: the item
             // should be defined before a file.
-            if (isset($this->_names[$record['name']])) {
+            if (isset($this->_names[$record['process']['name']])) {
                 return 'File';
             }
         }

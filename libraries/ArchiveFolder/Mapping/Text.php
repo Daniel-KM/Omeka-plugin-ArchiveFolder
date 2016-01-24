@@ -77,7 +77,7 @@ class ArchiveFolder_Mapping_Text extends ArchiveFolder_Mapping_Abstract
                     case 'name':
                         $indexDocument++;
                         $indexFile = 0;
-                        $documents[$indexDocument] = array('name' => $meta);
+                        $documents[$indexDocument] = array('process' => array('name' => $meta));
                         $record = &$documents[$indexDocument];
                         $record['files'] = array();
                         $referencedFiles = &$record['files'];
@@ -88,7 +88,7 @@ class ArchiveFolder_Mapping_Text extends ArchiveFolder_Mapping_Abstract
                     case 'files':
                         $indexFile++;
                         $file = array();
-                        $file['path'] = $meta;
+                        $file['specific']['path'] = $meta;
                         $referencedFiles[$indexFile] = $file;
                         $record = &$referencedFiles[$indexFile];
                         $continueForeach = true;
@@ -128,8 +128,8 @@ class ArchiveFolder_Mapping_Text extends ArchiveFolder_Mapping_Abstract
             unset($documents[0]);
         }
         // Else set a name if needed.
-        elseif (empty($first['name'])) {
-            $first['name'] = $this->_managePaths->getRelativePathToFolder($this->_metadataFilepath);
+        elseif (empty($first['process']['name'])) {
+            $first['process']['name'] = $this->_managePaths->getRelativePathToFolder($this->_metadataFilepath);
         }
 
         return $documents;

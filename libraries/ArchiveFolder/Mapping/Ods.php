@@ -40,7 +40,7 @@ class ArchiveFolder_Mapping_Ods extends ArchiveFolder_Mapping_Table
     /**
      * Return arrays of data from an xml.
      *
-     * @param string $xml
+     * @param SimpleXML $xml
      * @return array Cleaned array of arrays of data.
      */
     protected function _getArraysFromXml($xml)

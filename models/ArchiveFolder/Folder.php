@@ -224,8 +224,8 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
             'fill_ocr_process' => false,
             'records_for_files' => false,
             'item_type_name' => '',
-            'identifier_field' => ArchiveFolder_Importer::IDFIELD_NONE,
-            'action' => '',
+            'identifier_field' => ArchiveFolder_Importer::DEFAULT_IDFIELD,
+            'action' => ArchiveFolder_Importer::DEFAULT_ACTION,
         );
 
         $parameters = array_merge($defaults, $parameters);
@@ -267,48 +267,6 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         $this->setParameters($parameters);
 
         $this->identifier = $parameters['repository_identifier'];
-    }
-
-    /**
-     * Get url of the static repository (scheme + repository + ".xml").
-     *
-     * @example http://institution.org:8080/path/to/repository_identifier.xml
-     * @example http://example.org/repository/repository_identifier.xml
-     *
-     * @return string
-     */
-    public function getStaticRepositoryUrl()
-    {
-        return $this->getParameter('repository_url');
-    }
-
-    /**
-     * Get the base url of the static repository (gateway + static repository
-     * url without scheme).
-     *
-     * @example http://example.org/gateway/institution.org%3A8080/path/to/repository_identifier.xml
-     * @example http://example.org/gateway/example.org/repository/repository_identifier.xml
-     *
-     * @return string
-     */
-    public function getStaticRepositoryBaseUrl()
-    {
-        return $this->getParameter('repository_base_url');
-    }
-
-    /**
-     * Get the url to the folder of files (original uri for remote folder, files
-     * one for local). This will be used to build quickly the path for local
-     * files.
-     *
-     * @example http://institution.org:8080/path/to/folder/
-     * @example http://example.org/repository/repository_identifier/
-     *
-     * @return string
-     */
-    public function getStaticRepositoryUrlFolder()
-    {
-        return $this->getParameter('repository_folder');
     }
 
     /**
@@ -710,7 +668,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         );
 
         // The title of the collection is the url of the repository.
-        $repositoryName = $this->getParameter('repository_name');
+        $repositoryName = $this->uri;
 
         $elementTexts = array();
         $elementTexts['Dublin Core']['Title'][] =

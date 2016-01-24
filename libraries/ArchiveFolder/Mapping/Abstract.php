@@ -206,6 +206,12 @@ abstract class ArchiveFolder_Mapping_Abstract
      */
     public function getDocument($record, $withSubRecords = false)
     {
+        $document = $this->_getDocument($record, $withSubRecords);
+        if (empty($document)) {
+            return array();
+        }
+        $document = $this->_normalizeDocument($document);
+        return $document;
     }
 
     /**
@@ -257,6 +263,19 @@ abstract class ArchiveFolder_Mapping_Abstract
     abstract protected function _prepareDocuments();
 
     /**
+     * Convert one record (e.g. one row of a spreadsheet) into a document.
+     *
+     * @internal Currently, this is used only with the Archive Document.
+     *
+     * @param var $record The record to process.
+     * @param boolean $withSubRecords Add sub records if any (files...).
+     * @return array The document.
+     */
+    protected function _getDocument($record, $withSubRecords)
+    {
+    }
+
+    /**
      * Validate documents, secure paths of files and make them absolute.
      *
      * @internal Only local filepaths are checked.
@@ -268,8 +287,12 @@ abstract class ArchiveFolder_Mapping_Abstract
         // Check file paths and names (if one is absent, the other is used).
         $nameBase = $this->_managePaths->getRelativePathToFolder($this->_metadataFilepath);
         foreach ($documents as $key => &$document) {
+            $document = $this->_normalizeDocument($document, 'Item');
             // Check if the document is empty.
-            if (empty($document['metadata']) && empty($document['files']) && empty($document['extra'])) {
+            if (empty($document['metadata'])
+                    && empty($document['extra'])
+                    && empty($document['files'])
+                ) {
                 unset($documents[$key]);
                 continue;
             }
@@ -278,26 +301,26 @@ abstract class ArchiveFolder_Mapping_Abstract
             // Warning: this should not be the same than the one defined inside
             // a metadata file, even if the issue is very rare. Nevertheless, it
             // should be enough stable to be updatable in main normal cases.
-            if (empty($document['name'])) {
-                $document['name'] = $nameBase . ':0' . ($key + 1);
+            if (empty($document['process']['name'])) {
+                $document['process']['name'] = $nameBase . ':0' . ($key + 1);
             }
 
-            // Remove a possible null value.
             if (empty($document['files'])) {
-                $document['files'] = array();
+                continue;
             }
-
             foreach ($document['files'] as $order => &$file) {
+                $file = $this->_normalizeDocument($file, 'File');
+
                 // The absolute and the relative paths should be the same file.
-                $path = isset($file['path']) && strlen($file['path']) > 0
-                    ? $file['path']
-                    : (isset($file['name']) ? $file['name'] : null);
+                $path = isset($file['specific']['path']) && strlen($file['specific']['path']) > 0
+                    ? $file['specific']['path']
+                    : (isset($file['process']['name']) ? $file['process']['name'] : null);
 
                 // Check if there is a filepath.
                 // Empty() is not used, because "0" can be a content.
                 $path = trim($path);
                 if (strlen($path) == 0) {
-                    throw new ArchiveFolder_BuilderException(__('The filepath for document "%s" is empty.', $document['name']));
+                    throw new ArchiveFolder_BuilderException(__('The filepath for document "%s" is empty.', $document['process']['name']));
                 }
 
                 // The path is absolute or relative to the path of the
@@ -315,8 +338,8 @@ abstract class ArchiveFolder_Mapping_Abstract
                     throw new ArchiveFolder_BuilderException(__('The file path "%s" is incorrect.', $path));
                 }
 
-                $file['path'] = $absoluteFilePath;
-                $file['name'] = $relativeFilepath;
+                $file['process']['name'] = $relativeFilepath;
+                $file['specific']['path'] = $absoluteFilePath;
             }
         }
 
@@ -324,7 +347,310 @@ abstract class ArchiveFolder_Mapping_Abstract
     }
 
     /**
-     * Get the data or element set  and element name from a string.
+     * Check and normalize a document (move extra data in process and specific).
+     *
+     * No default is added here, except the record type.
+     *
+     * @param array $document The document to normalize.
+     * @param array $recordType Optinoal The record type if not set
+     * @return array The normalized document.
+     */
+    protected function _normalizeDocument($document, $recordType = null)
+    {
+        // Set default values to avoid notices.
+        if (!isset($document['process'])) {
+            $document['process'] = array();
+        }
+        if (!isset($document['specific'])) {
+            $document['specific'] = array();
+        }
+        if (!isset($document['metadata'])) {
+            $document['metadata'] = array();
+        }
+        if (!isset($document['extra'])) {
+            $document['extra'] = array();
+        }
+
+        // Normalization for any record.
+        $process = array(
+            'record type' => null,
+            'internal id' => null,
+            'action' => null,
+            'name' => null,
+            'identifier field' => null,
+            'format_xml' => null,
+            'xml' => null,
+        );
+        $document['process'] = array_intersect_key(
+            array_merge($document['extra'], $document['process']),
+            $process);
+        $document['extra'] = array_diff_key($document['extra'], $process);
+
+        // For compatibility, the name can be set at root of the document.
+        if (isset($document['name'])) {
+            $document['process']['name'] = $document['name'];
+            unset($document['name']);
+        }
+
+        // Set the record type, one of the most important value.
+        if (empty($document['process']['record type'])) {
+            // When the record type is set directly, it is used.
+            if ($recordType) {
+                $document['process']['record type'] = $recordType;
+            }
+
+            // Force the record type to item if not a file.
+            else {
+                $document['process']['record type'] = !isset($document['specific']['files'])
+                        && (isset($document['specific']['path'])
+                            || isset($document['extra']['path'])
+                            || isset($document['path'])
+                        )
+                    ? 'File'
+                    : 'Item';
+            }
+        }
+        // Normalize and check the record type.
+        $recordType = ucfirst(strtolower($document['process']['record type']));
+        if (!in_array($recordType, array('File', 'Item', 'Collection'))) {
+            throw new ArchiveFolder_BuilderException(__('The record type "%s" does not exist.',
+                $document['extra']['record type']));
+        }
+        $document['process']['record type'] = $recordType;
+
+        // Check the action.
+        if (!empty($document['process']['action'])) {
+            $action = strtolower($document['process']['action']);
+            if (!in_array($action, array(
+                    ArchiveFolder_Importer::ACTION_UPDATE_ELSE_CREATE,
+                    ArchiveFolder_Importer::ACTION_CREATE,
+                    ArchiveFolder_Importer::ACTION_UPDATE,
+                    ArchiveFolder_Importer::ACTION_ADD,
+                    ArchiveFolder_Importer::ACTION_REPLACE,
+                    ArchiveFolder_Importer::ACTION_DELETE,
+                    ArchiveFolder_Importer::ACTION_SKIP,
+                ))) {
+                $message = __('The action "%s" does not exist.', $document['process']['action']);
+                throw new ArchiveFolder_ImporterException($message);
+            }
+            $document['process']['action'] = $action;
+        }
+
+        // Specific normalization according to the record type: separate Omeka
+        // metadata and element texts, that are standard metadata.
+        switch ($document['process']['record type']) {
+            case 'File':
+                $specific = array(
+                    'path' => null,
+                    // "fullpath" is automatically checked and defined below.
+                    'original filename' => null,
+                    'filename' => null,
+                    'md5' => null,
+                    'authentication' => null,
+                );
+                $document['specific'] = array_intersect_key(
+                    array_merge($document['extra'], $document['specific']),
+                    $specific);
+                $document['extra'] = array_diff_key($document['extra'], $specific);
+
+                if (empty($document['specific']['path'])) {
+                    $document['specific']['path'] = empty($document['path']) ? '' : $document['path'];
+                }
+
+                // The full path is checked and simplifies management of files.
+                if ($document['specific']['path']) {
+                    $absoluteFilePath = $this->_managePaths->getAbsoluteUri($document['specific']['path']);
+                    // An empty result means an incorrect path.
+                    // Access rights for local files are checked by the builder.
+                    if (empty($absoluteFilePath)) {
+                        $message = __('The path "%s" is forbidden or incorrect.', $document['specific']['path']);
+                        throw new ArchiveFolder_BuilderException($message);
+                    }
+                    $document['process']['fullpath'] = $absoluteFilePath;
+                }
+                // No path is allowed for update if there is another identifier.
+                else {
+                    $document['process']['fullpath'] = '';
+                }
+
+                // The authentication is kept if md5 is set too.
+                if (!isset($document['specific']['authentication']) && !empty($document['specific']['md5'])) {
+                    $document['specific']['authentication'] = $document['specific']['md5'];
+                }
+                unset($document['specific']['md5']);
+                break;
+
+            case 'Item':
+                $specific = array(
+                    Builder_Item::IS_PUBLIC => null,
+                    Builder_Item::IS_FEATURED => null,
+                    Builder_Item::COLLECTION_ID => null,
+                    Builder_Item::ITEM_TYPE_ID => null,
+                    Builder_Item::ITEM_TYPE_NAME => null,
+                    Builder_Item::TAGS => null,
+                    'collection' => null,
+                    'item type' => null,
+                );
+                $document['specific'] = array_intersect_key(
+                    array_merge($document['extra'], $document['specific']),
+                    $specific);
+                $document['extra'] = array_diff_key($document['extra'], $specific);
+
+                // Check the collection.
+                if (isset($document['specific'][Builder_Item::COLLECTION_ID])
+                        && isset($document['specific']['collection'])
+                    ) {
+                    unset($document['specific'][Builder_Item::COLLECTION_ID]);
+                }
+
+                // No collection name, so check the collection id.
+                if (isset($document['specific'][Builder_Item::COLLECTION_ID])) {
+                    // If empty, collection id should be null, not "" or "0".
+                    if (empty($document['specific'][Builder_Item::COLLECTION_ID])) {
+                        $document['specific'][Builder_Item::COLLECTION_ID] = null;
+                    }
+                    // Check the collection id.
+                    else {
+                        $collection = get_db()->getTable('Collection')->find($document['specific'][Builder_Item::COLLECTION_ID]);
+                        if (empty($collection)) {
+                            $message = __('The collection "%s" does not exist.', $document['specific'][Builder_Item::COLLECTION_ID]);
+                            throw new ArchiveFolder_BuilderException($message);
+                        }
+                    }
+                }
+
+                // Check the item type, that can be set as "item_type_id",
+                // "item_type_name" and "item type". The "item type" is kept
+                // with the key "item_type_name".
+                if (isset($document['specific']['item type'])) {
+                    unset($document['specific'][Builder_Item::ITEM_TYPE_ID]);
+                    $document['specific'][Builder_Item::ITEM_TYPE_NAME] = $document['specific']['item type'];
+                    unset($document['specific']['item type']);
+                }
+                // Item type name is used if no item type.
+                elseif (isset($document['specific'][Builder_Item::ITEM_TYPE_NAME])) {
+                    unset($document['specific'][Builder_Item::ITEM_TYPE_ID]);
+                }
+
+                $itemTypes = get_db()->getTable('ItemType')->findPairsForSelectForm();
+                // Check the item type name.
+                if (!empty($document['specific'][Builder_Item::ITEM_TYPE_NAME])) {
+                    $itemTypeId = array_search(strtolower($document['specific'][Builder_Item::ITEM_TYPE_NAME]), array_map('strtolower', $itemTypes));
+                    if (!$itemTypeId) {
+                        throw new ArchiveFolder_BuilderException(__('The item type "%s" does not exist.',
+                            $document['specific'][Builder_Item::ITEM_TYPE_NAME]));
+                    }
+                    $document['specific'][Builder_Item::ITEM_TYPE_NAME] = $itemTypes[$itemTypeId];
+                }
+
+                // Check the item type id.
+                elseif (!empty($document['specific'][Builder_Item::ITEM_TYPE_ID])) {
+                    if (!isset($itemTypes[$itemTypeId])) {
+                        throw new ArchiveFolder_BuilderException(__('The item type id "%d" does not exist.',
+                            $itemTypeId));
+                    }
+                    unset($document['specific'][Builder_Item::ITEM_TYPE_ID]);
+                    $document['specific'][Builder_Item::ITEM_TYPE_NAME] = $itemTypes[$itemTypeId];
+                }
+                break;
+
+            case 'Collection':
+                $specific = array(
+                    Builder_Collection::IS_PUBLIC => null,
+                    Builder_Collection::IS_FEATURED => null,
+                );
+                $document['specific'] = array_intersect_key(
+                    array_merge($document['extra'], $document['specific']),
+                    $specific);
+                $document['extra'] = array_diff_key($document['extra'], $specific);
+                break;
+        }
+
+        // Normalize the identifier field if it is a special one.
+        if (!empty($document['process']['identifier field'])) {
+            $lowerIdentifierField = str_replace('_', ' ', strtolower($document['process']['identifier field']));
+            if (in_array($lowerIdentifierField, array(
+                    // For any record.
+                    ArchiveFolder_Importer::IDFIELD_NONE,
+                    ArchiveFolder_Importer::IDFIELD_INTERNAL_ID,
+                    // For file only.
+                    'original filename',
+                    'filename',
+                    'md5',
+                    'authentication',
+                ))) {
+
+                if ($document['process']['record type'] == 'File') {
+                    if ($lowerIdentifierField == 'original filename') {
+                        $lowerIdentifierField = 'original_filename';
+                    }
+                    elseif ($lowerIdentifierField == 'md5') {
+                        $lowerIdentifierField = 'authentication';
+                    }
+                }
+                elseif (in_array($lowerIdentifierField, array(
+                        'original filename',
+                        'filename',
+                        'md5',
+                        'authentication',
+                    ))) {
+                    $message = __('The identifier field "%s" is not allowed for the record type "%s".',
+                        $document['process']['identifier field'], $document['process']['record type']);
+                    throw new ArchiveFolder_BuilderException($message);
+                }
+
+                $document['process']['identifier field'] = $lowerIdentifierField;
+            }
+        }
+
+        // The identifier itself is checked only during import.
+
+        // Clean value for any record (done above).
+        // Clean specific value of fIle.
+        unset($document['path']);
+        unset($document['extra']['path']);
+        unset($document['extra']['original filename']);
+        unset($document['extra']['filename']);
+        unset($document['extra']['md5']);
+        unset($document['extra']['authentication']);
+        // Clean specific value of item.
+        unset($document['extra']['collection']);
+        unset($document['extra']['collection_id']);
+        unset($document['extra']['item_type_id']);
+        unset($document['extra']['item_type_name']);
+        unset($document['extra']['item type']);
+        unset($document['extra']['tags']);
+        // Clean specific value of item and collection.
+        unset($document['extra']['public']);
+        unset($document['extra']['featured']);
+
+        // Normalize the element texts.
+        // Add the html boolean to be Omeka compatible.
+        foreach ($document['metadata'] as $elementSetName => &$elements) {
+            foreach ($elements as $elementName => &$elementTexts) {
+                foreach ($elementTexts as &$elementText) {
+                    // Trim the metadata to avoid spaces.
+                    if (is_array($elementText)) {
+                        $elementText['text'] = trim($elementText['text']);
+                        $elementText['html'] = !empty($elementText['html']);
+                    }
+                    // Normalize the value.
+                    else {
+                        $elementText = trim($elementText);
+                        $elementText = array(
+                            'text' => $elementText,
+                            'html' => $this->_isXml($elementText),
+                        );
+                    }
+                }
+            }
+        }
+
+        return $document;
+    }
+
+    /**
+     * Get the data or element set and element name from a string.
      *
      * @param string $string The string to identify and clean.
      * @return string|array|null If recognized, the array with element set name
@@ -386,6 +712,9 @@ abstract class ArchiveFolder_Mapping_Abstract
 
         foreach ($documents as &$document) {
             $document = $this->_removeDuplicateMetadataForRecord($document);
+            if (empty($document['files'])) {
+                continue;
+            }
             foreach ($document['files'] as &$file) {
                 $file = $this->_removeDuplicateMetadataForRecord($file);
             }
@@ -403,11 +732,27 @@ abstract class ArchiveFolder_Mapping_Abstract
         foreach ($record as $key => &$value) {
             switch ($key) {
                 case 'metadata':
-                    foreach ($value as $elementSetName => &$elementName) {
-                        $elementName = array_map('array_unique', $elementName);
+                    foreach ($value as &$elements) {
+                        // Omeka metadata are not a simple list of strings.
+                        // $elements = array_map('array_unique', $elements);
+                        $ets = array();
+                        foreach ($elements as &$elementTexts) {
+                            $ets = array();
+                            foreach ($elementTexts as $i => &$elementText) {
+                                // Check if it exists.
+                                if (isset($ets[$elementText['text']])) {
+                                    unset($elementTexts[$i]);
+                                }
+                                // This is a unique value..
+                                else {
+                                    $ets[$elementText['text']] = null;
+                                }
+                            }
+                        }
                     }
                     break;
 
+                case 'specific':
                 case 'extra':
                     foreach ($value as &$data) {
                         if (is_array($data)) {
@@ -472,22 +817,36 @@ abstract class ArchiveFolder_Mapping_Abstract
         $documents = &$this->_processedFiles[$this->_metadataFilepath];
 
         foreach ($documents as &$document) {
-            if (isset($document['xml'])) {
-                $document['format_xml'] = $this->_formatXml;
+            if (isset($document['process']['xml'])) {
+                $document['process']['format_xml'] = $this->_formatXml;
             }
             else {
-                unset($document['format_xml']);
+                unset($document['process']['format_xml']);
             }
             if (isset($document['files'])) {
                 foreach ($document['files'] as &$file) {
-                    if (isset($file['xml'])) {
-                        $file['format_xml'] = $this->_formatXml;
+                    if (isset($file['process']['xml'])) {
+                        $file['process']['format_xml'] = $this->_formatXml;
                     }
                     else {
-                        unset($file['format_xml']);
+                        unset($file['process']['format_xml']);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Check if a string is an Xml one.
+     *
+     * @param string $string
+     * @return boolean
+     */
+    protected function _isXml($string)
+    {
+        return strpos($string, '<') !== false
+            && strpos($string, '>') !== false
+            // A main tag is added to allow inner ones.
+            && (boolean) simplexml_load_string('<xml>' . $string . '</xml>', 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
     }
 }

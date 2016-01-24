@@ -10,6 +10,7 @@ class ArchiveFolder_Importer
     // Default values.
     const IDFIELD_NONE = 'none';
     const IDFIELD_INTERNAL_ID = 'internal id';
+    const IDFIELD_NAME = 'name';
 
     const DEFAULT_IDFIELD = 'none';
 
@@ -41,7 +42,8 @@ class ArchiveFolder_Importer
      */
     public function __construct()
     {
-        $this->_mapper = new ArchiveFolder_Mapping_Document('', array());
+        $uri = get_option('archive_folder_static_dir');
+        $this->_mapper = new ArchiveFolder_Mapping_Document($uri, array());
     }
 
     /**
@@ -58,8 +60,15 @@ class ArchiveFolder_Importer
 
         $index = $folder->countImportedRecords() + 1;
         $recordXml = $this->_getXmlRecord($index);
-        if (!$recordXml) {
-            return false;
+        if (!is_object($recordXml)) {
+            $message = __('There is no record #%d.', $document['process']['index']);
+            throw new ArchiveFolder_ImporterException($message);
+        }
+        // This is an empty record.
+        if (empty($recordXml)) {
+            $message = __('The record #%d is empty.', $document['process']['index']);
+            $this->_folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+            return true;
         }
 
         // Set the default identifier field, that may be bypassed by a record.
@@ -201,19 +210,19 @@ class ArchiveFolder_Importer
     protected function _createFile($document)
     {
         // Check if the file url is present.
-        if (empty($document['specific']['path'])) {
+        if (empty($document['process']['fullpath'])) {
             return;
         }
-
-        $fileUrl = $document['specific']['path'];
 
         // Get record from the main record, that is saved before.
         // TODO Get the item via the specific "item" name.
         $item = $this->_folder->getRecord($this->_indexFirstLevelRecord);
         if (empty($item)) {
-            $message = __('The file "%s" cannot be created before the item.', $fileUrl);
+            $message = __('The file "%s" cannot be created before the item.', $document['specific']['path']);
             throw new ArchiveFolder_ImporterException($message);
         }
+
+        $fileUrl = $document['process']['fullpath'];
 
         // Set the transfer strategy according to the file url.
         $parsedFileUrl = parse_url($fileUrl);
@@ -276,7 +285,7 @@ class ArchiveFolder_Importer
             $document['process']['index'] = 0;
             $document['process']['record type'] = 'Collection';
             $document['process']['action'] = ArchiveFolder_Importer::ACTION_CREATE;
-            $document['process']['identifier field'] = 'name';
+            $document['process']['identifier field'] = ArchiveFolder_Importer::IDFIELD_NAME;
             $document['process']['identifier'] = $identifier;
 
             $document['specific'] = array();
@@ -358,8 +367,8 @@ class ArchiveFolder_Importer
                 // Check and create collection if needed.
                 // TODO Add an option to create or not a default collection.
                 $collection = null;
-                if (!empty($document['extra']['collection'])) {
-                    $collection = $this->_createCollectionFromIdentifier($document['extra']['collection']);
+                if (!empty($document['specific']['collection'])) {
+                    $collection = $this->_createCollectionFromIdentifier($document['specific']['collection']);
                     $document['specific'][Builder_Item::COLLECTION_ID] = $collection->id;
                     unset($document['extra']['collection']);
                 }
@@ -367,12 +376,11 @@ class ArchiveFolder_Importer
                 // Update specific data of the item.
                 switch ($action) {
                     case ArchiveFolder_Importer::ACTION_UPDATE:
-                        if (empty($document['specific'][Builder_Item::ITEM_TYPE_ID])
-                               || empty($document['specific'][Builder_Item::ITEM_TYPE_NAME])
-                            ) {
+                        // The item type is cleaned: only the name is available,
+                        // if any.
+                        if (empty($document['specific'][Builder_Item::ITEM_TYPE_NAME])) {
                             // TODO Currently, item type cannot be reset.
-                            // $recordMetadata[Builder_Item::ITEM_TYPE_ID] = null;
-                            unset($document['specific'][Builder_Item::ITEM_TYPE_ID]);
+                            // $recordMetadata[Builder_Item::ITEM_TYPE_NAME] = null;
                             unset($document['specific'][Builder_Item::ITEM_TYPE_NAME]);
                         }
                         break;
@@ -381,9 +389,6 @@ class ArchiveFolder_Importer
                     case  ArchiveFolder_Importer::ACTION_REPLACE:
                         if (empty($document['specific'][Builder_Item::COLLECTION_ID])) {
                             $document['specific'][Builder_Item::COLLECTION_ID] = $record->collection_id;
-                        }
-                        if (empty($document['specific'][Builder_Item::ITEM_TYPE_ID])) {
-                            $document['specific'][Builder_Item::ITEM_TYPE_ID] = $record->item_type_id;
                         }
                         if (empty($document['specific'][Builder_Item::ITEM_TYPE_NAME])) {
                             if (!empty($record->item_type_id)) {
@@ -532,176 +537,24 @@ class ArchiveFolder_Importer
     /**
      * Normalize the document and set default values according to parameters.
      *
-     * @param array $document
+     * @param array $document A cleaned document.
      * @param integer $index
      * @param SimpleXml $recordXml
      * @return array $document
      */
     private function _normalizeDocument($document, $index, $recordXml)
     {
-        // Set default values to avoid notices.
-        $document['process'] = array();
-        $document['specific'] = array();
-        if (!isset($document['metadata'])) {
-            $document['metadata'] = array();
-        }
-        if (!isset($document['extra'])) {
-            $document['extra'] = array();
-        }
-
         $document['process']['index'] = $index;
 
-        // Set the record type.
-        if (empty($document['extra']['record type'])) {
-            $document['process']['record type'] = isset($document['extra']['path'])
-                    || $this->_firstLevelRecord != $recordXml
-                ? 'File'
-                : 'Item';
-        }
-        // Check the record type.
-        else {
-            $recordType = ucfirst(strtolower($document['extra']['record type']));
-            if (!in_array($recordType, array('File', 'Item', 'Collection'))) {
-                throw new ArchiveFolder_ImporterException(__('The record type "%s" does not exist.',
-                    $document['extra']['record type']));
-            }
-            $document['process']['record type'] = $recordType;
-        }
-        unset($document['extra']['record type']);
-
-        // Set the action.
-        if (empty($document['extra']['action'])) {
+        // Set the default action.
+        if (empty($document['process']['action'])) {
             $document['process']['action'] = $this->_folder->getParameter('action') ?: ArchiveFolder_Importer::DEFAULT_ACTION;
         }
-        // Check the action.
-        else {
-            $action = strtolower($document['extra']['action']);
-            if (!in_array($action, array(
-                    ArchiveFolder_Importer::ACTION_UPDATE_ELSE_CREATE,
-                    ArchiveFolder_Importer::ACTION_CREATE,
-                    ArchiveFolder_Importer::ACTION_UPDATE,
-                    ArchiveFolder_Importer::ACTION_ADD,
-                    ArchiveFolder_Importer::ACTION_REPLACE,
-                    ArchiveFolder_Importer::ACTION_DELETE,
-                    ArchiveFolder_Importer::ACTION_SKIP,
-                ))) {
-                $message = __('The action "%s" does not exist.', $document['extra']['action']);
-                throw new ArchiveFolder_ImporterException($message);
-            }
-            // Normalize the action.
-            $document['process']['action'] = $action;
-        }
-        unset($document['extra']['action']);
 
-        // Specific normalization according to the record type: separate Omeka
-        // metadata and element texts, that are standard metadata.
-        switch ($document['process']['record type']) {
-            case 'File':
-                $document['specific']['path'] = empty($document['extra']['path']) ? '' : $document['extra']['path'];
-                unset($document['extra']['path']);
-                break;
-
-            case 'Item':
-                $specific = array(
-                    Builder_Item::IS_PUBLIC => null,
-                    Builder_Item::IS_FEATURED => null,
-                    Builder_Item::COLLECTION_ID => null,
-                    Builder_Item::ITEM_TYPE_ID => null,
-                    Builder_Item::ITEM_TYPE_NAME => null,
-                    Builder_Item::TAGS => null,
-                );
-                $document['specific'] = array_intersect_key($document['extra'], $specific);
-                $document['extra'] = array_diff_key($document['extra'], $specific);
-
-                // Check the collection.
-                if (!empty($document['extra']['collection'])) {
-                    $collection = $this->_getExistingRecordFromIdentifier(
-                        $document['extra']['collection'], 'Collection', $this->_identifierField);
-                    if ($collection) {
-                        $document['specific'][Builder_Item::COLLECTION_ID] = $collection->id;
-                        unset($document['extra']['collection']);
-                    }
-                }
-                // If set, collection id should be null, not "" or "0".
-                if (isset($document['specific'][Builder_Item::COLLECTION_ID])) {
-                    $document['specific'][Builder_Item::COLLECTION_ID] = $document['specific'][Builder_Item::COLLECTION_ID] ?: null;
-                }
-
-                // Check the item type, that can be set as "item_type_id",
-                // "item_type_name" and "item type".
-                $itemTypes = get_db()->getTable('ItemType')->findPairsForSelectForm();
-                $itemTypeId = empty($document['specific'][Builder_Item::ITEM_TYPE_ID])
-                    ? null
-                    : $document['specific'][Builder_Item::ITEM_TYPE_ID];
-                if ($itemTypeId) {
-                    if (!isset($itemTypes[$itemTypeId])) {
-                        throw new ArchiveFolder_ImporterException(__('The item type id "%d" does not exist.',
-                            $itemTypeId));
-                    }
-                    $itemTypeId = $itemTypes[$itemTypeId];
-                }
-                unset($document['specific'][Builder_Item::ITEM_TYPE_ID]);
-                $itemTypeName = empty($document['specific'][Builder_Item::ITEM_TYPE_NAME])
-                    ? $itemTypeId
-                    : $document['specific'][Builder_Item::ITEM_TYPE_NAME];
-                $itemTypeName = empty($document['extra']['item type'])
-                    ? $itemTypeName
-                    : $document['extra']['item type'];
-                if ($itemTypeName) {
-                    $itemTypeId = array_search(strtolower($itemTypeName), array_map('strtolower', $itemTypes));
-                    if (!$itemTypeId) {
-                        throw new ArchiveFolder_ImporterException(__('The item type "%s" does not exist.',
-                            $itemTypeName));
-                    }
-                    $document['specific'][Builder_Item::ITEM_TYPE_NAME] = $itemTypes[$itemTypeId];
-                }
-                unset($document['extra']['item type']);
-                break;
-
-            case 'Collection':
-                if (isset($document['extra']['public'])) {
-                    $document['specific'][Builder_Collection::IS_PUBLIC] = (boolean) $document['extra']['public'];
-                    unset($document['extra']['public']);
-                }
-                if (isset($document['extra']['featured'])) {
-                    $document['specific'][Builder_Collection::IS_FEATURED] = (boolean) $document['extra']['featured'];
-                    unset($document['extra']['featured']);
-                }
-                break;
-        }
-
-        // Set the identifier field.
-        $document['process']['identifier field'] = empty($document['extra']['identifier field'])
+        // Set the default identifier field.
+        $document['process']['identifier field'] = empty($document['process']['identifier field'])
             ? $this->_identifierField
-            : $document['extra']['identifier field'];
-        unset($document['extra']['identifier field']);
-
-        // Normalize the identifier field if it is a special one.
-        $lowerIdentifierField = str_replace('_', ' ', strtolower($document['process']['identifier field']));
-        if (in_array($lowerIdentifierField, array(
-                // For any record.
-                ArchiveFolder_Importer::IDFIELD_NONE,
-                ArchiveFolder_Importer::IDFIELD_INTERNAL_ID,
-                // For file only.
-                'original filename',
-                'filename',
-                'md5',
-                'authentication',
-            ))) {
-
-            if ($document['process']['record type'] != 'File' && in_array($lowerIdentifierField, array(
-                    'original filename',
-                    'filename',
-                    'md5',
-                    'authentication',
-                ))) {
-                $message = __('The identifier field "%s" is not allowed for the record type "%s".',
-                    $document['process']['identifier field'], $document['process']['record type']);
-                throw new ArchiveFolder_ImporterException($message);
-            }
-
-            $document['process']['identifier field'] = $lowerIdentifierField;
-        }
+            : $document['process']['identifier field'];
 
         // Get the identifier if any.
         $identifierField = $document['process']['identifier field'];
@@ -711,35 +564,24 @@ class ArchiveFolder_Importer
 
         // Default case is the internal id.
         elseif ($identifierField == ArchiveFolder_Importer::IDFIELD_INTERNAL_ID) {
-            $document['process']['identifier'] = empty($document['extra']['internal id']) ? 0 : (integer) $document['extra']['internal id'];
+            $document['process']['identifier'] = empty($document['process']['internal id']) ? 0 : (integer) $document['process']['internal id'];
         }
 
         // Name may be the Identifier.
-        elseif ($identifierField == 'name') {
-            $document['process']['identifier'] = empty($document['extra']['name']) ? '' : $document['extra']['name'];
+        elseif ($identifierField == ArchiveFolder_Importer::IDFIELD_INTERNAL_NAME) {
+            $document['process']['identifier'] = empty($document['process']['name']) ? '' : $document['process']['name'];
         }
 
         // Other cases.
         else {
             // Manage specific fields for file.
             $fieldFile = false;
-            if ($document['process']['record type'] == 'File') {
-                switch ($identifierField) {
-                    case 'original filename':
-                        $fieldFile = 'original_filename';
-                        break;
-                    case 'filename':
-                        $fieldFile = 'filename';
-                        break;
-                    case 'md5':
-                    case 'authentication':
-                        $fieldFile = 'authentication';
-                        break;
-                }
-                if ($fieldFile) {
-                    $document['process']['identifier field'] = $fieldFile;
-                    $document['process']['identifier'] = empty($document['extra'][$identifierField]) ? '' : $document['extra'][$identifierField];
-                }
+            if ($document['process']['record type'] == 'File' && in_array($identifierField, array(
+                    'original filename',
+                    'filename',
+                    'authentication',
+                ))) {
+                $document['process']['identifier'] = empty($document['specific'][$identifierField]) ? '' : $document['specific'][$identifierField];
             }
 
             // Get the record with a standard field.
@@ -747,11 +589,17 @@ class ArchiveFolder_Importer
                 $element = $this->_getElementFromIdentifierField($document['process']['identifier field']);
                 if ($element) {
                     $elementSetName = $element->getElementSet()->name;
-                    $document['process']['identifier'] = empty($document[$elementSetName][$element->name])
-                        ? null
-                        // Here, the value is a simple array of strings, without
-                        // text or html.
-                        : $document[$elementSetName][$element->name];
+                    if (empty($document[$elementSetName][$element->name])) {
+                        $document['process']['identifier'] = null;
+                    }
+                    // Here, the value is a list of Omeka element texts, with
+                    // text and html.
+                    else {
+                        $document['process']['identifier'] = array();
+                        foreach ($document[$elementSetName][$element->name] as $elementText) {
+                            $document['process']['identifier'][] = $elementText['text'];
+                        }
+                    }
                 }
                 // The identifier doesn't exist.
                 else {
@@ -759,32 +607,67 @@ class ArchiveFolder_Importer
                 }
             }
         }
-        unset($document['extra']['internal id']);
-        unset($document['extra']['name']);
-        unset($document['extra']['original filename']);
-        unset($document['extra']['filename']);
-        unset($document['extra']['md5']);
-        unset($document['extra']['authentication']);
 
-        // Normalize the element texts.
-        // Add the html boolean to be Omeka compatible.
-        foreach ($document['metadata'] as $elementSetName => &$elements) {
-            foreach ($elements as $elementName => &$elementTexts) {
-                foreach ($elementTexts as &$elementText) {
-                    // Trim the metadata to avoid spaces.
-                    if (is_array($elementText)) {
-                        $elementText['text'] = trim($elementText['text']);
-                        $elementText['html'] = !empty($elementText['html']);
-                    }
-                    // Normalize the value.
-                    else {
-                        $elementText = trim($elementText);
-                        $elementText = array(
-                            'text' => $elementText,
-                            'html' => $this->_isXml($elementText),
-                        );
+        return $document;
+    }
+
+    /**
+     * Check if metadata are existing elements and move other into extra data.
+     *
+     * This avoids an error during import, because Omeka checks it too.
+     *
+     * @internal Move it earlier during checking / normalization?
+     * @todo Warn if some elements move to extra (this may be an error).
+     *
+     * @param array $document A normalized document.
+     * @param array The checked document.
+     */
+    protected function _checkExistingMetadata($document)
+    {
+        $db = get_db();
+
+        // Prepare the list of names of element sets.
+        // Function findPairsForSelectForm() is not used because it's filtered.
+        $elementSets = $db->getTable('ElementSet')->findAll();
+        $elementSetNames = array();
+        foreach ($elementSets as $elementSet) {
+            $elementSetNames[$elementSet->name] = null;
+        }
+        // Add the non-existing element sets to extra.
+        $extraMetadata = array_diff_key($document['metadata'], $elementSetNames);
+        $document['metadata'] = array_intersect_key($document['metadata'], $elementSetNames);
+
+        // Check the remaining elements in each element set.
+        foreach ($document['metadata'] as $elementSetName => $elements) {
+            // Prepare the list of names of elements.
+            $elementsObjects = $db->getTable('Element')->findBySet($elementSetName);
+            $elementNames = array();
+            foreach ($elementsObjects as $elementObject) {
+                $elementNames[$elementObject->name] = null;
+            }
+            $diff = array_diff_key($elements, $elementNames);
+            if ($diff) {
+                $extraMetadata[$elementSetName] = $diff;
+                $document['metadata'][$elementSetName] = array_intersect_key($elements, $elementNames);
+            }
+        }
+
+        // Normalize new extra metadata. Values will be arrays, because elements
+        // are repeatable. To get single values, don't use the delimiter ":"
+        // like "geolocation:latitude", but the "[]" like "geolocation[latitude]".
+        // With the advanced geolocation plugin that allows multiple points by
+        // item, use "geolocation[][latitude]". Or use "extra" directly.
+        if ($extraMetadata) {
+            foreach ($extraMetadata as &$elements) {
+                foreach ($elements as &$elementTexts) {
+                    foreach ($elementTexts as &$elementText) {
+                        if (is_array($elementText)) {
+                            $elementText = $elementText['text'];
+                        }
                     }
                 }
+
+                $document['extra'] = array_merge_recursive($document['extra'], $extraMetadata);
             }
         }
 
@@ -835,10 +718,13 @@ class ArchiveFolder_Importer
 
         // Manage specific fields for file.
         if ($recordType == 'File' && in_array($identifierField, array(
-                'original_filename',
+                'original filename',
                 'filename',
                 'authentication',
             ))) {
+            if ($identifierField == 'original filename') {
+                $identifierField = 'original_filename';
+            }
             $record = $db->getTable('File')->findBySql($identifierField . ' = ?', array($identifier), true);
             return $record;
         }
@@ -1004,20 +890,6 @@ class ArchiveFolder_Importer
         }
 
         return true;
-    }
-
-    /**
-     * Check if a string is an Xml one.
-     *
-     * @param string $string
-     * @return boolean
-     */
-    private function _isXml($string)
-    {
-        return strpos($string, '<') !== false
-            && strpos($string, '>') !== false
-            // A main tag is added to allow inner ones.
-            && (boolean) simplexml_load_string('<xml>' . $string . '</xml>', 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
     }
 
     /**
@@ -1191,6 +1063,7 @@ class ArchiveFolder_Importer
             return;
         }
 
+        // Avoid an issue when "elements" is not set.
         if (!isset($post['Elements'])) {
             $post['Elements'] = array();
         }

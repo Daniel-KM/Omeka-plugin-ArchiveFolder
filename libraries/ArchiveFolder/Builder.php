@@ -38,32 +38,50 @@ class ArchiveFolder_Builder
     // List of metadata files available in the folder.
     protected $_metadataFiles;
 
-    // List of documents, according to parameters:
-    // array List of documents (items)
-    //     index => Index is used as order; starts from 1 internally when ready
-    //         name => relative path (sub-directory) or name (metadata file)
-    //         oai_id => oai id of the item (set internally)
-    //         metadata => if any, array of elements
-    //         extra => if any, array of unrecognized data, as tags or item type
-    //         format_xml => if any, format of xml metadata to include directly
-    //         xml => if any, the content to include for the format
-    //         files => ordered array of files attached to the document if any
-    //             index => array Index is used as order and starts from 1
-    //                 path => absolute filepath (local or http)
-    //                 name => filepath relative to the main folder, else url
-    //                 oai_id => oai id of the file (set internally)
-    //                 metadata => if any, array of elements
-    //                 extra => if any, array of unrecognized data
-    //                 format_xml => format of xml metadata to include directly
-    //                 xml => if any, the content to include for the format
-    // In metadata files, the file path may be relative. The mapping class may
-    // be used to convert it to absolute path and to relative path name. The
-    // index order and the oai_id are set internally.
-    // Unrecognized key/values are saved in the "extra" array. They will be
-    // included in the static repository only if a format or a hook manage them.
-    // By default none are managed, even "tags" and "item type", that are not
-    // standard metadata: tags may be replaced by Dublin Core : Subject or
-    // Coverage and item types by Dublin Core : Type.
+    /**
+     * List of documents, according to parameters:
+     * array List of documents (items)
+     *     index => Index is used as order; starts from 1 internally when ready
+     *         process => internal data used for the process
+     *             record type => Item
+     *             action
+     *             name => relative path (sub-directory) or name (metadata file)
+     *             oai_id => oai id of the item (set internally)
+     *             format_xml => if any, format of xml metadata to include
+     *             xml => if any, the content to include directly for the format
+     *         specific => specific data for this record type
+     *             collection
+     *             item type
+     *             tags
+     *             public
+     *             featured
+     *         metadata => array of elements (Dublin Core...)
+     *         extra => array of other data, like geolocation
+     *         files => ordered array of files attached to the document if any
+     *             index => array Index is used as order and starts from 1
+     *                 process => internal data used for the process
+     *                     record type => File
+     *                     action
+     *                     name => filepath relative to main folder, else url
+     *                     oai_id => oai id of the file (set internally)
+     *                     format_xml => format of xml metadata to include
+     *                     xml => if any, the content to include for the format
+     *                 specific = if any, specific data for this record type
+     *                     path => the original filepath (local or http)
+     *                     fullpath => the absolute url determined from the path
+     *                     original filename
+     *                     authentication
+     *                 metadata => array of elements (Dublin Core...)
+     *                 extra => array of other data
+     * In metadata files, the file path may be relative. The mapping class may
+     * be used to convert it to absolute path and to relative path name. The
+     * index order and the oai_id are set internally.
+     * Unrecognized key/values are saved in the "extra" array. They will be
+     * included in the static repository only if a format or a hook manage them.
+     * By default none are managed, even "tags" and "item type", that are not
+     * standard metadata: tags may be replaced by Dublin Core : Subject or
+     * Coverage and item types by Dublin Core : Type.
+     */
     protected $_documents;
 
     // Used to create the xml for the static repository.
@@ -133,7 +151,7 @@ class ArchiveFolder_Builder
         }
 
         if (empty($this->_folders) || empty($this->_files)) {
-            throw new ArchiveFolder_BuilderException(__('No folder and no file found.')
+            throw new ArchiveFolder_BuilderException(__('No folder and no file found after listing files.')
                 . ' ' . __('Check your rights and your configuration.'));
         }
 
@@ -146,7 +164,7 @@ class ArchiveFolder_Builder
         }
 
         if (empty($this->_folders) || empty($this->_files)) {
-            throw new ArchiveFolder_BuilderException(__('No folder and no file found.')
+            throw new ArchiveFolder_BuilderException(__('No folder and no file found after checking files.')
                 . ' ' . __('Check rights, allowed paths, extensions and configuration.'));
         }
 
@@ -169,8 +187,8 @@ class ArchiveFolder_Builder
         }
 
         if (empty($this->_documents)) {
-            throw new ArchiveFolder_BuilderException(__('No folder and no file found.')
-                . ' ' . __('Check rights, allowed paths, extensions and configuration.'));
+            throw new ArchiveFolder_BuilderException(__('No folder and no file found after checking documents.')
+                . ' ' . __('Check rights, allowed paths, extensions, configuration, the metadata in your files or the xsl processing.'));
         }
 
         if ($this->_folder->hasBeenStopped()) return;
@@ -361,7 +379,7 @@ class ArchiveFolder_Builder
         foreach ($documents as &$document) {
             if (!empty($document['files'])) {
                 foreach ($document['files'] as $file) {
-                    $referencedFiles[$file['path']] = $file['path'];
+                    $referencedFiles[$file['process']['fullpath']] = $file['specific']['path'];
                 }
             }
         }
@@ -409,16 +427,24 @@ class ArchiveFolder_Builder
                     $relativeFilepath = trim(substr($filepath, $startRelative), '/');
 
                     $doc = array();
+                    $doc['process']['record type'] = 'Item';
                     // The name is different from the file one to get a
                     // different default identifier.
                     $dir = pathinfo($relativeFilepath, PATHINFO_DIRNAME) == '.'
                         ? ''
                         : pathinfo($relativeFilepath, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
-                    $doc['name'] = $dir . pathinfo($relativeFilepath, PATHINFO_FILENAME);
+                    $doc['process']['name'] = $dir . pathinfo($relativeFilepath, PATHINFO_FILENAME);
+                    $doc['specific'] = array();
+                    $doc['metadata'] = array();
+                    $doc['extra'] = array();
 
                     $file = array();
-                    $file['path'] = $filepath;
-                    $file['name'] = $relativeFilepath;
+                    $file['process']['record type'] = 'File';
+                    $file['process']['name'] = $relativeFilepath;
+                    $file['process']['fullpath'] = $filepath;
+                    $file['specific']['path'] = $filepath;
+                    $file['metadata'] = array();
+                    $file['extra'] = array();
                     $doc['files'][] = $file;
 
                     $documents[] = $doc;
@@ -432,7 +458,11 @@ class ArchiveFolder_Builder
                     $folderpathClean = rtrim($folderpath, '/');
 
                     $doc = array();
-                    $doc['name'] = $relativeFolderpath;
+                    $doc['process']['record type'] = 'Item';
+                    $doc['process']['name'] = $relativeFolderpath;
+                    $doc['specific'] = array();
+                    $doc['metadata'] = array();
+                    $doc['extra'] = array();
 
                     foreach ($remainingFiles as $filepath => $filename) {
                         // Check if the file is in the folder (not subfolder).
@@ -441,8 +471,12 @@ class ArchiveFolder_Builder
                             $relativeFilepath = trim(substr($filepath, $startRelative), '/');
 
                             $file = array();
-                            $file['path'] = $filepath;
-                            $file['name'] = $relativeFilepath;
+                            $file['process']['record type'] = 'File';
+                            $file['process']['name'] = $relativeFilepath;
+                            $file['process']['fullpath'] = $filepath;
+                            $file['specific']['path'] = $filepath;
+                            $file['metadata'] = array();
+                            $file['extra'] = array();
                             $doc['files'][] = $file;
                             unset($remainingFiles[$filepath]);
                         }
@@ -477,15 +511,15 @@ class ArchiveFolder_Builder
         $unsets = array();
         foreach ($documents as $key => $document) {
             foreach ($document['files'] as $order => $file) {
-                if (!$this->_isExtensionAllowed($file['path'])) {
+                if (!$this->_isExtensionAllowed($file['specific']['path'])) {
                     unset($documents[$key]);
-                    $unsets[] = $document['name'];
+                    $unsets[] = $document['process']['name'];
                     break;
                 }
 
-                if ($this->_isUriAllowed($file['path']) !== true) {
+                if ($this->_isUriAllowed($file['specific']['path']) !== true) {
                     unset($documents[$key]);
-                    $unsets[] = $document['name'];
+                    $unsets[] = $document['process']['name'];
                     break;
                 }
             }
@@ -550,7 +584,7 @@ class ArchiveFolder_Builder
         $this->_format->setWriter($documentWriter);
         foreach ($this->_documents as $indexDocument => $document) {
             // The record and associated files are filled in one time.
-            $this->_fillRecord($document, $prefix, 'Item', $indexDocument);
+            $this->_fillRecord($document, $prefix, $indexDocument);
 
             // Useless with the format document.
             /*
@@ -559,7 +593,7 @@ class ArchiveFolder_Builder
                     && $format->getParameterFormat('support_separated_files')
                 ) {
                 foreach ($document['files'] as $order => $file) {
-                    $this->_fillRecord($file, $prefix, 'File', $order);
+                    $this->_fillRecord($file, $prefix, $order);
                 }
             }
             */
@@ -590,32 +624,33 @@ class ArchiveFolder_Builder
      *
      * @param array $doc Document or file array.
      * @param string $prefix
-     * @param string $recordType "Item" of "File".
      * @param integer $order
      * @return void
      */
-    protected function _fillRecord($document, $prefix, $recordType = 'Item', $order = null)
+    protected function _fillRecord($document, $prefix, $order = null)
     {
         $writer = $this->_writer;
         $documentWriter = $this->_documentWriter;
 
         // If there is an xml file for the current document, use it directly for
         // the specified format.
-        if (!empty($document['xml']) && !empty($document['format_xml'])
-                && $prefix == $document['format_xml']
+        if (!empty($document['process']['xml']) && !empty($document['process']['format_xml'])
+                && $prefix == $document['process']['format_xml']
             ) {
-            $documentWriter->writeRaw($document['xml']);
+            $documentWriter->writeRaw($document['process']['xml']);
         }
         // Default conversion.
         else {
             $format = $this->_format;
-            // Record type is an item.
-            if ($recordType == 'Item') {
-                $format->fillRecord($document);
-            }
-            // Record type is a file.
-            else {
-                $format->fillFileAsRecord($document, $order);
+            $recordType = empty($document['process']['record type']) ? '' : $document['process']['record type'];
+            switch ($recordType) {
+                case 'File':
+                    $format->fillFileAsRecord($document, $order);
+                    break;
+                case 'Item':
+                default:
+                    $format->fillRecord($document);
+                    break;
             }
         }
 
