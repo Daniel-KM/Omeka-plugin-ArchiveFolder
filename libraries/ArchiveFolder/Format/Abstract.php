@@ -219,9 +219,7 @@ abstract class ArchiveFolder_Format_Abstract
         $doc = &$this->_document;
 
         $metadata = array();
-        $metadata['Dublin Core']['Title'][] = $doc['process']['name']
-            ? array('text' => $doc['process']['name'], 'html' => $this->_isXml($doc['process']['name']))
-            : array('text' => '/', 'html' => false);
+        $metadata['Dublin Core']['Title'][] = $doc['process']['name'] ?: '/';
 
         $doc['metadata'] = $metadata;
     }
@@ -237,10 +235,7 @@ abstract class ArchiveFolder_Format_Abstract
         $doc = &$this->_document;
 
         $metadata = array();
-        $metadata['Dublin Core']['Title'][] = array(
-            'text' => pathinfo($file['specific']['path'], PATHINFO_BASENAME),
-            'html' => false,
-        );
+        $metadata['Dublin Core']['Title'][] = pathinfo($file['specific']['path'], PATHINFO_BASENAME);
 
         $this->_document['files'][$order]['metadata'] = $metadata;
     }
@@ -255,12 +250,9 @@ abstract class ArchiveFolder_Format_Abstract
         $itemTypeName = $this->_getItemTypeName($doc);
         if ($itemTypeName) {
             if (empty($doc['metadata']['Dublin Core']['Type'])
-                    || !$this->_checkValueInMetadata($itemTypeName, $doc['metadata']['Dublin Core']['Type'])
+                    || !in_array($itemTypeName, $doc['metadata']['Dublin Core']['Type'])
                 ) {
-                $doc['metadata']['Dublin Core']['Type'][] = array(
-                    'text' => $itemTypeName,
-                    'html' => false,
-                );
+                $doc['metadata']['Dublin Core']['Type'][] = $itemTypeName;
             }
         }
     }
@@ -274,12 +266,9 @@ abstract class ArchiveFolder_Format_Abstract
 
         $url = $this->_managePaths->getAbsoluteUrl($doc['process']['name']);
         if (empty($doc['metadata']['Dublin Core']['Identifier'])
-                || !$this->_checkValueInMetadata($url, $doc['metadata']['Dublin Core']['Identifier'])
+                || !in_array($url, $doc['metadata']['Dublin Core']['Identifier'])
             ) {
-            $doc['metadata']['Dublin Core']['Identifier'][] = array(
-                'text' => $url,
-                'html' => false,
-            );
+            $doc['metadata']['Dublin Core']['Identifier'][] = $url;
         }
 
         if (!empty($this->_parametersFormat['link_to_files'])) {
@@ -296,12 +285,9 @@ abstract class ArchiveFolder_Format_Abstract
                 foreach ($doc['files'] as $file) {
                     $url = $this->_managePaths->getAbsoluteUrl($file['process']['name']);
                     if (empty($doc['metadata']['Dublin Core'][$fileLink])
-                            || !$this->_checkValueInMetadata($url, $doc['metadata']['Dublin Core'][$fileLink])
+                            || !in_array($url, $doc['metadata']['Dublin Core'][$fileLink])
                         ) {
-                        $doc['metadata']['Dublin Core'][$fileLink][] = array(
-                            'text' => $url,
-                            'html' => false,
-                        );
+                        $doc['metadata']['Dublin Core'][$fileLink][] = $url;
                     }
                 }
             }
@@ -323,12 +309,9 @@ abstract class ArchiveFolder_Format_Abstract
         $fileLink = $this->_parametersFormat['use_dcterms'] ? 'isRequiredBy' : 'Relation';
         $url = $this->_managePaths->getAbsoluteUrl($doc['process']['name']);
         if (empty($metadata['Dublin Core'][$fileLink])
-                || !$this->_checkValueInMetadata($url, $metadata['Dublin Core'][$fileLink])
+                || !in_array($url, $metadata['Dublin Core'][$fileLink])
             ) {
-            $metadata['Dublin Core'][$fileLink][] = array(
-                'text' => $url,
-                'html' => false,
-            );
+            $metadata['Dublin Core'][$fileLink][] = $url;
         }
 
         $this->_document['files'][$order]['metadata'] = $metadata;
@@ -348,7 +331,7 @@ abstract class ArchiveFolder_Format_Abstract
             if (isset($metadata[$elementSetName][$term])) {
                 $elementName = $prefix . ':' . $name;
                 foreach ($metadata[$elementSetName][$term] as $content) {
-                    $this->_writeElement($elementName, $content['text']);
+                    $this->_writeElement($elementName, $content);
                 }
             }
         }
@@ -369,7 +352,7 @@ abstract class ArchiveFolder_Format_Abstract
                 }
                 $elementName = $prefixFormat . ':' . $name;
                 foreach ($metadata['Dublin Core'][$term] as $content) {
-                    $this->_writeElement($elementName, $content['text']);
+                    $this->_writeElement($elementName, $content);
                 }
             }
         }
@@ -379,7 +362,7 @@ abstract class ArchiveFolder_Format_Abstract
      * Write a content with the xml writer
      *
      * @param string $elementName
-     * @param string $string
+     * @param array|string $string Simple content or Omeka element text.
      * @param array $attributes Optional attributes.
      * @param boolean $isRawXml If true, write raw xml, because string is
      * already escaped. It is useful specially to avoid escape of quotes for
@@ -394,8 +377,21 @@ abstract class ArchiveFolder_Format_Abstract
     ) {
         $writer = $this->_writer;
 
-        if ($this->_isCdata($string)) {
-            $string = substr($string, 9, strlen($string) - 12);
+        // Normalize the value, that can be an Omeka element text or a string.
+        if (is_array($string)) {
+            $content = $string['text'];
+            $isXml = isset($string['html'])
+                ? (boolean) $string['html']
+                : $this->_isXml($content);
+        }
+        // Simple string.
+        else {
+            $content = $string;
+            $isXml = $this->_isXml($content);
+        }
+
+        if ($this->_isCdata($content)) {
+            $content = substr($content, 9, strlen($content) - 12);
         }
 
         // TODO Check if cdata is needed (and add prefix if needed).
@@ -405,15 +401,15 @@ abstract class ArchiveFolder_Format_Abstract
         // quotes, that makes the base heavier. Quotes are automatically managed
         // by Zend during import and by Omeka in the theme.
         // Previously, Xml was protected by a cdata.
-        if (!$isRawXml && !$this->_isXml($string)) {
-            $string = htmlspecialchars($string, ENT_NOQUOTES);
+        if (!$isRawXml && !$isXml) {
+            $content = htmlspecialchars($content, ENT_NOQUOTES);
         }
 
         $writer->startElement($elementName);
         if ($attributes) {
             $this->_writeAttributes($attributes);
         }
-        $writer->writeRaw($string);
+        $writer->writeRaw($content);
         $writer->endElement();
     }
 

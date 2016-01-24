@@ -592,18 +592,36 @@ class ArchiveFolder_Importer
                     if (empty($document[$elementSetName][$element->name])) {
                         $document['process']['identifier'] = null;
                     }
-                    // Here, the value is a list of Omeka element texts, with
-                    // text and html.
+                    // Here, the value is a list of simple strings.
                     else {
-                        $document['process']['identifier'] = array();
-                        foreach ($document[$elementSetName][$element->name] as $elementText) {
-                            $document['process']['identifier'][] = $elementText['text'];
-                        }
+                        $document['process']['identifier'] = $document[$elementSetName][$element->name];
                     }
                 }
                 // The identifier doesn't exist.
                 else {
                     $document['process']['identifier'] = null;
+                }
+            }
+        }
+
+        // Normalize the element texts.
+        // Add the html boolean to be Omeka compatible.
+        foreach ($document['metadata'] as $elementSetName => &$elements) {
+            foreach ($elements as $elementName => &$elementTexts) {
+                foreach ($elementTexts as &$elementText) {
+                    // Trim the metadata too to avoid useless spaces.
+                    if (is_array($elementText)) {
+                        $elementText['text'] = trim($elementText['text']);
+                        $elementText['html'] = !empty($elementText['html']);
+                    }
+                    // Normalize the value.
+                    else {
+                        $elementText = trim($elementText);
+                        $elementText = array(
+                            'text' => $elementText,
+                            'html' => $this->_isXml($elementText),
+                        );
+                    }
                 }
             }
         }
@@ -661,9 +679,7 @@ class ArchiveFolder_Importer
             foreach ($extraMetadata as &$elements) {
                 foreach ($elements as &$elementTexts) {
                     foreach ($elementTexts as &$elementText) {
-                        if (is_array($elementText)) {
-                            $elementText = $elementText['text'];
-                        }
+                        $elementText = $elementText['text'];
                     }
                 }
 
@@ -890,6 +906,20 @@ class ArchiveFolder_Importer
         }
 
         return true;
+    }
+
+    /**
+     * Check if a string is an Xml one.
+     *
+     * @param string $string
+     * @return boolean
+     */
+    private function _isXml($string)
+    {
+        return strpos($string, '<') !== false
+            && strpos($string, '>') !== false
+            // A main tag is added to allow inner ones.
+            && (boolean) simplexml_load_string('<xml>' . $string . '</xml>', 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_NOWARNING);
     }
 
     /**

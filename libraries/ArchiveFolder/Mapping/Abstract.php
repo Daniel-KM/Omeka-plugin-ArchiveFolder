@@ -625,24 +625,17 @@ abstract class ArchiveFolder_Mapping_Abstract
         unset($document['extra']['featured']);
 
         // Normalize the element texts.
-        // Add the html boolean to be Omeka compatible.
+        // Remove the Omeka 'html', that slows down process and that can be
+        // determined automatically when it is really needed.
         foreach ($document['metadata'] as $elementSetName => &$elements) {
             foreach ($elements as $elementName => &$elementTexts) {
                 foreach ($elementTexts as &$elementText) {
-                    // Trim the metadata to avoid spaces.
                     if (is_array($elementText)) {
-                        $elementText['text'] = trim($elementText['text']);
-                        $elementText['html'] = !empty($elementText['html']);
-                    }
-                    // Normalize the value.
-                    else {
-                        $elementText = trim($elementText);
-                        $elementText = array(
-                            'text' => $elementText,
-                            'html' => $this->_isXml($elementText),
-                        );
+                        $elementText = $elementText['text'];
                     }
                 }
+                // Trim the metadata too to avoid useless spaces.
+                $elementTexts = array_map('trim', $elementTexts);
             }
         }
 
@@ -733,8 +726,10 @@ abstract class ArchiveFolder_Mapping_Abstract
             switch ($key) {
                 case 'metadata':
                     foreach ($value as &$elements) {
-                        // Omeka metadata are not a simple list of strings.
-                        // $elements = array_map('array_unique', $elements);
+                        // Here, elements are simple strings.
+                        $elements = array_map('array_unique', $elements);
+                        /*
+                        // Omeka element texts are not a simple list of strings.
                         $ets = array();
                         foreach ($elements as &$elementTexts) {
                             $ets = array();
@@ -749,6 +744,7 @@ abstract class ArchiveFolder_Mapping_Abstract
                                 }
                             }
                         }
+                        */
                     }
                     break;
 
