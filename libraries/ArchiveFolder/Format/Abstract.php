@@ -56,6 +56,9 @@ abstract class ArchiveFolder_Format_Abstract
     // The writer is used to create the xml of the static repository.
     protected $_writer;
 
+    // List of Qualified Dublin Core terms. This list is built automatically.
+    protected $_dcmiTerms = array();
+
     // Current document to process.
     protected $_document;
 
@@ -75,6 +78,10 @@ abstract class ArchiveFolder_Format_Abstract
     {
         $this->_uri = $uri;
         $this->_parameters = $parameters;
+
+        if ($this->_parametersFormat['use_dcterms']) {
+            $this->_loadDcmiElements();
+        }
 
         $this->_managePaths = new ArchiveFolder_Tool_ManagePaths($uri, $parameters);
     }

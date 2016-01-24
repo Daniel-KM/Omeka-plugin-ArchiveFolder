@@ -25,16 +25,6 @@ class ArchiveFolder_Format_OaiDcterms extends ArchiveFolder_Format_Abstract
         'compare_directly' => true,
     );
 
-    // List of Qualified Dublin Core terms. This list is built automatically.
-    protected $_dcmiTerms = array();
-
-    public function __construct($parameters, $writer)
-    {
-        parent::__construct($parameters, $writer);
-
-        $this->_loadDcmiElements();
-    }
-
     protected function _fillMetadata($record = null)
     {
         $writer = $this->_writer;

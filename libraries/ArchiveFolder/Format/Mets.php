@@ -28,10 +28,6 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
         'compare_directly' => false,
     );
 
-    // List of Qualified Dublin Core terms. This list is built automatically
-    // if needed.
-    protected $_dcmiTerms = array();
-
     /**
      * The dmd and file ids are normalized, so the oai id can't be used.
      * Furthermore, they should be unique in all the instance. So default
@@ -44,16 +40,15 @@ class ArchiveFolder_Format_Mets extends ArchiveFolder_Format_Abstract
     protected $_prefixFile = 'original.0';
     protected $_separator = '.';
 
-    public function __construct($parameters, $writer)
+    public function __construct($uri, $parameters)
     {
-        parent::__construct($parameters, $writer);
-
         // Mets can use simple or qualified Dublin Core, so prepare it if
         // needed.
-        if (!empty($this->_getParameter('use_dcterms'))) {
+        if (!empty($parameters['use_dcterms'])) {
             $this->_parametersFormat['use_dcterms'] = true;
-            $this->_loadDcmiElements();
         }
+
+        parent::__construct($uri, $parameters);
     }
 
     /**

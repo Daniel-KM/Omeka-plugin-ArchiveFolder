@@ -18,8 +18,8 @@ class ArchiveFolder_Format_OaiDc extends ArchiveFolder_Format_Abstract
     protected $_metadataNamespace = self::METADATA_NAMESPACE;
 
     protected $_parametersFormat = array(
-        'link_to_files' => true,
         'use_dcterms' => false,
+        'link_to_files' => true,
         'support_separated_files' => true,
         'compare_directly' => true,
     );
