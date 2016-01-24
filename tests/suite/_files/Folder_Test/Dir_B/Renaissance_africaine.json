@@ -5,19 +5,21 @@
             "Title":["Monument de la renaissance africaine"],
             "Creator":["Pierre Goudiaby"],
             "Date":["4 April 2010"],
-            "Coverage":["Senegal"]
+            "Coverage":["Senegal"],
+            "Format":["52 m"]
     }},
     "extra":{
+        "item type":"Physical Object",
         "geolocation[latitude]":"14.7222°",
         "geolocation[longitude]":"-17.495°",
         "geolocation[zoom_level]":"16",
-        "geolocation[map_type]":"",
+        "geolocation[map_type]":"hybrid",
         "geolocation[address]":"",
         "Tags":["Memorial","Statue"]
     },
     "files":{
         "1":{
-            "path":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/3\/3a\/Le_Monument_de_la_Renaissance_africaine.jpg",
+            "path":"https://upload.wikimedia.org/wikipedia/commons/3/3a/Le_Monument_de_la_Renaissance_africaine.jpg",
             "metadata":{
                 "Dublin Core":{
                     "Title":["From the base of the monument"],

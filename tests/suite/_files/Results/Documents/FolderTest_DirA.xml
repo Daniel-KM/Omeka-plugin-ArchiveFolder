@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents>
+<record recordType="Item">
+  <elementSet name="Dublin Core">
+    <element name="Title">
+      <data>Title of the document of the Directory A (from "Directory_A.metadata.txt")</data>
+    </element>
+    <element name="Creator">
+      <data>John Smith</data>
+      <data>Mary Smith</data>
+    </element>
+    <element name="Description">
+      <data>This is the Dublin Core Description of this document.
+This is the second line of the description, after a line break.
+
+   This is the fourth line, after an empty paragraph.
+The spaces at the start of the fourth line, after the first two, are not trimmed, because they are inside the description and belongs to it.</data>
+    </element>
+    <element name="Date">
+      <data>2015</data>
+    </element>
+    <element name="Identifier">
+      <data>::ExampleBasePath::/Folder_Test/Dir_A/Directory_A.metadata.txt</data>
+    </element>
+  </elementSet>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_1.png">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>The Recto of the Image (Image Dir A 1)</data>
+      </element>
+      <element name="Rights">
+        <data>Creative Commons CC0</data>
+      </element>
+    </elementSet>
+  </record>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_2.png">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>The verso of the Image (Image Dir A 2)</data>
+      </element>
+      <element name="Rights">
+        <data>Public Domain</data>
+      </element>
+    </elementSet>
+  </record>
+</record>
+
+<record recordType="Item">
+  <elementSet name="Dublin Core">
+    <element name="Title">
+      <data>Second document of "Directory_A.metadata.txt", without attached file</data>
+    </element>
+    <element name="Identifier">
+      <data>::ExampleBasePath::/Folder_Test/Dir_A/Document%202</data>
+    </element>
+  </elementSet>
+  <extra>
+    <data name="Another field">This field can be written in the static repository with a special format or hook.</data>
+  </extra>
+</record>
+</documents>

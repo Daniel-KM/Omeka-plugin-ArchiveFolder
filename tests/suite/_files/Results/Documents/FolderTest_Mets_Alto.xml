@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents>
+<record recordType="Item">
+  <elementSet name="Dublin Core">
+    <element name="Title">
+      <data>Image #2 of Subdir B-B Alto</data>
+    </element>
+    <element name="Description">
+      <data>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</data>
+    </element>
+    <element name="Identifier">
+      <data>::ExampleBasePath::/Folder_Test_Mets_Alto/my_obj_id_1</data>
+    </element>
+  </elementSet>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/master/image_Subdir_B-B_1.png">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>Image #1 of Subdir B-B Alto</data>
+      </element>
+      <element name="Description">
+        <data>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</data>
+      </element>
+    </elementSet>
+    <elementSet name="OCR">
+      <element name="Text">
+        <data>Image Subdir B-B #2</data>
+      </element>
+      <element name="Data">
+        <data>{"String":{"0":["Image",200,124,244,70],"5":"EOL","6":["Subdir",106,206,264,56],"13":["B-B",402,206,130,56],"16":"EOL","17":["#2",269,292,102,56],"19":"EOL"}}</data>
+      </element>
+      <element name="Process">
+        <data>ID: OCR_1
+Date: 2015-09-14
+[002_TOTAL_CHARS] TOTAL CAR. {16}
+[007_TOTAL_STRINGS] TOTAL STRINGS {4}
+[010_CHARS_NON-ISO] CARS NON-ISO {0}
+[011_CHARS_PUNCTUATION] CARS PONCTUATION {0}
+[012_CHARS_DIGITS] CARS CHIFFRES {1}
+[013_CHARS_SUSPECT] CARS SUSPECTS {0}</data>
+      </element>
+    </elementSet>
+  </record>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/master/image_Subdir_B-B_2.png">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>Image #2 of Subdir B-B Alto</data>
+      </element>
+      <element name="Description">
+        <data>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</data>
+      </element>
+    </elementSet>
+    <elementSet name="OCR">
+      <element name="Text">
+        <data>Image Subdir B-B #1</data>
+      </element>
+      <element name="Data">
+        <data>{"String":{"0":["Image",200,124,244,70],"5":"EOL","6":["Subdir",106,206,264,56],"13":["B-B",402,206,130,56],"16":"EOL","17":["#1",269,292,102,56],"19":"EOL"}}</data>
+      </element>
+      <element name="Process">
+        <data>ID: OCR_1
+Date: 2015-09-14
+[002_TOTAL_CHARS] TOTAL CAR. {16}
+[007_TOTAL_STRINGS] TOTAL STRINGS {4}
+[010_CHARS_NON-ISO] CARS NON-ISO {0}
+[011_CHARS_PUNCTUATION] CARS PONCTUATION {0}
+[012_CHARS_DIGITS] CARS CHIFFRES {1}
+[013_CHARS_SUSPECT] CARS SUSPECTS {0}</data>
+      </element>
+    </elementSet>
+  </record>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_1.alto.xml">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>Image #1 of Subdir B-B Alto</data>
+      </element>
+      <element name="Description">
+        <data>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</data>
+      </element>
+    </elementSet>
+  </record>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_2.alto.xml">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>Image #2 of Subdir B-B Alto</data>
+      </element>
+      <element name="Description">
+        <data>Imported via Mets file "Subdir_B-B_Alto.mets.xml"</data>
+      </element>
+    </elementSet>
+  </record>
+</record>
+</documents>

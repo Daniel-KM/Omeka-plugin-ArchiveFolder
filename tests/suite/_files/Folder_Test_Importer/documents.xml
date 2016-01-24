@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+    <record>
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Alpha</data>
+            </element>
+        </elementSet>
+    </record>
+    <record collection="alphabet">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Beta</data>
+            </element>
+        </elementSet>
+        <record file="beta1.png">
+            <dc:title>File Beta 1</dc:title>
+        </record>
+        <dc:creator>Creator of Beta</dc:creator>
+        <record file="beta2.png">
+            <dc:title>File Beta 2</dc:title>
+        </record>
+    </record>
+    <record>
+        <dc:title>Gamma</dc:title>
+    </record>
+    <record>
+        <dc:title>Delta</dc:title>
+        <record file="delta1.png">
+            <dc:title>File Delta 1</dc:title>
+        </record>
+    </record>
+    <record>
+        <dc:title>Epsilon</dc:title>
+        <record file="epsilon1.png">
+            <dc:title>File Epsilon 1</dc:title>
+        </record>
+        <record file="epsilon2.png">
+            <dc:title>File Epsilon 2</dc:title>
+        </record>
+        <dc:creator>Creator of Epsilon</dc:creator>
+        <record file="epsilon3.png">
+            <dc:title>File Epsilon 3</dc:title>
+        </record>
+    </record>
+    <record recordType="Item" name="1" action="skip"/>
+</documents>

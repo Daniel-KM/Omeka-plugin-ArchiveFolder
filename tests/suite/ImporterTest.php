@@ -1,7 +1,5 @@
 <?php
 
-// TODO Add tests for the importer.
-
 class ArchiveFolder_ImporterTest extends ArchiveFolder_Test_AppTestCase
 {
     protected $_isAdminTest = true;
@@ -15,10 +13,42 @@ class ArchiveFolder_ImporterTest extends ArchiveFolder_Test_AppTestCase
         $this->_authenticateUser($this->user);
     }
 
-    public function testOneItem()
+    public function testFolder()
     {
-        $this->markTestSkipped(
-            __('No test for the importer currently.')
-        );
+        $folder = &$this->_folder;
+
+        $uri = TEST_FILES_DIR
+            . DIRECTORY_SEPARATOR . 'Folder_Test_Importer';
+
+        $parameters = array();
+
+        // The result is is checked via mappings.
+        $this->_prepareFolderTest($uri, $parameters);
+        $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder check failed: ' . $folder->messages);
+
+        $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+
+        $xmlpath = $folder->getLocalRepositoryFilepath();
+
+        $index = 1;
+        do {
+            $folder->import();
+            $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status,
+                'Folder process failed for record #' . $index . ': ' . $folder->messages);
+            $index++;
+        }
+        while ($folder->countRecordsToImport()
+            && !($folder->isError() || $folder->hasBeenStopped()));
+
+        $this->assertEquals(0, $folder->countRecordsToImport());
+        $this->assertEquals(12, $folder->getParameter('imported_records'));
+
+        $archiveRecords = $folder->getArchiveFolderRecords();
+        $this->assertEquals(12, count($archiveRecords));
+
+        $records = $folder->getRecords();
+        $this->assertEquals(12, count($records));
     }
 }

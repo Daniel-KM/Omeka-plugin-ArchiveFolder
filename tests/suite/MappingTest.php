@@ -44,18 +44,27 @@ class ArchiveFolder_MappingTest extends ArchiveFolder_Test_AppTestCase
 
                 $expected = file_get_contents($expectedPath);
                 $expected = trim($expected);
-                $this->assertTrue(strlen($expected) > 0, __('Result for file "%s" (prefix "%s") is not readable.', basename($filepath), $prefix));
+                $this->assertTrue(strlen($expected) > 0,
+                    __('Result for file "%s" (prefix "%s") is not readable.', basename($filepath), $prefix));
 
                 $result = $mapping->isMetadataFile($filepath);
-                $this->assertTrue($result, __('The file "%s" is not recognized as format "%s".', basename($filepath), $prefix));
+                $this->assertTrue($result,
+                    __('The file "%s" is not recognized as format "%s".', basename($filepath), $prefix));
+
+                if (version_compare(phpversion(), '5.4.0', '<')) {
+                    $this->markTestSkipped(
+                        __('This test requires php 5.4.0 or higher.')
+                    );
+                }
 
                 $result = $mapping->listDocuments($filepath);
-                $result = json_encode($result);
+                $result = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                 // Remove local paths before comparaison.
-                $jsonUri = trim(json_encode($uri), '"');
+                $jsonUri = trim(json_encode($uri, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), '"');
                 $expected = str_replace($jsonUri, '::ExampleBasePath::', $expected);
                 $result = str_replace($jsonUri, '::ExampleBasePath::', $result);
-                $this->assertEquals($expected, $result, __('The list of documents for file "%s" (prefix "%s") is not correct.', basename($filepath), $prefix));
+                $this->assertEquals($expected, $result,
+                    __('The list of documents for file "%s" (prefix "%s") is not correct.', basename($filepath), $prefix));
             }
         }
 

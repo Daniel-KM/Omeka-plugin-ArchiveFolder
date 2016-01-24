@@ -21,7 +21,7 @@ class ArchiveFolder_SecurityTest extends ArchiveFolder_Test_AppTestCase
         $this->_prepareFolderTest($uri, $parameters);
 
         // Process folder to check error.
-        $folder = $this->_folder;
+        $folder = &$this->_folder;
 
         $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
         $this->assertEquals(ArchiveFolder_Folder::STATUS_ERROR, $folder->status);
@@ -41,9 +41,9 @@ class ArchiveFolder_SecurityTest extends ArchiveFolder_Test_AppTestCase
 
         $this->_testOutsidePath();
 
-        $folder = $this->_folder;
+        $folder = &$this->_folder;
 
-        $this->assertStringEndsWith(__('The file "../file_2.png" is incorrect.'), $folder->messages);
+        $this->assertStringEndsWith(__('The path "../file_2.png" is forbidden or incorrect.'), $folder->messages);
     }
 
     public function testOutsideRealPath()
@@ -59,7 +59,7 @@ class ArchiveFolder_SecurityTest extends ArchiveFolder_Test_AppTestCase
 
         $this->_testOutsidePath();
 
-        $folder = $this->_folder;
+        $folder = &$this->_folder;
         $uri = TEST_FILES_DIR
             . DIRECTORY_SEPARATOR . 'Folder_Test_Security';
 
@@ -81,7 +81,7 @@ class ArchiveFolder_SecurityTest extends ArchiveFolder_Test_AppTestCase
         $this->_prepareFolderTest($uri, $parameters);
 
         // Process folder to check error.
-        $folder = $this->_folder;
+        $folder = &$this->_folder;
 
         $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
         $this->assertEquals(ArchiveFolder_Folder::STATUS_ERROR, $folder->status);

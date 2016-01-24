@@ -14,6 +14,8 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     protected $_allowLocalPaths = true;
 
+    protected $_folder;
+
     // This list of metadata files is ordered by complexity to simplify tests.
     protected $_metadataFilesByFolder = array(
         'Folder_Test' => array(
@@ -30,6 +32,9 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
         ),
         'Folder_Test_Characters_Local' => array(
             array('text' => 'Non-Latin - Local.metadata.txt'),
+        ),
+        'Folder_Test_Importer' => array(
+            array('doc' => 'documents.xml'),
         ),
     );
 
@@ -182,5 +187,102 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
             (is_dir($path)) ? $this->_delTree($path) : unlink($path);
         }
         return rmdir($dir);
+    }
+
+    protected function _checkFolder()
+    {
+        $folder = &$this->_folder;
+
+        $folder->process(ArchiveFolder_Builder::TYPE_CHECK);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder check failed: ' . $folder->messages);
+
+        $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+
+        $this->_checkXml();
+    }
+
+    /**
+     * Assert true if two xml are equals.
+     */
+    protected function _checkXml()
+    {
+        $folder = &$this->_folder;
+
+        $xmlpath = $folder->getLocalRepositoryFilepath();
+        $this->assertTrue(file_exists($xmlpath));
+
+        // Because the xml is known and small, it's possible to manipulate it
+        // via string functions. This allows to clean local paths and dates.
+        $expected = file_get_contents($this->_expectedXml);
+        $actual = file_get_contents($xmlpath);
+        $actual = str_replace(TEST_FILES_DIR, '::ExampleBasePath::', $actual);
+        $result = file_put_contents($xmlpath, $actual);
+
+        // The file can be saved to simplify update of the tests.
+        copy($xmlpath, sys_get_temp_dir() . '/' . basename($this->_expectedXml));
+
+        $this->assertTrue(!empty($result));
+
+        // Common message for all tests.
+        $message = sprintf('"%s" is different from "%s".', basename($this->_expectedXml), basename($xmlpath));
+
+        $this->assertEquals(filesize($this->_expectedXml), strlen($actual), $message);
+
+        // Get the date from the original file.
+        $needle = '<oai:datestamp>';
+        $expectedDate = substr(strstr($expected, $needle), strlen($needle), 10);
+        $actualDate = substr(strstr($actual, $needle), strlen($needle), 10);
+        // Get the time from the previous one, specially for metsHdr, if needed.
+        $needle = 'CREATEDATE="';
+        $expectedTime = substr(strstr($expected, $needle . $expectedDate), strlen($needle), 20);
+        $actualTime = substr(strstr($actual, $needle . $actualDate), strlen($needle), 20);
+
+        // Use the new date and time in the original file.
+        $expected = str_replace(
+            array(
+                '<oai:datestamp>' . $expectedDate . '</oai:datestamp>',
+                'CREATEDATE="' . $expectedTime . '"',
+            ),
+            array(
+                '<oai:datestamp>' . $actualDate . '</oai:datestamp>',
+                'CREATEDATE="' . $actualTime . '"',
+            ),
+            $expected);
+
+        // Remove all whitespaces to manage different implementations of xml
+        // on different systems.
+        $expected = preg_replace('/\s+/', '', $expected);
+        $actual = preg_replace('/\s+/', '', $actual);
+
+        // This assert allows to quick check the value.
+        $this->assertEquals(strlen($expected), strlen($actual), $message);
+
+        $this->assertEquals($expected, $actual, $message);
+    }
+
+    /**
+     * List recursively a directory to get all files.
+     *
+     * @param string $path Path of the directory to check.
+     *
+     * @return associative array of dirpath / dirname and filepath / filename or
+     * false if error.
+     */
+    private function _iterateDirectory($path)
+    {
+        $filenames = array();
+
+        $path = realpath($path);
+        $directoryIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+        foreach ($directoryIterator as $name => $pathObject) {
+            if (!$pathObject->isDir()) {
+                $filenames[] = $name;
+            }
+        }
+
+        ksort($filenames);
+
+        return $filenames;
     }
 }

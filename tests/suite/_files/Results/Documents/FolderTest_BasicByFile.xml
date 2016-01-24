@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents>
+<record recordType="Item">
+  <elementSet name="Dublin Core">
+    <element name="Title">
+      <data>Image_Basic_1</data>
+    </element>
+    <element name="Identifier">
+      <data>::ExampleBasePath::/Folder_Test/Basic/Image_Basic_1</data>
+    </element>
+  </elementSet>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Basic/Image_Basic_1.jpg"/>
+</record>
+
+<record recordType="Item">
+  <elementSet name="Dublin Core">
+    <element name="Title">
+      <data>Image_Basic_2</data>
+    </element>
+    <element name="Identifier">
+      <data>::ExampleBasePath::/Folder_Test/Basic/Image_Basic_2</data>
+    </element>
+  </elementSet>
+  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Basic/Image_Basic_2.png"/>
+</record>
+</documents>
