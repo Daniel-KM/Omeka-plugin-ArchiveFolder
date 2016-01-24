@@ -54,9 +54,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             'label' => __('Files Metadata'),
             'description' => __('Create metadata for files, not only for items.')
                 . ' ' . __('Metadata for files may be useless if there is only one file by item.')
-                . ' ' . __('If not set, the Dublin Core term "Identifier" will be used to link the item and its files.')
-                . ' ' . __('If set, the Dublin Core term "Relation" or the Qualified Dublin Core term "Requires" will be used.')
-                . ' ' . __('This parameter can be bypassed when a metadata file is directly included in the static repository.'),
+                . ' ' . __('This parameter may be bypassed when a metadata file is directly included in the folder.'),
             'value' => true,
         ));
 
@@ -72,7 +70,14 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 . ' ' . __('This character or this string, for example the pipe "|", can be used to delimite them.')
                 . ' ' . __('If the delimiter is empty, then the whole text will be used.')
                 . ' ' . __('Anyway, multiple columns can be mapped to the same element and multiple rows can manage multiple values for the same field of the same record.'),
-            'value' => '|',
+            'value' => ArchiveFolder_Mapping_Table::DEFAULT_ELEMENT_DELIMITER,
+        ));
+
+        $this->addElement('text', 'empty_value', array(
+            'label' => __('Spreadsheet empty value'),
+            'description' => __('If metadata are available in a table (Open Document Spreadsheet ods), an empty cell can be an empty value or no value.')
+                . ' ' . __('To distinct these two cases, an empty value can be replaced by this string (case sensitive).'),
+            'value' => ArchiveFolder_Mapping_Table::DEFAULT_EMPTY_VALUE,
         ));
 
         if (plugin_is_active('OcrElementSet')) {
@@ -91,7 +96,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             $this->addElement('checkbox', 'fill_ocr_process', array(
                 'label' => __('Fill processing data for OCR'),
                 'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Process" too.'),
-                'value' => false,
+                'value' => true,
             ));
         }
         else {
@@ -188,6 +193,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'records_for_files',
                 'exclude_extensions',
                 'element_delimiter',
+                'empty_value',
                 'fill_ocr_text',
                 'fill_ocr_data',
                 'fill_ocr_process',

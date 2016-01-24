@@ -6,12 +6,18 @@
  */
 class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
 {
+    const DEFAULT_ELEMENT_DELIMITER = '|';
+    const DEFAULT_EMPTY_VALUE = 'Empty value';
+
     // False is used, because this is an intermediate class to be used with
     // a spreadsheet.
     protected $_checkMetadataFile = array('false');
 
     // Element delimiter is used to separate values of the element inside cell.
-    protected $_elementDelimiter = '';
+    protected $_elementDelimiter = ArchiveFolder_Mapping_Table::DEFAULT_ELEMENT_DELIMITER;
+
+    // Empty value allows to discern an empty value and no value.
+    protected $_emptyValue = ArchiveFolder_Mapping_Table::DEFAULT_EMPTY_VALUE;
 
     // Normalized list of headers of the current table, for internal purposes.
     protected $_headers = array();
@@ -22,15 +28,35 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
     protected $_names = array();
 
     /**
+     * Constructor of the class.
+     *
+     * @param string $uri The uri of the folder.
+     * @param array $parameters The parameters to use for the mapping.
+     * @return void
+     */
+    public function __construct($uri, array $parameters)
+    {
+        // For compatibility, "file" is allowed as header to import multiple
+        // files attached to an item. The header "files" is allowed too.
+        $this->_specialData['file'] = true;
+        $this->_specialData['files'] = true;
+
+        parent::__construct($uri, $parameters);
+    }
+
+    /**
      * Prepare the list of documents set inside the current metadata file.
      */
     protected function _prepareDocuments()
     {
-        // Nothing, because this class should be extended.
+        // Nothing, because this class should be extended by a specific format.
     }
 
     /**
      * Add the documents that a table contains to the list of documents.
+     *
+     * @internal One row can represent multiple records and multiple rows can
+     * represent one record.
      *
      * @param array $table An array of data.
      * @return void
@@ -53,7 +79,8 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
         }
 
         // Set the element delimiter if any.
-        $this->_elementDelimiter = $this->_getParameter('element_delimiter') ?: '';
+        $this->_elementDelimiter = $this->_getParameter('element_delimiter') ?: ArchiveFolder_Mapping_Table::DEFAULT_ELEMENT_DELIMITER;
+        $this->_emptyValue = $this->_getParameter('empty_value') ?: ArchiveFolder_Mapping_Table::DEFAULT_EMPTY_VALUE;
 
         // Remove headers from the table.
         $key = key($table);
@@ -65,8 +92,8 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
             // Reset the document key.
             $documentKey = null;
 
-            // First: get the current record from row in order to convert it
-            // into a true record in the next step.
+            // First step: get the current record from row in order to convert
+            // it into a true record in the next step.
             $record = $this->_getRecordFromRow($row);
 
             // Quick check if the document is empty.
@@ -79,96 +106,154 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                 continue;
             }
 
-            // Next steps depend on the record type.
+            // Next steps depend on the record type, so it is checked.
             $recordType = $this->_getRecordType($record);
-            unset($record['process']['record type']);
+            $record['process']['record type'] = $recordType;
             switch ($recordType) {
-                case 'Item':
-                    // Second: pre-normalize the current record.
-                    if (isset($record['files'])) {
-                        $files = $record['files'];
-                        $record['files'] = array();
-                        foreach ($files as $filepath) {
-                            $record['files'][$filepath] = array('specific' => array('path' => $filepath));
-                        }
+                case 'File':
+                    // The path and the name will be validated later, but the
+                    // path should exist.
+                    $record['specific']['path'] = empty($record['specific']['files']) ? null : array_pop($record['specific']['files']);
+                    if (!strlen($record['specific']['path'])) {
+                        // TODO Another identifier can be used for an update.
+                        throw new ArchiveFolder_BuilderException(__('There is no path for the file.'));
                     }
-                    // No files.
-                    else {
-                        $record['files'] = array();
-                    }
+                    unset($record['specific']['files']);
 
-                    // Third: add a new record or update an existing one.
-                    // If the required name is not filled, this is a new record.
-                    if (empty($record['process']['name'])) {
+                    // Add a new record or update an existing one.
+
+
+                    // Process actions by row.
+                    if (in_array('action', $this->_headers)) {
                         $documents[] = $record;
                         end($documents);
                         $documentKey = key($documents);
                     }
-                    // Check if this is an update of a document.
+
+                    // Process by the whole table: merge rows.
                     else {
-                        // Check if this is a complement in order to merge it.
-                        if (isset($this->_names[$record['process']['name']])) {
-                            $documentKey = $this->_names[$record['process']['name']];
-                            $documents[$documentKey] = $this->_mergeRecords($documents[$documentKey], $record);
+                        // Check if there are referenced files (normally useless,
+                        // except if an ordered table starts with a file).
+                        if (is_null($referencedFiles)) {
+                            $documents[] = array('files' => array());
+                            end($documents);
+                            $documentKey = key($documents);
+                            $referencedFiles = &$documents[$documentKey]['files'];
                         }
-                        // This is a new document.
-                        else {
+
+                        // Get the referenced files if there is a name.
+                        // It may repeat _getRecordType(), etc., but this is needed.
+                        elseif (!empty($record['process']['name']) && isset($this->_names[$record['process']['name']])) {
+                            $documentKey = $this->_names[$record['process']['name']];
+                            $referencedFiles = &$documents[$documentKey]['files'];
+                        }
+                        // Else, this is the current referenced files.
+
+                        // The name is a metadata for the document, not the file.
+                        unset($record['process']['name']);
+
+                        // Check if this an update of a file in order update it.
+                        $referencedFiles[$record['specific']['path']] = isset($referencedFiles[$record['specific']['path']])
+                            // This is an update.
+                            ? $this->_mergeRecords($referencedFiles[$record['specific']['path']], $record)
+                            // This is a new record.
+                            : $record;
+                    }
+
+                    break;
+
+                case 'Item':
+                    // No files.
+                    if (empty($record['specific']['files'])) {
+                        $record['files'] = array();
+                    }
+                    // Pre-normalize files.
+                    else {
+                        foreach ($record['specific']['files'] as $filepath) {
+                            $record['files'][$filepath]['specific']['path'] = $filepath;
+                        }
+                    }
+                    unset($record['specific']['files']);
+
+                    // No break: continue for other metadata.
+
+                case 'Collection':
+                    // Process actions by row.
+                    if (in_array('action', $this->_headers)) {
+                        $documents[] = $record;
+                        end($documents);
+                        $documentKey = key($documents);
+                    }
+
+                    // Process by the whole table: merge rows.
+                    else {
+                        // Add a new record or update an existing one.
+                        // If the required name is not filled, this is a new record.
+                        if (empty($record['process']['name'])) {
                             $documents[] = $record;
                             end($documents);
                             $documentKey = key($documents);
                         }
 
-                        // Remember the current record name as key if needed.
-                        $this->_names[$record['process']['name']] = $documentKey;
+                        // Check if this is an update of a previous row.
+                        else {
+                            // Check if this is a complement in order to merge it.
+                            if (isset($this->_names[$record['process']['name']])) {
+                                $documentKey = $this->_names[$record['process']['name']];
+                                $documents[$documentKey] = $this->_mergeRecords($documents[$documentKey], $record);
+                            }
+                            // This is a new document.
+                            else {
+                                $documents[] = $record;
+                                end($documents);
+                                $documentKey = key($documents);
+                            }
+
+                            // Remember the current record name as key if needed.
+                            $this->_names[$record['process']['name']] = $documentKey;
+                        }
                     }
 
                     // Remember the current record for next files, if needed.
-                    $referencedFiles = &$documents[$documentKey]['files'];
-                    break;
-
-                case 'File':
-                    // Second: normalize the current record.
-                    // The path and the name will be validated later, but the
-                    // path should exist.
-                    $record['specific']['path'] = empty($record['files']) ? null : reset($record['files']);
-                    if (!strlen($record['specific']['path'])) {
-                        throw new ArchiveFolder_BuilderException(__('There is no path for the file.'));
-                    }
-                    unset($record['files']);
-
-                    // Third: add a new record or update an existing one.
-
-                    // Check if there are referenced files (normally useless,
-                    // except if an ordered table starts with a file).
-                    if (is_null($referencedFiles)) {
-                        $documents[] = array('files' => array());
-                        end($documents);
-                        $documentKey = key($documents);
+                    if ($recordType == 'Item') {
                         $referencedFiles = &$documents[$documentKey]['files'];
                     }
-                    // Get the referenced files if there is a name.
-                    // It may repeat _getRecordType(), etc., but this is needed.
-                    elseif (!empty($record['process']['name']) && isset($this->_names[$record['process']['name']])) {
-                        $documentKey = $this->_names[$record['process']['name']];
-                        $referencedFiles = &$documents[$documentKey]['files'];
-                    }
-                    // Else, this is the current referenced files.
-
-                    // The name is a metadata for the document, not the file.
-                    unset($record['process']['name']);
-
-                    // Check if this an update of a file in order update it.
-                    $referencedFiles[$record['specific']['path']] = isset($referencedFiles[$record['specific']['path']])
-                        // This is an update.
-                        ? $this->_mergeRecords($referencedFiles[$record['specific']['path']], $record)
-                        // This is anew record.
-                        : $record;
                     break;
-
-                default:
-                    throw new ArchiveFolder_BuilderException(__('The record type "%s" is not managed.', $recordType));
             }
         }
+
+        foreach ($documents as &$document) {
+            $document['extra'] = array_map(array($this, '_normalizeAsStringOrArray'), $document['extra']);
+            if (!empty($documents['files'])) {
+                foreach ($documents['files'] as &$file) {
+                    $file['extra'] = array_map(array($this, '_normalizeAsStringOrArray'), $file['extra']);
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper to normalize extra values as single or multiple values.
+     *
+     * Empty values are kept. Duplicates are removed later.
+     *
+     * @param array $value
+     * @return string|array The normalized value as string or array.
+     */
+    protected function _normalizeAsStringOrArray($value)
+    {
+        if (!is_array($value)) {
+            return $value;
+        }
+        if (count($value) == 0) {
+            return '';
+        }
+        // Single value is converted into a string.
+        if (count($value) == 1) {
+            return reset($value);
+        }
+        // Filtering is possible for arrays.
+        return array_filter($value, function($v) {return strlen($v) > 0;});
     }
 
     /**
@@ -184,7 +269,13 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
     {
         $headers = &$this->_headers;
 
-        $record = array();
+        $current = array();
+
+        // Set default values to avoid notices.
+        $current['process'] = array();
+        $current['specific'] = array();
+        $current['metadata'] = array();
+        $current['extra'] = array();
 
         foreach ($headers as $index => $header) {
             //Check if this a comment.
@@ -197,52 +288,52 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                 continue;
             }
 
-            // Check if this is a special value.
+            // Check if this is a special value (already normalized as string).
             if (is_string($header)) {
-                switch ($header) {
-                    // Single values that are processed here.
-                    case 'name':
-                    case 'record type':
-                        $record['process'][$header] = $row[$index];
-                        break;
+                // Separate headers for process and specific headers.
+                $recordPart = in_array($header, array('record type', 'action', 'name', 'identifier field', 'internal id'))
+                    ? 'process'
+                    : 'specific';
 
-                    // Multiple values that are managed here.
-                    case 'files':
-                        $record[$header] = isset($record[$header])
-                            ? $this->_addValues($row[$index], $record[$header])
-                            : $this->_addValues($row[$index]);
-                        break;
+                // Multiple values are allowed (for example tags). Keep order.
+                if ($this->_specialData[$header]) {
+                    // Manage the tags and files exception.
+                    if ($header == 'tag') {
+                        $header = 'tags';
+                    }
+                    if ($header == 'file' || $header == 'path') {
+                        $header = 'files';
+                    }
 
-                    // Item type is an exception.
-                    case 'item type':
-                        // The check avoids a notice.
-                        $record['extra'][$header] = isset($record['extra'][$header])
-                            ? $this->_addValues($row[$index], $record['extra'][$header])
-                            : $this->_addValues($row[$index]);
-                        break;
-
-                    // Other special headers are removed.
+                    $current[$recordPart][$header] = isset($current[$recordPart][$header])
+                        ? $this->_addValues($row[$index], $current[$recordPart][$header])
+                        : $this->_addValues($row[$index]);
+                }
+                // Only one value is allowed: keep last value (even if there is
+                // a delimiter).
+                else {
+                    $current[$recordPart][$header] = $row[$index];
                 }
             }
 
-            // This is an array, so this is standard or special metadata.
+            // This is an array, so this is a standard or an extra metadata.
             else {
                 // Check if this a standard or an unrecognized element.
                 if (empty($header[0])) {
-                    $record['extra'][$header[1]] = isset($record['extra'][$header[1]])
-                        ? $this->_addValues($row[$index], $record['extra'][$header[1]])
+                    $current['extra'][$header[1]] = isset($current['extra'][$header[1]])
+                        ? $this->_addValues($row[$index], $current['extra'][$header[1]])
                         : $this->_addValues($row[$index]);
                 }
                 // Standard element.
                 else {
-                    $record['metadata'][$header[0]][$header[1]] = isset($record['metadata'][$header[0]][$header[1]])
-                        ? $this->_addValues($row[$index], $record['metadata'][$header[0]][$header[1]])
+                    $current['metadata'][$header[0]][$header[1]] = isset($current['metadata'][$header[0]][$header[1]])
+                        ? $this->_addValues($row[$index], $current['metadata'][$header[0]][$header[1]])
                         : $this->_addValues($row[$index]);
                 }
             }
         }
 
-        return $record;
+        return $current;
     }
 
     /**
@@ -254,24 +345,29 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
      */
     protected function _addValues($value, $existing = array())
     {
-        // Convert a null tino an array when needed.
-        $existing = $existing ?: array();
+        // Convert a null into an array when needed.
+        $result = $existing ?: array();
 
-        if (empty($this->_elementDelimiter)) {
-            $existing[] = $value;
+        if (empty($this->_elementDelimiter) || strpos($value, $this->_elementDelimiter) === false) {
+            $result[] = $value;
         }
-        // Import each sub-value.
+        // Import each sub-value. No filtering.
         else {
             $values = explode($this->_elementDelimiter, $value);
             $values = array_map('trim', $values);
-            foreach ($values as $value) {
-                if (strlen($value) > 0) {
-                    $existing[] = $value;
-                }
+            foreach ($values as $key => $value) {
+                $result[] = $value;
             }
         }
 
-        return $existing;
+        // Replace empty values by an empty string that will be kept.
+        if ($this->_emptyValue !== '') {
+            $result = array_map(function($v) {
+                return $v === $this->_emptyValue? '' : $v;
+            }, $result);
+        }
+
+        return $result;
     }
 
     /**
@@ -295,8 +391,18 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
             else {
                 switch ($key) {
                     case 'process':
-
                     case 'specific':
+                        foreach ($value as $k => $v) {
+                            // Multiple values.
+                            if ($this->_specialData[$k]) {
+                                $current[$key][$k] = array_merge_recursive($current[$key][$k], $v);
+                            }
+                            // Single value.
+                            else {
+                                $current[$key][$k] = is_array($v) ? array_pop($v) : $v;
+                            }
+                        }
+                        break;
 
                     case 'metadata':
                     case 'extra':
@@ -307,10 +413,6 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
                         // This is not recursive, because a file doesn't contain files.
                         $current[$key] = $this->_mergeRecords($current[$key], $value);
                         break;
-
-                    default:
-                        $current[$key] = $value;
-                        break;
                 }
             }
         }
@@ -319,33 +421,59 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
     }
 
     /**
-     * Determine if a record extracted from a row is an item or a file, without
-     * any context, except if required.
+     * Determine the type of the record extracted from a row (item, file or
+     * collection), without any context, except if required.
      *
-     * Notes:
-     * - Only items and files are managed by a static repository. One static
-     * repository is one collection.
-     * - Metadata of an item should be set before attached files ones).
+     * @internal Here, the record is not normalized.
      *
-     * @param array $record
-     * @return string "Item" or "File".
+     * @param array $record The record extracteed from row, not normalized.
+     * @return string "Collection, ""Item" or "File".
      */
-    protected function _getRecordType($record)
+    private function _getRecordType($record)
     {
         // Check if there is a "record type".
         if (!empty($record['process']['record type'])) {
-            return strtolower($record['process']['record type']) == 'file' ? 'File' : 'Item';
+            $recordType = ucfirst(strtolower($record['process']['record type']));
+            if (!in_array($recordType, array('File', 'Item', 'Collection'))) {
+                throw new ArchiveFolder_BuilderException(__('The record type "%s" is incorrect.', $record['process']['record type']));
+            }
+            return $recordType;
         }
 
-        // Check if there is an "item type".
-        if (!empty($record['specific']['item type'])) {
+        // Check if there is a content specific to an item.
+        if (!empty($record['specific']['collection'])
+                || !empty($record['specific']['item type'])
+                || !empty($record['specific']['tags'])
+            ) {
             return 'Item';
+        }
+
+        // Check if there is a content specific to an item or a collection.
+        if (!empty($record['specific']['public'])
+                || !empty($record['specific']['featured'])
+            ) {
+            // Not fully determinable, so force to Item.
+            // TODO Warn for missing data.
+            return 'Item';
+        }
+
+        // Check if there is a content specific to a file.
+        if (!empty($record['specific']['item'])
+                || !empty($record['specific']['path'])
+                || !empty($record['specific']['original filename'])
+                || !empty($record['specific']['filename'])
+                || !empty($record['specific']['md5'])
+                || !empty($record['specific']['authentication'])
+            ) {
+            return 'File';
         }
 
         // Check if there is no file or multiple files.
-        if (empty($record['files']) || count($record['files']) > 1) {
+        if (empty($record['specific']['files']) || count($record['specific']['files']) > 1) {
             return 'Item';
         }
+
+        // TODO Check if still relevant and useful.
 
         // Check if this is an indexed or an ordered table.
         // Indexed.
@@ -364,6 +492,7 @@ class ArchiveFolder_Mapping_Table extends ArchiveFolder_Mapping_Abstract
         }
         // Ordered.
 
+        // TODO Warn for missing data.
         return 'Item';
     }
 }

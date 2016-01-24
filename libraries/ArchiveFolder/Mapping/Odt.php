@@ -53,7 +53,9 @@ class ArchiveFolder_Mapping_Odt extends ArchiveFolder_Mapping_Text
         $xml->registerXPathNamespace('text', 'urn:oasis:names:tc:opendocument:xmlns:text:1.0');
 
         // TODO Convert encoded spaces (<text:s text:c="2"/>) to true spaces.
+        // TODO Convert OpenDocument styles into html.
 
+        // All cells are paragraphs, even numbers.
         $xpath = '/office:document-content/office:body/office:text/text:p';
         $paragraphs = $xml->xpath($xpath);
         foreach ($paragraphs as $paragraph) {

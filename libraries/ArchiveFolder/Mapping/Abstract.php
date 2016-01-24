@@ -73,42 +73,31 @@ abstract class ArchiveFolder_Mapping_Abstract
         'rights' => 'Rights',
     );
 
-    // Internal values.
-    // These headers have special meanings in Omeka or in the fork of CsvImport.
-    protected $_specialHeaders = array(
-        // Name or index of the document, even for attached files with metadata.
-        'name' => 'name',
-        'item' => 'name',
-        'document' => 'name',
-        // Attached files.
-        'file' => 'files',
-        'files' => 'files',
-        // 'fileurl' => 'files', // deprecated
-        'record type' => 'record type',
-        // 'recordtype' => 'record type', // deprecated
-
-        // These ones are used only if a format manages them.
-        'item type' => 'item type',
-        // 'itemtype' => 'item type', // deprecated
-        /*
-        // Tags, collection, featured, public, are useless, because there are
-        // automatically managed as extra metadata.
-        'tags' => 'tags',
-        'collection' => 'collection',
-        'featured' => 'featured',
-        'public => 'public',
-
-        // These ones allow to use same files than the fork of Csv Import.
-        'sourceitemid' => 'name', // deprecated
-        'updatemode' => 'action', // deprecated
-        'updateidentifier' => 'name', // deprecated
-        'record identifier' => 'name', // deprecated
-        'recordidentifier' => 'name', // deprecated
-        // Identifier cannot be used, because it can be a Dublin Core element.
-        // 'identifier' => 'name', // not managed
-        'action' => 'action', // not managed
-        'identifierfield' => 'identifier field', // not managed
-        */
+    // List of normalized special fields (attributes or extra data).
+    // They are unique values, except tags.
+    protected $_specialData = array(
+        // For any record (allow to manage process).
+        'record type' => false,
+        'action' => false,
+        'name' => false,
+        'identifier field' => false,
+        'internal id' => false,
+        // For files ("file" will be normalized as speciic "path").
+        'item' => false,
+        'file' => false,
+        'path' => false,
+        'original filename' => false,
+        'filename' => false,
+        'md5' => false,
+        'authentication' => false,
+        // For items ("tag" will be normalized as specific "tags").
+        'collection' => false,
+        'item type' => false,
+        'tag' => true,
+        'tags' => true,
+        // For items and collections.
+        'featured' => false,
+        'public' => false,
     );
 
     // Element separator is used for the name of the element for some formats.
@@ -378,10 +367,10 @@ abstract class ArchiveFolder_Mapping_Abstract
         // Normalization for any record.
         $process = array(
             'record type' => null,
-            'internal id' => null,
             'action' => null,
             'name' => null,
             'identifier field' => null,
+            'internal id' => null,
             'format_xml' => null,
             'xml' => null,
         );
@@ -672,8 +661,8 @@ abstract class ArchiveFolder_Mapping_Abstract
             $lowerName = strtolower($name);
 
             // Manage special headers.
-            if (isset($this->_specialHeaders[$lowerName])) {
-                return $this->_specialHeaders[$lowerName];
+            if (isset($this->_specialData[$lowerName])) {
+                return $lowerName;
             }
 
             if (isset($this->_dcTerms[$lowerName])) {

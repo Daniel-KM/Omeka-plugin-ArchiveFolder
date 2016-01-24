@@ -26,10 +26,7 @@ class ArchiveFolder_MappingTest extends ArchiveFolder_Test_AppTestCase
 
                 $mapping = $this->_mappings[$prefix]['class'];
                 $uri = TEST_FILES_DIR . DIRECTORY_SEPARATOR . $folder;
-                $mapping = new $mapping($uri, array(
-                        // The ods file needs an element delimiter to process all tests.
-                        'element_delimiter' => '|',
-                ));
+                $mapping = new $mapping($uri, array());
 
                 $filepath = TEST_FILES_DIR
                     . DIRECTORY_SEPARATOR . $folder

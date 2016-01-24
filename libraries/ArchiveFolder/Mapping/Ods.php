@@ -85,6 +85,9 @@ class ArchiveFolder_Mapping_Ods extends ArchiveFolder_Mapping_Table
                     $repeatedColumns = $repeatedColumns ? (integer) reset($repeatedColumns) : 1;
 
                     // TODO Convert encoded spaces (<text:s text:c="2"/>) to true spaces.
+                    // TODO Convert styles into html (via xsl or ods 2 html).
+
+                    // All cells are paragraphs, even numbers.
                     $xpath = 'text:p';
                     $paragraphs = $cell->xpath($xpath);
                     foreach ($paragraphs as $paragraph) {

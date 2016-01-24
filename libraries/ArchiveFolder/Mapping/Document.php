@@ -24,36 +24,6 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
     // Current doc for internal purposes.
     protected $_doc;
 
-    // List of normalized special fields (attributes or extra data).
-    // They are unique values, except tags.
-    // Important: extra data can't start with these reserved terms, except if
-    // they are not used together.
-    // TODO Add a warn when special data and extra data start the same.
-    protected $_specialData = array(
-        // For any record (allow to manage process).
-        'action' => true,
-        'identifier field' => true,
-        'record type' => true,
-        'internal id' => true,
-        'name' => true,
-        // For files ("file" will be normalized as extra "path").
-        'item' => true,
-        'file' => true,
-        'path' => true,
-        'original filename' => true,
-        'filename' => true,
-        'md5' => true,
-        'authentication' => true,
-        // For items ("tag" will be normalized as extra "tags").
-        'collection' => true,
-        'item type' => true,
-        'tag' => false,
-        'tags' => false,
-        // For items and collections.
-        'featured' => true,
-        'public' => true,
-    );
-
     /**
      * Prepare the list of documents set inside the current metadata file.
      */
@@ -222,12 +192,8 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
         foreach ($current['extra'] as $field => $data) {
             $lowerField = $this->_spaceFromUppercase($field);
             if (isset($this->_specialData[$lowerField])) {
-                // Only one value is allowed: keep last value.
-                if ($this->_specialData[$lowerField]) {
-                    $extraLower[$lowerField] = array_pop($data);
-                }
                 // Multiple values are allowed (for example tags). Keep order.
-                else {
+                if ($this->_specialData[$lowerField]) {
                     // Manage the tags exception (may be "tags" or "tag").
                     if ($lowerField == 'tag') {
                         $lowerField = 'tags';
@@ -236,6 +202,10 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
                     $extraLower[$lowerField] = empty($extraLower[$lowerField])
                         ? $data
                         : array_merge($extraLower[$lowerField], $data);
+                }
+                // Only one value is allowed: keep last value.
+                else {
+                    $extraLower[$lowerField] = is_array($data) ? array_pop($data) : $data;
                 }
                 unset($current['extra'][$field]);
             }

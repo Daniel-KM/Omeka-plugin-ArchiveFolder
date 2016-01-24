@@ -75,6 +75,7 @@ class ArchiveFolder_Mapping_Text extends ArchiveFolder_Mapping_Abstract
                 switch ($name) {
                     // This is an item.
                     case 'name':
+                    case 'item':
                         $indexDocument++;
                         $indexFile = 0;
                         $documents[$indexDocument] = array('process' => array('name' => $meta));
@@ -85,7 +86,7 @@ class ArchiveFolder_Mapping_Text extends ArchiveFolder_Mapping_Abstract
                         break;
 
                     // This is a file.
-                    case 'files':
+                    case 'file':
                         $indexFile++;
                         $file = array();
                         $file['specific']['path'] = $meta;
@@ -95,8 +96,6 @@ class ArchiveFolder_Mapping_Text extends ArchiveFolder_Mapping_Abstract
                         break;
 
                     // This is something else to add in "extra" metadata.
-                    // case 'record type':
-                    // case 'item type':
                     default:
                         $elementName = $name;
                         break;

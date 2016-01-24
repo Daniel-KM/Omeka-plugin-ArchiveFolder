@@ -103,6 +103,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             'unreferenced_files',
             'exclude_extensions',
             'element_delimiter',
+            'empty_value',
             'fill_ocr_text',
             'fill_ocr_data',
             'fill_ocr_process',

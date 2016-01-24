@@ -112,12 +112,6 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     protected function _prepareFolderTest($uri = '', $parameters = array())
     {
-        // The ods file needs an element delimiter. Other parameters uses the
-        // defaults.
-        if (!isset($parameters['element_delimiter'])) {
-            $parameters['element_delimiter'] = '|';
-        }
-
         $this->_folder = new ArchiveFolder_Folder();
         $this->_folder->uri = $uri ?: (TEST_FILES_DIR
             . DIRECTORY_SEPARATOR . 'Folder_Test');
