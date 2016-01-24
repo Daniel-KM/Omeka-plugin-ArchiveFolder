@@ -10,8 +10,8 @@
             case ArchiveFolder::STATUS_PAUSED: $status = __('Process paused'); break;
             case ArchiveFolder::STATUS_STOPPED: $status = __('Process stopped'); break;
             case ArchiveFolder::STATUS_KILLED: $status = __('Process killed'); break;
-            case ArchiveFolder::STATUS_COMPLETED: $status = __('OAI-PMH Static Repository ready'); break;
-            case ArchiveFolder::STATUS_DELETED: $status = __('OAI-PMH Static Repository deleted'); break;
+            case ArchiveFolder::STATUS_COMPLETED: $status = __('Process completed'); break;
+            case ArchiveFolder::STATUS_DELETED: $status = __('Folder deleted'); break;
             case ArchiveFolder::STATUS_ERROR: $status = __('Process Error'); break;
             default: $status = __('Error'); break;
         }

@@ -1,5 +1,5 @@
 <?php
-$pageTitle = __('Add a Folder to Archive');
+$pageTitle = __('Add a new folder to archive');
 echo head(array(
     'title' => $pageTitle,
     'bodyclass' => 'archive-folder edit',

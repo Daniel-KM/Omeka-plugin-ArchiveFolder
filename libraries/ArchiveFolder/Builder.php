@@ -19,14 +19,11 @@ class ArchiveFolder_Builder
     // Parameters of the repository.
     protected $_parameters;
 
-    // The oai identifier class.
-    protected $_oaiIdentifier;
-
     // The mappings classes.
     protected $_mappings;
 
-    // List of the used metadata formats for this folder.
-    protected $_metadataFormats;
+    // The format class for Archive Document.
+    protected $_format;
 
     protected $_transferStrategy;
 
@@ -118,14 +115,6 @@ class ArchiveFolder_Builder
         if ($this->_folder->hasBeenStopped()) return;
 
         try {
-            $this->_checkOaiIdentifier();
-        } catch (ArchiveFolder_BuilderException $e) {
-            throw new ArchiveFolder_BuilderException($e->getMessage());
-        } catch (Exception $e) {
-            throw new ArchiveFolder_BuilderException(__('Identifier cannot be built: %s', $e->getMessage()));
-        }
-
-        try {
             $this->_checkMappings();
         } catch (ArchiveFolder_BuilderException $e) {
             throw new ArchiveFolder_BuilderException($e->getMessage());
@@ -133,13 +122,7 @@ class ArchiveFolder_Builder
             throw new ArchiveFolder_BuilderException(__('Mappings cannot be checked: %s', $e->getMessage()));
         }
 
-        try {
-            $this->_checkMetadataFormats();
-        } catch (ArchiveFolder_BuilderException $e) {
-            throw new ArchiveFolder_BuilderException($e->getMessage());
-        } catch (Exception $e) {
-            throw new ArchiveFolder_BuilderException(__('Formats cannot be checked: %s', $e->getMessage()));
-        }
+        $this->_format = new ArchiveFolder_Format_Document();
 
         if ($this->_folder->hasBeenStopped()) return;
 
@@ -192,16 +175,6 @@ class ArchiveFolder_Builder
 
         if ($this->_folder->hasBeenStopped()) return;
 
-        try {
-            $this->_createOaiIdentifiers();
-        } catch (ArchiveFolder_BuilderException $e) {
-            throw new ArchiveFolder_BuilderException($e->getMessage());
-        } catch (Exception $e) {
-            throw new ArchiveFolder_BuilderException(__('The oai identifiers cannot be built: %s', $e->getMessage()));
-        }
-
-        if ($this->_folder->hasBeenStopped()) return;
-
         switch ($type) {
             case self::TYPE_CHECK :
                 break;
@@ -209,21 +182,6 @@ class ArchiveFolder_Builder
                 if (empty($this->_folder->identifier)) {
                     throw new ArchiveFolder_BuilderException(__('The repository identifier is not defined.'));
                 }
-
-                // Create the cache for local files and remote files that need it.
-                // The original structure is not modified. To cache before the
-                // build of the static repository xml file makes it easier.
-                if (!$this->_getParameter('repository_remote')) {
-                    try {
-                        $this->_cacheFilesIntoLocalRepository();
-                    } catch (ArchiveFolder_BuilderException $e) {
-                        throw new ArchiveFolder_BuilderException($e->getMessage());
-                    } catch (Exception $e) {
-                        throw new ArchiveFolder_BuilderException(__('An error occurs when the files are cached locally: %s', $e->getMessage()));
-                    }
-                }
-
-                if ($this->_folder->hasBeenStopped()) return;
 
                 // The main process.
                 $this->_createStaticRepository();
@@ -275,32 +233,6 @@ class ArchiveFolder_Builder
     }
 
     /**
-     * Prepare and check the oai identifier.
-     *
-     * @return boolean
-     */
-    protected function _checkOaiIdentifier()
-    {
-        $oaiIdentifiers = apply_filters('archive_folder_oai_identifiers', array());
-
-        // Check the selected identifier.
-        $identifierFormat = $this->_getParameter('oai_identifier_format');
-        if (!isset($oaiIdentifiers[$identifierFormat])) {
-            throw new ArchiveFolder_BuilderException(__('OAI identifier format"%s" is missing.', $identifierFormat));
-        }
-
-        $class = $oaiIdentifiers[$identifierFormat]['class'];
-        if (!class_exists($class)) {
-            throw new ArchiveFolder_BuilderException(__('OAI identifier class "%s" is missing.', $class));
-        }
-
-        $this->_oaiIdentifier = new $class;
-        $this->_oaiIdentifier->setFolderData($this->_folder->uri, $this->_parameters);
-
-        return true;
-    }
-
-    /**
      * Prepare and check the mapping of metadata files.
      *
      * @return boolean
@@ -316,36 +248,6 @@ class ArchiveFolder_Builder
                 throw new ArchiveFolder_BuilderException(__('Mapping class "%s" is missing.', $class));
             }
             $this->_mappings[$name] = new $class($this->_folder->uri, $this->_parameters);
-        }
-
-        return true;
-    }
-
-    /**
-     * Prepare and check the formats.
-     *
-     * @return boolean
-     */
-    protected function _checkMetadataFormats()
-    {
-        $metadataFormats = apply_filters('archive_folder_formats', array());
-
-        // Keep only formats that are wanted for this repository.
-        $this->_metadataFormats = array();
-        foreach ($metadataFormats as $name => $format) {
-            // Keep only existing formats.
-            if (in_array($name, $this->_getParameter('metadata_formats'))) {
-                $class = $format['class'];
-                if (!class_exists($class)) {
-                    throw new ArchiveFolder_BuilderException(__('Format class "%s" is missing.', $class));
-                }
-                $this->_metadataFormats[$format['prefix']] = new $class($this->_folder->uri, $this->_parameters);
-            }
-        }
-
-        // "oai_dc" is the only required format.
-        if (!isset($this->_metadataFormats['oai_dc'])) {
-            throw new ArchiveFolder_BuilderException(__('Format "oai_dc" is required.'));
         }
 
         return true;
@@ -605,83 +507,6 @@ class ArchiveFolder_Builder
     }
 
     /**
-     * Create OAI identifiers for each document and file.
-     */
-    protected function _createOaiIdentifiers()
-    {
-        $listOaiIdentifiers = array();
-        foreach ($this->_documents as $orderDocument => &$document) {
-            $document['oai_id'] = $this->_oaiIdentifier->create(array(
-                array($orderDocument => $document),
-            ));
-            $listOaiIdentifiers[] = $document['oai_id'];
-            // An identifier is prepared even if the file is not a record to
-            // simplify process.
-            foreach ($document['files'] as $orderFile => &$file) {
-                $file['oai_id'] = $this->_oaiIdentifier->create(array(
-                    array($orderDocument => $document),
-                    array($orderFile => $file),
-                ));
-                $listOaiIdentifiers[] = $file['oai_id'];
-            }
-        }
-
-        // Check if all identifiers are unique.
-        $unique = array_filter(array_unique($listOaiIdentifiers));
-        if (empty($unique) || count($unique) != count($listOaiIdentifiers)) {
-           throw new ArchiveFolder_BuilderException(__('Some oai identifiers are not unique. Check names of your documents.'));
-        }
-    }
-
-    /**
-     * Copy local files inside the cache (default: files/repositories).
-     *
-     * @todo Some files shouldn't be copied: use list documents? Probably no.
-     * @todo Copy the hierarchy organized as resulting documents? Probably no.
-     */
-    protected function _cacheFilesIntoLocalRepository()
-    {
-        $startRelative = strlen($this->_folder->uri);
-        $cacheFolder = $this->_folder->getCacheFolder();
-
-        // First, create all folders.
-        foreach ($this->_folders as $folderpath => $foldername) {
-            $doc = array();
-            $relativeFolderpath = trim(substr($folderpath, $startRelative), '/');
-            // The url is raw encoded and should be decoded.
-            if ($this->_transferStrategy == 'Url') {
-                $relativeFolderpath = rawurldecode($relativeFolderpath);
-            }
-            $absoluteFolderPath = $cacheFolder . '/' . $relativeFolderpath;
-            if (file_exists($absoluteFolderPath)) {
-                if (is_file($absoluteFolderPath)) {
-                    throw new ArchiveFolder_BuilderException(__('Unable to create the folder "%s": there is a file with the same name.', $relativeFolderpath));
-                }
-                $result = true;
-            }
-            else {
-                $result = @mkdir($absoluteFolderPath, 0775, true);
-            }
-            if (!$result) {
-                throw new ArchiveFolder_BuilderException(__('Unable to create the cache for folder "%s".', $relativeFolderpath));
-            }
-        }
-
-        // Second, copy each file.
-        foreach ($this->_files as $filepath => $filename) {
-            $relativeFilepath = trim(substr($filepath, $startRelative), '/');
-            // The url is raw encoded and should be decoded.
-            if ($this->_transferStrategy == 'Url') {
-                $relativeFilepath = rawurldecode($relativeFilepath);
-            }
-            $result = @copy($filepath, $cacheFolder . '/' . $relativeFilepath);
-            if (!$result) {
-                throw new ArchiveFolder_BuilderException(__('Unable to copy the file "%s" in the cache.', $filepath));
-            }
-        }
-    }
-
-    /**
      * Create repository of documents according to the type of the folder.
      *
      * @link http://www.openarchives.org/OAI/2.0/guidelines-static-repository.htm
@@ -697,6 +522,9 @@ class ArchiveFolder_Builder
 
         $this->_createTempXmlFile();
 
+        // Metadata may be different when files are separated.
+        $recordsForFiles = (boolean) $this->_getParameter('records_for_files');
+
         // Set the xml. Xml Writer is used because the repository can be big.
         $writer = new XMLWriter();
         $writer->openUri($this->_xmlpathTemp);
@@ -706,22 +534,6 @@ class ArchiveFolder_Builder
 
         // Prepare the static repository.
         $this->_startStaticRepository();
-        $this->_identifyRepository();
-
-        // List the metadata formats of the repository.
-        $writer->startElement('ListMetadataFormats');
-        foreach ($this->_metadataFormats as $prefix => $format) {
-            $writer->startElement('oai:metadataFormat');
-            $format->setWriter($writer);
-            $format->fillMetadataFormat();
-            $writer->endElement();
-        }
-        $writer->endElement();
-
-        // Metadata may be different when files are separated.
-        $recordsForFiles = (boolean) $this->_getParameter('records_for_files');
-
-        if ($this->_folder->hasBeenStopped()) return;
 
         // Prepare the document writer, that will be emptied for each document.
         $documentWriter = new XMLWriter();
@@ -729,35 +541,33 @@ class ArchiveFolder_Builder
         $documentWriter->setIndent(self::XML_INDENT);
         $documentWriter->setIndentString('  ');
         // The document has no xml header.
-        // Prepare the writer for each format.
-        foreach ($this->_metadataFormats as $prefix => $format) {
-            $format->setWriter($documentWriter);
-        }
 
-        // For all formats, loop all documents to create the xml records.
-        foreach ($this->_metadataFormats as $prefix => $format) {
-            $writer->startElement('ListRecords');
-            $writer->writeAttribute('metadataPrefix', $format->getMetadataPrefix());
+        // The prefix of the format is kept for future updates or it will be
+        // removed later.
+        $prefix = 'doc';
 
-            foreach ($this->_documents as $indexDocument => $document) {
-                $this->_fillRecord($document, $prefix, 'Item', $indexDocument);
+        // Prepare the writer for each format (only one currently).
+        $this->_format->setWriter($documentWriter);
+        foreach ($this->_documents as $indexDocument => $document) {
+            // The record and associated files are filled in one time.
+            $this->_fillRecord($document, $prefix, 'Item', $indexDocument);
 
-                if ($recordsForFiles
-                        && isset($document['files'])
-                        && $format->getParameterFormat('support_separated_files')
-                    ) {
-                    foreach ($document['files'] as $order => $file) {
-                        $this->_fillRecord($file, $prefix, 'File', $order);
-                    }
+            // Useless with the format document.
+            /*
+            if ($recordsForFiles
+                    && isset($document['files'])
+                    && $format->getParameterFormat('support_separated_files')
+                ) {
+                foreach ($document['files'] as $order => $file) {
+                    $this->_fillRecord($file, $prefix, 'File', $order);
                 }
-
-                $documentWriter->flush();
-                $writer->flush();
-
-                if ($this->_folder->hasBeenStopped()) return;
             }
-            // End ListRecords.
-            $writer->endElement();
+            */
+
+            $documentWriter->flush();
+            $writer->flush();
+
+            if ($this->_folder->hasBeenStopped()) return;
         }
 
         // End the static repository.
@@ -772,35 +582,7 @@ class ArchiveFolder_Builder
     {
         $writer = $this->_writer;
 
-        $writer->startElement('Repository');
-        $writer->writeAttribute('xmlns', 'http://www.openarchives.org/OAI/2.0/static-repository');
-        $writer->writeAttribute('xmlns:oai', 'http://www.openarchives.org/OAI/2.0/');
-        $writer->writeAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $writer->writeAttribute('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/static-repository http://www.openarchives.org/OAI/2.0/static-repository.xsd');
-    }
-
-    /**
-     * Create the identification of the repository.
-     */
-    protected function _identifyRepository()
-    {
-        $writer = $this->_writer;
-
-        $writer->startElement('Identify');
-        $writer->writeElement('oai:repositoryName', $this->_getParameter('repository_name'));
-        $writer->writeElement('oai:baseURL', $this->_getParameter('repository_base_url'));
-        $writer->writeElement('oai:protocolVersion', '2.0');
-        $emails = explode(' ', $this->_getParameter('admin_emails'));
-        foreach ($emails as $email) {
-            $writer->writeElement('oai:adminEmail', trim($email));
-        }
-        $writer->writeElement('oai:earliestDatestamp', $this->_getEarliestDatestamp());
-        $writer->writeElement('oai:deletedRecord', 'no');
-        $writer->writeElement('oai:granularity', 'YYYY-MM-DD');
-
-        // No Oai Identifier, because this is defined by the OaiPmhGateway.
-
-        $writer->endElement();
+        $writer->startElement('documents');
     }
 
     /**
@@ -826,7 +608,7 @@ class ArchiveFolder_Builder
         }
         // Default conversion.
         else {
-            $format = $this->_metadataFormats[$prefix];
+            $format = $this->_format;
             if ($recordType == 'Item') {
                 $format->fillRecord($document);
             }
@@ -836,249 +618,9 @@ class ArchiveFolder_Builder
             }
         }
 
-        // Check if the document have been updated.
-        $oaiIdentifier = $this->_createFullOaiIdentifier($document['oai_id']);
-        $datestamp = $this->_isDocumentUpdated($oaiIdentifier, $prefix);
-        $datestamp = $datestamp ?: $this->_getParameter('datestamp');
-
-        // Add the document to the static repository.
-        $writer->startElement('oai:record');
-        $this->_fillRecordHeader($oaiIdentifier, $datestamp);
-
-        $writer->startElement('oai:metadata');
         // TODO Indent / include the document properly or remove indent.
         $documentXml = $documentWriter->outputMemory(true);
         $writer->writeRaw(PHP_EOL . $documentXml);
-        $writer->endElement();
-
-        /**
-        // Currently not available.
-        if ($recordType == 'Item') {
-            $this->_fillProvenance($document);
-        }
-        */
-
-        // End oai:record.
-        $writer->endElement();
-    }
-
-    /**
-     * Fill the header of a record.
-     *
-     * @param string $oaiIdentifier The full oai identifier of the document.
-     * @param string $datestamp
-     */
-    protected function _fillRecordHeader($oaiIdentifier, $datestamp)
-    {
-        $writer = $this->_writer;
-
-        // The header of the record doesn't depend on format.
-        $writer->startElement('oai:header');
-        $writer->writeElement('oai:identifier', $oaiIdentifier);
-        $writer->writeElement('oai:datestamp', $datestamp);
-        $writer->endElement();
-    }
-
-    /**
-     * Fill the provenance of a document.
-     *
-     * @todo About provenance for harvested records (see http://www.openarchives.org/OAI/2.0/guidelines-provenance.htm)
-     *
-     * @param array $doc Document or file array.
-     */
-    protected function _fillProvenance($document)
-    {
-        return;
-
-        $writer = $this->_writer;
-        $writer->startElement('oai:about');
-        $writer->startElement('oai:provenance');
-        $writer->writeAttribute('xmlns', 'http://www.openarchives.org/OAI/2.0/provenance');
-        $writer->writeAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $writer->writeAttribute('xsi:schemaLocation', 'http://www.openarchives.org/OAI/2.0/provenance http://www.openarchives.org/OAI/2.0/provenance.xsd');
-        $writer->startElement('oai:originDescription');
-        // $writer->writeAttribute('harvestDate', 'the time stamp of harvest');
-        // $writer->writeAttribute('altered', 'true or false');
-        // $writer->writeElement('baseUrl', 'the original base url');
-        // $writer->writeElement('identifier', 'the original oai identifier);
-        // $writer->writeElement('datestamp', 'the original timestamp);
-        // $writer->writeElement('metadataNamespace', 'the original namespace format);
-        $writer->endElement();
-        $writer->endElement();
-        $writer->endElement();
-    }
-
-    /**
-     * Check if a document have been updated, and, if no, return the datestamp.
-     *
-     * @param string $oaiIdentifier The full oai identifier of the document.
-     * @param string $prefix The format to check.
-     * @return string|false If no change, return the old datestamp, else false.
-     */
-    protected function _isDocumentUpdated($oaiIdentifier, $prefix)
-    {
-        $documentWriter = $this->_documentWriter;
-
-        $existingRecord = $this->_getRecord($oaiIdentifier, $prefix);
-        // If not exists, it is new record.
-        if (empty($existingRecord)) {
-            return false;
-        }
-
-        // The prefix may or may not be set.
-        $existingDocument = $existingRecord->metadata->children();
-        if (empty($existingDocument)) {
-            $existingDocument = $existingRecord->metadata->children($prefix, true);
-            if (empty($existingDocument)) {
-                return false;
-            }
-        }
-        $existingDocument = $existingDocument[0];
-
-        // Warning: some formats, like Mets, keep a time stamp inside content.
-        $format = $this->_metadataFormats[$prefix];
-        if (!$format->getParameterFormat('compare_directly')) {
-            $format->cleanToCompare($existingDocument);
-        }
-
-        // To avoid differences of encoded entities and other issues, the
-        // documents are cleaned.
-        $existingDocument = $this->_normalizeXml($existingDocument);
-        $documentXml = $this->_normalizeXml($documentWriter->outputMemory(false));
-        if (empty($existingDocument)
-                || empty($documentXml)
-                || $existingDocument != $documentXml
-            ) {
-            return false;
-        }
-
-        return (string) $existingRecord->header->datestamp;
-    }
-
-    /**
-     * Get the xml content of a record for the specified prefix.
-     *
-     * @see OaiPmhGateway_ResponseGenerator::_getRecord()
-     *
-     * @param string $identifier
-     * @param string $prefix
-     * @return SimpleXml|null|boolean The record if found, null if not found,
-     * false if error (incorrect format). The error is set if any.
-     */
-    protected function _getRecord($identifier, $metadataPrefix)
-    {
-        // Prepare the xml reader for the existing static repository.
-        // Don't use a static value to allow tests.
-        $localRepositoryFilepath = $this->_folder->getLocalRepositoryFilepath();
-        if (!file_exists($localRepositoryFilepath)) {
-            return  false;
-        }
-
-        // Read the xml from the beginning.
-        $reader = new XMLReader;
-        $result = $reader->open($localRepositoryFilepath, null, LIBXML_NSCLEAN);
-        if (!$result) {
-            $localRepositoryFilepath = false;
-            return false;
-        }
-
-        $record = null;
-
-        while ($reader->read()) {
-            if ($reader->nodeType == XMLReader::ELEMENT
-                    && $reader->name == 'ListRecords'
-                    && $reader->getAttribute('metadataPrefix') === $metadataPrefix
-                ) {
-                // Loop on all records until the one of the identifier (if
-                // prefix is not found above, it's bypassed because there is no
-                // new element to read.
-                while ($reader->read()) {
-                    if ($reader->nodeType == XMLReader::ELEMENT
-                            && $reader->name === 'oai:record'
-                        ) {
-                        // Because XMLReader is a stream reader, forward only,
-                        // and the identifier is not the first element, it is
-                        // saved temporary.
-                        $currentRecord = $reader->readOuterXml();
-                        $recordXml = @simplexml_load_string($currentRecord, 'SimpleXMLElement', 0, 'oai', true);
-
-                        // Check conditions.
-                        if ((string) $recordXml->header->identifier === $identifier) {
-                            $record = $recordXml;
-                            break 2;
-                        }
-                        $reader->next();
-                    }
-
-                    // Don't continue to list records with another prefix.
-                    if ($reader->nodeType == XMLReader::END_ELEMENT
-                            && $reader->name == 'ListRecords'
-                        ) {
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        $reader->close();
-        return $record;
-    }
-
-    /**
-     * Normalize an xml (remove indent).
-     *
-     * @param string $xml
-     * @return string Cleaned xml.
-     */
-    protected function _normalizeXml($xml)
-    {
-        $dom = new DOMDocument("1.0");
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        if (is_object($xml)) {
-            $xml = $xml->asXml();
-        }
-        $result = @$dom->loadXML($xml, LIBXML_NSCLEAN);
-        if (!$result) {
-            return '';
-        }
-        $xml = $dom->saveXML();
-
-        // TODO Check why the xsi namespace may be set or not at record level.
-        $xml = str_replace(' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"', '', $xml);
-
-        return $xml;
-    }
-
-    /**
-     * Return the full oai identifier of a record.
-     *
-     * @param string $recordIdentifier
-     * @return string Full oai identifier of the record.
-     */
-    protected function _createFullOaiIdentifier($recordIdentifier)
-    {
-        // Filter the id (some characters should be escaped: see RFC 3986).
-        // rawurlencode() cannot be used, because reserved characters must not
-        // be encoded. Nevertheless, this is already an uri. So the issue
-        // concerns spaces and non-autoconverted paths principaly.
-        $filters = array(
-            ' ' => '%20',
-        );
-        $id = str_replace(array_keys($filters), array_values($filters), $recordIdentifier);
-        return 'oai:' . $this->_getParameter('repository_domain') . ':' . $id;
-    }
-
-    /**
-     * Helper to get the earlieast datestamp of the repository.
-     *
-     * @todo Currently, return unix timestamp of 0 (1970).
-     *
-     * @return string OAI-PMH date stamp.
-     */
-    protected function _getEarliestDatestamp()
-    {
-        return gmdate('Y-m-d', 0);
     }
 
     /**

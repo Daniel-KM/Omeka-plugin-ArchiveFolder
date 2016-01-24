@@ -1,16 +1,10 @@
-.folder-status .status,
-.harvest-status .status {
+.folder-status .status {
 /*    cursor: pointer; */
     margin-left: 3px;
     margin-right: 3px;
     padding-bottom: 1px;
     padding-left: 20px;
     position:relative;
-}
-.harvest-full-status,
-.harvest-prefix {
-    font-style: italic;
-    text-align: right;
 }
 .status.added {
     background: url('../../../../../application/views/scripts/images/silk-icons/error_add.png') no-repeat scroll 0 0 transparent;

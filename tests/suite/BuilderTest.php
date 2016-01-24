@@ -36,9 +36,6 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
             ),
             $parameters['metadata_formats']);
         $this->assertEquals('Folder_Test', $parameters['repository_identifier']);
-        $this->assertTrue($parameters['oaipmh_gateway']);
-        $this->assertTrue($parameters['oaipmh_harvest']);
-        $this->assertEquals('doc', $parameters['oaipmh_harvest_prefix']);
 
         $this->assertEquals(WEB_ROOT . '/repository/Folder_Test/', $parameters['repository_folder']);
         $this->assertEquals(WEB_ROOT . '/repository/Folder_Test.xml', $parameters['repository_url']);

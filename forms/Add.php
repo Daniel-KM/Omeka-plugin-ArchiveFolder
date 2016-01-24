@@ -6,25 +6,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
     {
         parent::init();
 
-        $oaiIdentifiers = $this->_getFiltered('archive_folder_oai_identifiers');
         $mappings = $this->_getFiltered('archive_folder_mappings');
-        $formats = $this->_getFiltered('archive_folder_formats', 'prefix');
-        $formatsHarvests = $this->_getFilteredMetadataFormats('archive_folder_formats');
-
-        $optionsUpdateMetadata = array(
-            'keep' => __('Keep existing'),
-            'element' => __('By element'),
-            'strict' => __('Strict copy'),
-        );
-        $defaultUpdateMetadata = 'element';
-
-        $optionsUpdateFiles = array(
-            'keep' => __('Keep existing'),
-            'deduplicate' => __('Deduplicate'),
-            'remove' => __('Remove deleted'),
-            'full' => __('Full update'),
-        );
-        $defaultUpdateFiles = 'full';
 
         $allowLocalPaths = Zend_Registry::get('archive_folder')->local_folders->allow == '1';
 
@@ -124,25 +106,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             ));
         }
 
-        // Only the "short_name" format of identifier allows to do update,
-        // because it's stable and doesn't depend on position in the list of
-        // files, it manages files and files defined by metadata files, and it's
-        // short, as recommended.
-        $this->addElement('hidden', 'oai_identifier_format', array(
-            'value' => 'short_name',
-        ));
-
-        /*
-        $this->addElement('select', 'oai_identifier_format', array(
-            'label' => __('Record Identifier'),
-            'description' => __('The local identifier of each record should be unique and stable.')
-                . ' ' . __('This is used only for internal purposes.')
-                . ' ' . __('See readme for more info.'),
-            'multiOptions' => label_table_options($oaiIdentifiers),
-            'value' => isset($oaiIdentifiers['position_folder']) ? 'position_folder' : null,
-        ));
-        */
-
         $values = array(
             '' => __('No default item type'),
             'default' => __('Default type according to first file of each item'),
@@ -157,99 +120,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 . ' ' . __('This field can be bypassed by special formats.'),
             'multiOptions' => $values,
             'value' => '',
-        ));
-
-        $this->addElement('text', 'repository_name', array(
-            'label' => __('Name of the repository'),
-            'description' => __('The name is the title of this repository.')
-                . ' ' . __('It should be unique.')
-                . ' ' . __('If not set, the name will be the uri.'),
-        ));
-
-        $this->addElement('text', 'admin_emails', array(
-            'label' => __('Administrator(s) Email(s)'),
-            // 'validators' => array('EmailAddress'),
-            'description' => __('The email(s) of the administrator(s) of this folder will be displayed in repository.'),
-        ));
-
-        $this->addElement('multiCheckbox', 'metadata_formats', array(
-            'label' => __('Metadata Formats'),
-            'description' => __('Metadata formats exposed by the static repository.'),
-            'multiOptions' => $formats,
-            // Only the required format and the internal document are set true by default.
-            'value' => array('oai_dc', 'doc'),
-        ));
-
-        $this->addElement('checkbox', 'use_dcterms', array(
-            'label' => __('Use Dublin Core Terms when possible'),
-            'description' => __('For formats like "Mets", if files metadata are filled, the process can use "Relation" or "Requires" / "Is Required By" to identify the relation between each item and associated files.'),
-            'value' => true,
-        ));
-
-        $this->addElement('checkbox', 'repository_remote', array(
-            'label' => __('Remote Repository'),
-            'description' => __('If set, keep original url for the static repository and set Omeka as a simple gateway.')
-                . ' ' . __('If not set, or if files are local, or not available via http/https, Omeka will be the static repository.')
-                . ' ' . __('This option is important, because it is used to set the base url of the repository and the identifier of each record.')
-                . ' ' . __('Local files will be stored in a subfolder of files/repositories.'),
-            'value' => false,
-        ));
-
-        $this->addElement('text', 'repository_domain', array(
-            'label' => __('Domain'),
-        ));
-
-        $this->addElement('text', 'repository_path', array(
-            'label' => __('Repository Path'),
-        ));
-
-        $this->addElement('text', 'repository_identifier', array(
-            'label' => __('Repository Identifier'),
-            'description' => __('This identifier should be unique and contain only alphanumeric characters, "-" and "_", without space and without extension.'),
-        ));
-
-        $this->addElement('checkbox', 'oaipmh_gateway', array(
-            'label' => __('Add to OAI-PMH gateway'),
-            'description' => __('Make this repository available internally by the OAI-PMH gateway.')
-                . (plugin_is_active('OaiPmhGateway') ? '' : ' '
-                    . __('This option will be used only if the plugin OAI-PMH Gateway is enabled.')),
-            'value' => true,
-        ));
-
-        $canHarvest = plugin_is_active('OaiPmhGateway') && plugin_is_active('OaipmhHarvester');
-        $descriptionCanHarvest = __('This option will be used only if the plugins OAI-PMH Gateway and OAI-PMH Harvester are enabled.');
-        $this->addElement('checkbox', 'oaipmh_harvest', array(
-            'label' => __('Harvest via OAI-PMH'),
-            'description' => __('Harvest this repository with the OAI-PMH Harvester, via the OAI-PMH Gateway.')
-                . ($canHarvest ? '' : ' ' . $descriptionCanHarvest),
-            'value' => true,
-        ));
-
-        $this->addElement('select', 'oaipmh_harvest_prefix', array(
-            'label' => __('Format used to harvest'),
-            'description' => __('The "oai_dc" can import only metadata of items.')
-                . ' ' . __('Choose an advanced one as "Mets" to harvest files too.')
-                . ' ' . __('The default "Documents" format allows to import and to update all standard data, properties and extra data.')
-                . ' ' . __('The selected format should be set as a format used by the static repository.')
-                . ($canHarvest ? '' : ' ' . $descriptionCanHarvest),
-            'multiOptions' => $formatsHarvests,
-            'value' => isset($formatsHarvests['doc']) ? 'doc' : 'oai_dc',
-        ));
-
-        $this->addElement('select', 'oaipmh_harvest_update_metadata', array(
-            'label' => __('Re-harvesting metadata'),
-            'description' => __('When metadata are updated, old ones may be kept or removed.')
-                . ($canHarvest ? '' : ' ' . $descriptionCanHarvest),
-            'multiOptions' => $optionsUpdateMetadata,
-            'value' => $defaultUpdateMetadata,
-        ));
-
-        $this->addElement('select', 'oaipmh_harvest_update_files', array(
-            'label' => __('Re-harvesting files'),
-            'description' => __('When files are updated, duplicates and old ones may be kept or removed.')
-                . ($canHarvest ? '' : ' ' . $descriptionCanHarvest),
-            'multiOptions' => $optionsUpdateFiles,
-            'value' => $defaultUpdateFiles,
         ));
 
         // Parameters for the folder of original files.
@@ -272,7 +142,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'fill_ocr_text',
                 'fill_ocr_data',
                 'fill_ocr_process',
-                'oai_identifier_format',
                 'item_type_id',
             ),
             'archive_folder_records',
@@ -285,51 +154,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                     . ' ' . __('An object can have multiple pictures under different views or taken by different photographers.')
                     . ' ' . __('In that case, it is recommended to separate the metadata, for example to add data about each page or the different authors of the view.')
                     . ' ' . __("Conversely, an image of a paint, a photography, or a book digitalized as a pdf and e-book files doesn't need to have separate records."),
-        ));
-
-        // Parameters to create the static repository.
-        $this->addDisplayGroup(
-            array(
-                'repository_name',
-                'admin_emails',
-                'metadata_formats',
-                'use_dcterms'
-            ),
-            'archive_folder_repository',
-            array(
-                'legend' => __('Static Repository'),
-                'description' => __('Set the generic parameters of the static repository.'),
-        ));
-
-        // Parameters to create the url of the static repository.
-        $this->addDisplayGroup(
-            array(
-                'repository_remote',
-                'repository_domain',
-                'repository_path',
-                'repository_identifier',
-            ),
-            'archive_folder_base_url',
-            array(
-                'legend' => __('Static Repository Url'),
-                'description' => __('These advanced options allow to change the url of the static repository, if wished.')
-                    . ' ' . __('This url is: "my_domain.com/my_path/to/my_folder_identifier.xml".')
-                    . ' ' . __('If not set, parameters will be determined from the uri.'),
-        ));
-
-        // Parameters to harvest.
-        $this->addDisplayGroup(
-            array(
-                'oaipmh_gateway',
-                'oaipmh_harvest',
-                'oaipmh_harvest_prefix',
-                'oaipmh_harvest_update_metadata',
-                'oaipmh_harvest_update_files',
-            ),
-            'archive_folder_harvest',
-            array(
-                'legend' => __('Static Repository Harvesting'),
-                'description' => __('Options for OAI-PMH harvesting (used after the first update).'),
         ));
 
         $this->applyOmekaStyles();
@@ -369,26 +193,5 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         }
 
         return $values;
-    }
-
-    /**
-     * Return the list of available filtered values with a description.
-     *
-     * @param string $filter Name of the filter to use.
-     * @param string $withSecondValue Add a second value as description.
-     * @return array Associative array of oai identifiers.
-     */
-    protected function _getFilteredMetadataFormats($filter)
-    {
-        $values = apply_filters($filter, array());
-
-        $result = array();
-        foreach ($values as $name => $value) {
-            if (class_exists($value['class']) && !isset($result[$value['prefix']])) {
-                $result[$value['prefix']] =  sprintf('%s [%s]', $value['description'], $value['prefix']);
-            }
-        }
-
-        return $result;
     }
 }

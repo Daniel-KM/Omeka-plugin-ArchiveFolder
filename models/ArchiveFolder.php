@@ -121,19 +121,6 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     }
 
     /**
-     * Indicate if the folder is cached locally.
-     *
-     * @todo A full cache check.
-     *
-     * @return boolean
-     */
-    public function isCached()
-    {
-        return $this->status != ArchiveFolder::STATUS_ADDED
-            && !$this->getParameter('repository_remote');
-    }
-
-    /**
      * Indicate if the process of the folder has been stopped.
      *
      * @return boolean
@@ -142,30 +129,6 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     {
         $currentStatus = $this->getTable('ArchiveFolder')->getCurrentStatus($this->id);
         return $currentStatus == ArchiveFolder::STATUS_STOPPED;
-    }
-
-    /**
-     * Indicate if the folder is set to be harvested.
-     *
-     * @return boolean
-     */
-    public function isSetToBeHarvested()
-    {
-        return $this->getParameter('oaipmh_harvest');
-    }
-
-    /**
-     * Returns the path to a file that is cached or not.
-     *
-     * @param string $filepath The public filepath from the url.
-     * @return string|boolean|null File path, false if not exist in this folder,
-     * null if not available.
-     */
-    public function getFile($filepath)
-    {
-        if ($this->isCached()) {
-            return $this->getCacheFolder() . '/' . $filepath;
-        }
     }
 
     public function getProperty($property)
@@ -179,39 +142,6 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
             default:
                 return parent::getProperty($property);
         }
-    }
-
-    public function getGateway()
-    {
-        if (!plugin_is_active('OaiPmhGateway') || !$this->getParameter('oaipmh_gateway')) {
-            return null;
-        }
-
-        $gateway = $this->_db->getTable('OaiPmhGateway')
-            ->findByUrl($this->getStaticRepositoryUrl());
-
-        return $gateway;
-    }
-
-    public function getHarvest()
-    {
-        if (!plugin_is_active('OaiPmhGateway') || !$this->getParameter('oaipmh_gateway')) {
-            return null;
-        }
-
-        if (!plugin_is_active('OaipmhHarvester') || !$this->getParameter('oaipmh_harvest')) {
-            return null;
-        }
-
-        $gateway = $this->getGateway();
-        if (empty($gateway)) {
-            return null;
-        }
-
-        $prefix = $this->getParameter('oaipmh_harvest_prefix');
-        $harvest = $gateway->getHarvest($prefix);
-
-        return $harvest;
     }
 
     /**
@@ -264,8 +194,6 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     {
         $this->uri = rtrim(trim($this->uri), '/.');
 
-        $transferStrategy = $this->_getTransferStrategy();
-
         // Default parameters if not set.
         $defaults = array(
             'unreferenced_files' => 'by_file',
@@ -275,26 +203,7 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
             'fill_ocr_data' => false,
             'fill_ocr_process' => false,
             'records_for_files' => false,
-            'oai_identifier_format' => 'short_name',
             'item_type_name' => '',
-
-            'repository_name' => '[' . $this->uri . ']',
-            'admin_emails' => get_option('administrator_email'),
-            'metadata_formats' => array_keys(apply_filters('archive_folder_formats', array())),
-            'use_dcterms' => true,
-
-            'repository_remote' => false,
-            'repository_scheme' => '',
-            'repository_domain' => '',
-            'repository_port' => '',
-            'repository_path' => '',
-            'repository_identifier' => basename($this->uri),
-
-            'oaipmh_gateway' => true,
-            'oaipmh_harvest' => true,
-            'oaipmh_harvest_prefix' => 'doc',
-            'oaipmh_harvest_update_metadata' => 'element',
-            'oaipmh_harvest_update_files' => 'full',
         );
 
         $parameters = array_merge($defaults, $parameters);
@@ -302,13 +211,6 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         // Manage empty values for some parameters.
         foreach (array(
                 'unreferenced_files',
-                'oai_identifier_format',
-                'repository_name',
-                'repository_identifier',
-                'admin_emails',
-                'oaipmh_harvest_prefix',
-                'oaipmh_harvest_update_metadata',
-                'oaipmh_harvest_update_files',
             ) as $value) {
             if (empty($parameters[$value])) {
                 $parameters[$value] = $defaults[$value];
@@ -316,195 +218,33 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         }
 
         // Manage some exceptions.
-        $parameters['repository_identifier'] = $this->_keepAlphanumericOnly($parameters['repository_identifier']);
 
-        // Create the repository url.
-        $parameters['repository_remote'] = $parameters['repository_remote'] && $transferStrategy == 'Url';
-        // Remote folder.
-        if ($parameters['repository_remote']) {
-            $parsedUrl = parse_url($this->uri);
-            $parameters['repository_scheme'] = $parsedUrl['scheme'];
-            if (empty($parameters['repository_domain']) && isset($parsedUrl['host'])) {
-                $parameters['repository_domain'] = $parsedUrl['host'];
-            }
-            if (empty($parameters['repository_port']) && isset($parsedUrl['port'])) {
-                $parameters['repository_port'] = $parsedUrl['port'];
-            }
-            if (empty($parameters['repository_path']) && isset($parsedUrl['path'])) {
-                $parameters['repository_path'] = $parsedUrl['path'];
-            }
-            else {
-                $parameters['repository_path'] = $this->_keepAlphanumericOnlyForDir($parameters['repository_path']);
-            }
-            $parameters['repository_path'] = trim($parameters['repository_path'], '/');
+        // The repository identifier is kept for future evolutions and for the
+        // compatibility with the plugin OAI-PMH Static Repository.
 
-            $parameters['repository_folder_human'] = $this->uri . '/';
+        // Remove the web dir when possible.
+        if (strpos($this->uri, WEB_DIR) === 0) {
+            $repositoryIdentifierBase = substr($this->uri, strlen(WEB_DIR));
         }
-        // Local folder.
+        // Else remove the protocol and the domain.
+        elseif (parse_url($this->uri, PHP_URL_HOST)) {
+            $repositoryIdentifierBase = parse_url($foo, PHP_URL_PATH);
+        }
+        // Else keep the full uri.
         else {
-            $parsedUrl = parse_url(WEB_ROOT);
-            $parameters['repository_scheme'] = $parsedUrl['scheme'];
-            $parameters['repository_domain'] = $parsedUrl['host'];
-            if (empty($parameters['repository_port']) && isset($parsedUrl['port'])) {
-                $parameters['repository_port'] = $parsedUrl['port'];
-            }
-            // TODO Use the name set in routes.ini or use the repository_path?
-            $parameters['repository_path'] = (isset($parsedUrl['path']) ? ltrim($parsedUrl['path'], '/') . '/' : '')
-                . 'repository';
-
-            // There is no function for absolute public url.
-            set_theme_base_url('public');
-            $parameters['repository_folder_human'] = absolute_url(
-                array(
-                    'repository' => $parameters['repository_identifier'],
-                    'filepath' => '',
-                ),
-                'archivefolder_file', array(), false, false);
-            revert_theme_base_url();
-            $parameters['repository_folder_human'] = rtrim($parameters['repository_folder_human'], '/.') . '/';
+            $repositoryIdentifierBase = $this->uri;
         }
-
-        $parameters['repository_folder'] = $this->_urlEncodePath($parameters['repository_folder_human']);
-
-        $parameters['repository_url_human'] = $this->_setStaticRepositoryUrlFromParameters(
-            $parameters['repository_scheme'],
-            $parameters['repository_domain'],
-            $parameters['repository_port'],
-            $parameters['repository_path'],
-            $parameters['repository_identifier']);
-
-        $parameters['repository_url'] = $this->_urlEncodePath($parameters['repository_url_human']);
-        $parameters['repository_base_url'] = $this->_urlEncodePath(
-            $this->_setStaticRepositoryBaseUrl($parameters['repository_url_human']));
-
-        // Add the required format.
-        if (!in_array('oai_dc', $parameters['metadata_formats'])) {
-            array_unshift($parameters['metadata_formats'], 'oai_dc');
-        }
-
-        $parameters['use_dcterms'] = (boolean) $parameters['use_dcterms'];
+        $repositoryIdentifierBase .= '-' . time() . rtrim(strtok(substr(microtime(), 2), ' '), '0');
+        $parameters['repository_identifier'] = $this->_keepAlphanumericOnly($repositoryIdentifierBase);
 
         $parameters['records_for_files'] = (boolean) $parameters['records_for_files'];
 
         $parameters['item_type_name'] = $this->_getItemTypeName();
 
-        $parameters['oaipmh_harvest'] = (boolean) $parameters['oaipmh_harvest'];
-        $parameters['oaipmh_gateway'] = $parameters['oaipmh_gateway'] || $parameters['oaipmh_harvest'];
-
         // Other parameters are not changed, so save them.
         $this->setParameters($parameters);
 
-        $this->identifier = $parameters['repository_remote']
-            ? $this->_keepAlphanumericOnly($parameters['repository_url_human'])
-            : $parameters['repository_identifier'];
-    }
-
-    /**
-     * Set the repository of this folder, that will be used to set the base url.
-     *
-     * The user can choose repository url, that can be local or remote.
-     *
-     * @param string $scheme
-     * @param string $domain
-     * @param string $port
-     * @param string $path
-     * @param string $identifier
-     * @return string Static repository url (with or without scheme and encoded
-     * port).
-     */
-    private function _setStaticRepositoryUrlFromParameters($scheme, $domain, $port, $path, $identifier)
-    {
-        return $scheme . '://'
-            . $domain
-            . ($port ? ':' . $port : '')
-            . ($path ? '/' . $path : '')
-            . '/' . $identifier
-            . '.xml';
-    }
-
-    /**
-     * Url-encode each part of a full url (RFC 3986).
-     *
-     * @see http://www.faqs.org/rfcs/rfc3986.html
-     *
-     * @example From https://example.org:8080/gateway/institution:6789/my path/to/my file!.xml
-     * @example To https://example.org:8080/gateway/institution%3A6789/my%20path/to/my%20file%21.xml
-     *
-     * @param string $fullUrl The simple url to encode, without user, password,
-     * query and fragment (only scheme, hostname, port and path).
-     * @return string The url encoded url.
-     */
-    protected function _urlEncodePath($fullUrl)
-    {
-        $parsedUrl = parse_url($fullUrl);
-        if (!isset($parsedUrl['path'])) {
-            return $fullUrl;
-        }
-
-        $paths = explode('/', $parsedUrl['path']);
-        $paths = array_map('rawurlencode', $paths);
-
-        return $parsedUrl['scheme'] . '://'
-            . $parsedUrl['host']
-            . (isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '')
-            . implode('/', $paths);
-    }
-
-    /**
-     * Set the base url of the static repository (gateway + static repository
-     * url without scheme, but with encoded delimiter of port if any).
-     *
-     * @example http://example.org/gateway/institution.org%3A8080/path/to/repository_identifier.xml
-     * @example http://example.org/gateway/example.org/repository/repository_identifier.xml
-     *
-     * @internal Should be run after _setStaticRepositoryUrlFromParameters()
-     *
-     * @param string $repositoryUrl The url of the repository.
-     * @return string The base url.
-     */
-    private function _setStaticRepositoryBaseUrl($url)
-    {
-        if (plugin_is_active('OaiPmhGateway')) {
-            // There is no function for absolute public url.
-            set_theme_base_url('public');
-            $baseUrl = absolute_url(
-                array(
-                    // Remove the scheme of the url.
-                    'repository' => substr(strstr($url,'://'), 3),
-                ),
-                'oaipmhgateway_query', array(), false, false);
-            revert_theme_base_url();
-        }
-        // This static repository will not be really available.
-        else {
-            $baseUrl = WEB_FILES . '/' . get_option('archive_folder_static_dir') . '/' . basename($url);
-        }
-
-        return $baseUrl;
-    }
-
-    /**
-     * Get the transfer strategy of files, according to uri.
-     */
-    protected function _getTransferStrategy()
-    {
-        $scheme = parse_url($this->uri, PHP_URL_SCHEME);
-        if (in_array($scheme, array('http', 'https'))) {
-            $transferStrategy = 'Url';
-        }
-        // Ftp files should be imported locally to conform to OAI standard, that
-        // only accept http or https requests.
-        elseif (in_array($scheme, array('ftp', 'sftp'))) {
-            $transferStrategy = 'Ftp';
-        }
-        elseif ($scheme == 'file' || (!empty($this->uri) && $this->uri[0] == '/')) {
-            $transferStrategy = 'Filesystem';
-        }
-        else {
-            $transferStrategy = '';
-        }
-
-        return $transferStrategy;
+        $this->identifier = $parameters['repository_identifier'];
     }
 
     /**
@@ -559,18 +299,6 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
         return FILES_DIR
             . DIRECTORY_SEPARATOR . get_option('archive_folder_static_dir')
             . DIRECTORY_SEPARATOR . $this->identifier . '.xml';
-    }
-
-    /**
-     * Return the full path to the xml local static repository folder.
-     *
-     * @return string.
-     */
-    public function getCacheFolder()
-    {
-        return FILES_DIR
-            . DIRECTORY_SEPARATOR . get_option('archive_folder_static_dir')
-            . DIRECTORY_SEPARATOR . $this->identifier;
     }
 
     /**
@@ -725,68 +453,14 @@ class ArchiveFolder extends Omeka_Record_AbstractRecord implements Zend_Acl_Reso
     }
 
     /**
-     * The post process is the harvesting if set.
+     * The post process is the import process (harvesting) if set.
      *
      * @internal This process should be managed as a job.
-     *
-     * @see OaipmhHarvester_IndexController::harvestAction()
      *
      * @param ArchiveFolder $folder
      */
     private function _postProcess()
     {
-        if (plugin_is_active('OaiPmhGateway') && $this->getParameter('oaipmh_gateway')) {
-            $gateway = $this->getGateway();
-            if (empty($gateway)) {
-                $gateway = new OaiPmhGateway();
-                $gateway->url = $this->getStaticRepositoryUrl();
-                $gateway->public = false;
-                $gateway->save();
-            }
-
-            if (plugin_is_active('OaipmhHarvester') && $this->getParameter('oaipmh_harvest')) {
-                $prefix = $this->getParameter('oaipmh_harvest_prefix');
-                $updateMetadata = $this->getParameter('oaipmh_harvest_update_metadata');
-                $updateFiles = $this->getParameter('oaipmh_harvest_update_files');
-                $harvest = $gateway->getHarvest($prefix);
-                if (empty($harvest)) {
-                    $harvest = new OaipmhHarvester_Harvest;
-                    $harvest->base_url = $gateway->getBaseUrl();
-                    $harvest->metadata_prefix = $prefix;
-                }
-
-                // The options are always updated.
-                $harvest->update_metadata = $updateMetadata ?: OaipmhHarvester_Harvest::UPDATE_METADATA_ELEMENT;
-                $harvest->update_files = $updateFiles ?: OaipmhHarvester_Harvest::UPDATE_FILES_FULL;
-
-                $message = __('Harvester launched.');
-                $this->addMessage($message, ArchiveFolder::MESSAGE_CODE_NOTICE);
-                _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s', $this->id, $this->uri, $message));
-
-                // Insert the harvest.
-                $harvest->status = OaipmhHarvester_Harvest::STATUS_QUEUED;
-                $harvest->initiated = date('Y:m:d H:i:s');
-                $harvest->save();
-
-                $jobDispatcher = Zend_Registry::get('bootstrap')->getResource('jobs');
-                $jobDispatcher->setQueueName('imports');
-
-                try {
-                    $jobDispatcher->sendLongRunning('OaipmhHarvester_Job', array('harvestId' => $harvest->id));
-                } catch (Exception $e) {
-                    $message = __('Harvester crashed: %s', get_class($e) . ': ' . $e->getMessage());
-                    $this->addMessage($message, ArchiveFolder::MESSAGE_CODE_NOTICE);
-                    _log('[ArchiveFolder] '. __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
-                    $harvest->status = OaipmhHarvester_Harvest::STATUS_ERROR;
-                    $harvest->addMessage(
-                        get_class($e) . ': ' . $e->getMessage(),
-                        OaipmhHarvester_Harvest_Abstract::MESSAGE_CODE_ERROR
-                    );
-                }
-            }
-
-            // TODO For remote archive folders, upload the xml file to them.
-        }
     }
 
     /**

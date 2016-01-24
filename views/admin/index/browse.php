@@ -2,11 +2,6 @@
 $pageTitle = __('Archive Folders (%d total)', $total_results);
 queue_css_file('archive-folder');
 queue_js_file('archive-folder-browse');
-if (plugin_is_active('OaiPmhGateway')) {
-    queue_css_file('oai-pmh-gateway');
-    queue_js_file('oai-pmh-gateway');
-    queue_js_file('oai-pmh-gateway-browse');
-}
 echo head(array(
     'title' => $pageTitle,
     'bodyclass' => 'archive-folder browse',
@@ -18,7 +13,7 @@ echo head(array(
         <a href="<?php echo html_escape(url('archive-folder/index/add')); ?>" class="add button small green"><?php echo __('Add a new archive folder'); ?></a>
     </div>
     <?php endif; ?>
-    <h2><?php echo __('Status of Static Repositories'); ?></h2>
+    <h2><?php echo __('Status of Archive Folders'); ?></h2>
     <?php echo flash(); ?>
 <?php if (iterator_count(loop('ArchiveFolder'))): ?>
     <form action="<?php echo html_escape(url('archive-folder/index/batch-edit')); ?>" method="post" accept-charset="utf-8">
@@ -48,7 +43,7 @@ echo head(array(
                     <th class="batch-edit-heading"><?php // echo __('Select'); ?></th>
                     <?php endif;
                     $browseHeadings[__('Folder')] = 'uri';
-                    $browseHeadings[__('Folder and OAI-PMH Status')] = 'status';
+                    $browseHeadings[__('Folder Status')] = 'status';
                     $browseHeadings[__('Action')] = null;
                     $browseHeadings[__('Last Modified')] = 'modified';
                     echo browse_sort_links($browseHeadings, array('link_tag' => 'th scope="col"', 'list_tag' => ''));
@@ -57,12 +52,9 @@ echo head(array(
             </thead>
             <tbody>
                 <?php $key = 0; ?>
-                <?php foreach (loop('ArchiveFolder') as $folder):
-                    $gateway = $folder->getGateway();
-                    $harvest = $gateway ? $gateway->getHarvest($folder->getParameter('oaipmh_harvest_prefix')) : null;
-                ?>
+                <?php foreach (loop('ArchiveFolder') as $folder): ?>
                 <tr class="archive-folder <?php if (++$key%2 == 1) echo 'odd'; else echo 'even'; ?>">
-                    <?php if (is_allowed('OaiPmhGateway_Index', 'edit')): ?>
+                    <?php if (is_allowed('ArchiveFolder_Index', 'edit')): ?>
                     <td class="batch-edit-check" scope="row">
                         <input type="checkbox" name="folders[]" value="<?php echo $folder->id; ?>" />
                     </td>
@@ -88,38 +80,6 @@ echo head(array(
                     <td>
                         <?php
                             echo common('archive-folder-status', array('folder' => $folder));
-                        ?>
-                        <p>
-                            <em>
-                        <?php if ($gateway && $folder->status != ArchiveFolder::STATUS_ADDED): ?>
-                            <a href="<?php echo html_escape($gateway->getBaseUrl() . '?verb=Identify'); ?>" target="_blank"><?php echo __('OAI-PMH Gateway'); ?></a>
-                        <?php else: ?>
-                            <?php echo __('OAI-PMH Gateway'); ?>
-                        <?php endif; ?>
-                            </em>
-                        </p>
-                        <?php if ($gateway && $folder->status != ArchiveFolder::STATUS_ADDED):
-                            echo common('gateway-public', array('gateway' => $gateway, 'asText' => false, 'textPublic' => true));
-                            echo common('gateway-status', array('gateway' => $gateway, 'asText' => false));
-                            echo common('gateway-friend', array('gateway' => $gateway, 'asText' => false, 'textFriend' => true));
-                        else:
-                            echo __('No gateway');
-                        endif;
-                        ?>
-                        <p>
-                            <em>
-                                <?php echo __('OAI-PMH Harvester'); ?>
-                            </em>
-                        </p>
-                        <?php if ($harvest && $folder->status != ArchiveFolder::STATUS_ADDED):
-                            echo common('harvest-status', array('harvest' => $harvest, 'asText' => true)); ?>
-                            <div class="harvest-full-status">
-                                <?php echo '<div class="harvest-prefix">[' . $harvest->metadata_prefix . ']</div>'; ?>
-                                <a href="<?php echo url('oaipmh-harvester/index/status', array('harvest_id' => $harvest->id)); ?>"><?php echo __('Full Status'); ?></a>
-                            </div>
-                        <?php else:
-                            echo __('None');
-                        endif;
                         ?>
                     </td>
                     <td>
@@ -186,49 +146,6 @@ echo head(array(
                                     <?php endif;
                                 endif;
 
-                                if ($gateway && $folder->status != ArchiveFolder::STATUS_ADDED):
-                                    $actionUri = $this->url(array(
-                                            'module' => 'oai-pmh-gateway',
-                                            'controller' => 'index',
-                                            'action' => 'check',
-                                            'id' => $gateway->id,
-                                        ),
-                                        'default');
-                                    $action = __('Check gateway'); ?>
-                        <a href="<?php echo html_escape($actionUri); ?>" class="harvest button blue"><?php echo $action; ?></a>
-                                <?php
-                                elseif ($folder->status != ArchiveFolder::STATUS_ADDED):
-                                    $actionUri = $this->url(array(
-                                            'module' => 'archive-folder',
-                                            'controller' => 'index',
-                                            'action' => 'create-gateway',
-                                            'id' => $folder->id,
-                                        ),
-                                        'default');
-                                    $action = __('Create gateway'); ?>
-                        <a href="<?php echo html_escape($actionUri); ?>" class="harvest button blue"><?php echo $action; ?></a>
-                                <?php endif;
-
-                                if ($folder->isSetToBeHarvested() && $folder->status != ArchiveFolder::STATUS_ADDED):
-                                    if ($harvest and in_array($harvest->status, array(OaipmhHarvester_Harvest::STATUS_QUEUED, OaipmhHarvester_Harvest::STATUS_IN_PROGRESS))):
-                                $actionUri = $this->url(array(
-                                        'action' => 'browse',
-                                    ),
-                                    'default');
-                                $action = __('Refresh page');
-                                ?>
-                        <a href="<?php echo html_escape($actionUri); ?>" class="refresh button blue"><?php echo $action; ?></a>
-                                <?php else:
-                                    $actionUri = $this->url(array(
-                                            'action' => 'harvest',
-                                            'id' => $folder->id,
-                                        ),
-                                        'default');
-                                    $action = __('Harvest'); ?>
-                        <a href="<?php echo html_escape($actionUri); ?>" class="harvest button blue"><?php echo $action; ?></a>
-                                <?php endif;
-                                endif;
-
                                 if (is_allowed('ArchiveFolder_Index', 'delete')):
                                     $actionUri = $this->url(array(
                                             'action' => 'delete-confirm',
@@ -248,29 +165,12 @@ echo head(array(
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <?php if (plugin_is_active('OaiPmhGateway')): ?>
-        <p style="text-align: right;"><em><?php echo __('Click public, status or friend to switch it.'); ?></em></p>
-        <?php endif; ?>
         <div class="pagination"><?php echo $paginationLinks; ?></div>
     </form>
     <script type="text/javascript">
         Omeka.messages = jQuery.extend(Omeka.messages,
             {'archiveFolder':{
                 'confirmation':<?php echo json_encode(__('Are your sure to remove these folders?')); ?>
-        <?php if (plugin_is_active('OaiPmhGateway')): ?>
-            },
-            'oaiPmhGateway':{
-                'public':<?php echo json_encode(__('Public')); ?>,
-                'notPublic':<?php echo json_encode(__('Reserved')); ?>,
-                'initiated':<?php echo json_encode(__('Initiated')); ?>,
-                'terminated':<?php echo json_encode(__('Terminated')); ?>,
-                'friend':<?php echo json_encode(__('Friend')); ?>,
-                'notFriend':<?php echo json_encode(__('Not friend')); ?>,
-                'undefined':<?php echo json_encode(__('Undefined')); ?>,
-                'checkGood':<?php echo json_encode(__('Checked good')); ?>,
-                'checkError':<?php echo json_encode(__('Checked error')); ?>,
-                'confirmation':<?php echo json_encode(__('Are your sure to remove these gateways?')); ?>
-        <?php endif; ?>
             }}
         );
         Omeka.addReadyCallback(Omeka.ArchiveFolderBrowse.setupBatchEdit);

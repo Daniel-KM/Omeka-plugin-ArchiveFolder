@@ -105,26 +105,8 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             'fill_ocr_data',
             'fill_ocr_process',
             'records_for_files',
-            'oai_identifier_format',
             // The item_type_id is in _postData().
             'item_type_name',
-
-            'repository_name',
-            'admin_emails',
-            'metadata_formats',
-            'use_dcterms',
-
-            'repository_remote',
-            'repository_domain',
-            'repository_port',
-            'repository_path',
-            'repository_identifier',
-
-            'oaipmh_gateway',
-            'oaipmh_harvest',
-            'oaipmh_harvest_prefix',
-            'oaipmh_harvest_update_metadata',
-            'oaipmh_harvest_update_files',
         ));
         foreach ($parameters as $parameter => &$value) {
             $value = isset($record->$parameter) ? $record->$parameter : null;
@@ -269,114 +251,6 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             . ' ' . __('This may take a while. Please check below for status.');
         $this->_helper->flashMessenger($message, 'success');
         return true;
-    }
-
-    public function createGatewayAction()
-    {
-        $folder = $this->_db->findById();
-        if (empty($folder)) {
-            $msg = __('Folder #%d does not exist.', $this->_getParam('id'));
-            $this->_helper->flashMessenger($msg, 'error');
-            return $this->forward('browse');
-        }
-
-        if (!plugin_is_active('OaiPmhGateway')) {
-            $msg = __('The folder cannot be harvested: the plugin OAI-PMH Gateway is not enabled.');
-            $this->_helper->flashMessenger($msg, 'error');
-            return $this->forward('browse');
-        }
-
-        // Get or create the gateway.
-        $gateway = $folder->getGateway();
-        if (empty($gateway)) {
-            $gateway = new OaiPmhGateway();
-            $gateway->url = $folder->getStaticRepositoryUrl();
-            $gateway->public = false;
-            $gateway->save();
-        }
-
-        if ($gateway) {
-            $msg = __('The gateway for folder "%" has been created.', $gateway->url);
-            $this->_helper->flashMessenger($msg, 'success');
-        }
-        else {
-            $msg = __('The gateway for folder "%" cannot be created.', $folder->getStaticRepositoryUrl());
-            $this->_helper->flashMessenger($msg, 'error');
-        }
-
-        $this->forward('browse');
-    }
-
-    public function harvestAction()
-    {
-        $folder = $this->_db->findById();
-        if (empty($folder)) {
-            $msg = __('Folder #%d does not exist.', $this->_getParam('id'));
-            $this->_helper->flashMessenger($msg, 'error');
-            return $this->forward('browse');
-        }
-
-        if (!plugin_is_active('OaiPmhGateway')) {
-            $msg = __('The folder cannot be harvested: the plugin OAI-PMH Gateway is not enabled.');
-            $this->_helper->flashMessenger($msg, 'error');
-            return $this->forward('browse');
-        }
-
-        if (!plugin_is_active('OaipmhHarvester')) {
-            $msg = __('The folder cannot be harvested: the plugin OAI-PMH Harvester is not enabled.');
-            $this->_helper->flashMessenger($msg, 'error');
-            return $this->forward('browse');
-        }
-
-        $folder->setParameter('oaipmh_gateway', true);
-        $folder->setParameter('oaipmh_harvest', true);
-        $folder->save();
-
-        // Get or create the gateway.
-        $gateway = $folder->getGateway();
-        if (empty($gateway)) {
-            $gateway = new OaiPmhGateway();
-            $gateway->url = $folder->getStaticRepositoryUrl();
-            $gateway-> public = false;
-            $gateway->save();
-        }
-
-        $options = array();
-        $options['update_metadata'] = $folder->getParameter('oaipmh_harvest_update_metadata');
-        $options['update_files'] = $folder->getParameter('oaipmh_harvest_update_files');
-        $harvest = $gateway->harvest($folder->getParameter('oaipmh_harvest_prefix'), $options);
-
-        // No harvest and no prefix, so go to select page.
-        if ($harvest === false) {
-            $msg = __('A metadata prefix should be selected to harvest the repository "%s".', $gateway->url);
-            $this->_helper->flashMessenger($msg, 'success');
-            $url = absolute_url(array(
-                    'module' => 'oaipmh-harvester',
-                    'controller' => 'index',
-                    'action' => 'sets',
-                ), null, array(
-                    'base_url' => $gateway->url,
-            ));
-            $this->redirect($url);
-        }
-        elseif (is_null($harvest)) {
-            $msg = __('The repository "%s" cannot be harvested.', $gateway->url)
-               . ' ' . __('Check the gateway.');
-            $this->_helper->flashMessenger($msg, 'error');
-            $url = absolute_url(array(
-                    'module' => 'oai-pmh-gateway',
-                    'controller' => 'index',
-                    'action' => 'browse',
-                ), null, array(
-                    'id' => $gateway->id,
-            ));
-            $this->redirect($url);
-        }
-
-        // Else the harvest is launched.
-        $msg = __('The harvest of the folder "%" is launched.', $gateway->url);
-        $this->_helper->flashMessenger($msg, 'success');
-        $this->forward('browse');
     }
 
     protected function _getDeleteConfirmMessage($record)

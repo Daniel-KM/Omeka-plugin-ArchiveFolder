@@ -2,8 +2,8 @@
 /**
  * Archive Folder
  *
- * Automatically build a standard OAI-PMH archive from files and metadata of a
- * local or a distant folder.
+ * Automatically build an archive from files and metadata of a local or a
+ * distant folder.
  *
  * @copyright Copyright Daniel Berthereau, 2015
  * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
@@ -25,7 +25,6 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         'uninstall_message',
         'config_form',
         'config',
-        'define_routes',
         'define_acl',
     );
 
@@ -34,20 +33,17 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
      */
     protected $_filters = array(
         'admin_navigation_main',
-        'archive_folder_oai_identifiers',
         'archive_folder_mappings',
         'archive_folder_ingesters',
-        'archive_folder_formats',
     );
 
     /**
      * @var array This plugin's options.
      */
     protected $_options = array(
-        'archive_folder_force_update' => true,
         'archive_folder_memory_limit' => null,
         'archive_folder_short_dispatcher' => null,
-        'archive_folder_static_dir' => 'repositories',
+        'archive_folder_static_dir' => 'documents',
         'archive_folder_processor' => '',
         // With roles, in particular if Guest User is installed.
         'archive_folder_allow_roles' => 'a:1:{i:0;s:5:"super";}',
@@ -125,7 +121,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookUninstallMessage()
     {
-        echo __('The folder "%s" where the xml files of the static repositories are saved will not be removed automatically.', get_option('archive_folder_static_dir'));
+        echo __('The folder "%s" where the xml files of the documents are saved will not be removed automatically.', get_option('archive_folder_static_dir'));
     }
 
     /**
@@ -157,14 +153,6 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
                 set_option($optionKey, $post[$optionKey]);
             }
         }
-    }
-
-    /**
-     * Defines route for direct download count.
-     */
-    public function hookDefineRoutes($args)
-    {
-        $args['router']->addConfig(new Zend_Config_Ini(dirname(__FILE__) . '/routes.ini', 'routes'));
     }
 
     /**
@@ -228,62 +216,6 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     /**
-     * Add the oai identifiers for all records that are available.
-     *
-     * @param array $oaiIdentifiers Oai identifiers array.
-     * @return array Filtered oai identifiers array.
-    */
-    public function filterArchiveFolderOaiIdentifiers($oaiIdentifiers)
-    {
-        // Available default identifiers in the plugin.
-        // TODO Use Ark.
-        // The only one that allows updates currently, so it is set by default.
-        $oaiIdentifiers['short_name'] = array(
-            'class' => 'ArchiveFolder_Identifier_ShortName',
-            'description' => __('Hashed path + name: repository_id:aUi3[:name]'),
-        );
-        // These are usable for update only if new documents are listed at end.
-        $oaiIdentifiers['position_folder'] = array(
-            'class' => 'ArchiveFolder_Identifier_PositionFolder',
-            'description' => __('Alphabetic position of item and file: repository_id:17:14'),
-        );
-        $oaiIdentifiers['position'] = array(
-            'class' => 'ArchiveFolder_Identifier_Position',
-            'description' => __('Alphabetic position of record: repository_id:17'),
-        );
-        // Hashs are currently useless for updates: use the paths / names only.
-        $oaiIdentifiers['hash_md5'] = array(
-            'class' => 'ArchiveFolder_Identifier_HashMd5',
-            'description' => __('MD5 hash of the record'),
-        );
-        $oaiIdentifiers['hash_sha1'] = array(
-            'class' => 'ArchiveFolder_Identifier_HashSha1',
-            'description' => __('SHA1 hash of the record'),
-        );
-        /*
-        // TODO Uses paths as identifiers (to be finished).
-        $oaiIdentifiers['path'] = array(
-            'class' => 'ArchiveFolder_Identifier_Path',
-            'description' => __('Path in the folder: "repository_id/my_subfolder/my_file"'),
-        );
-        $oaiIdentifiers['path_item'] = array(
-            'class' => 'ArchiveFolder_Identifier_PathItem',
-            'description' => __('Path in the folder, with item for files'),
-        );
-        $oaiIdentifiers['path_colon'] = array(
-            'class' => 'ArchiveFolder_Identifier_PathColon',
-            'description' => __('Path with colon ":": "repository_id:my_subfolder:my_file"'),
-        );
-        $oaiIdentifiers['path_colon_item'] = array(
-            'class' => 'ArchiveFolder_Identifier_PathColonItem',
-            'description' => __('Path with colon, with item for files'),
-        );
-        */
-
-        return $oaiIdentifiers;
-    }
-
-    /**
      * Add the mappings to convert metadata files into Omeka elements.
      *
      * @param array $mappings Available mappings.
@@ -337,41 +269,5 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         );
 
         return array_merge($archiveFolderIngesters, $ingesters);
-    }
-
-    /**
-     * Add the metadata formats that are available.
-     *
-     * @internal The prefix is a value to allow multiple ways to format data.
-     *
-     * @param array $metadataFormats Metadata formats array.
-     * @return array Filtered metadata formats array.
-    */
-    public function filterArchiveFolderFormats($formats)
-    {
-        // Available formats in the plugin at first place to keep order.
-        $archiveFolderFormats = array();
-        $archiveFolderFormats['oai_dc'] = array(
-            'prefix' => 'oai_dc',
-            'class' => 'ArchiveFolder_Format_OaiDc',
-            'description' => __('Dublin Core'),
-        );
-        $archiveFolderFormats['oai_dcterms'] = array(
-            'prefix' => 'oai_dcterms',
-            'class' => 'ArchiveFolder_Format_OaiDcterms',
-            'description' => __('Dublin Core Terms'),
-        );
-        $archiveFolderFormats['oai_dcq'] = array(
-            'prefix' => 'oai_dcq',
-            'class' => 'ArchiveFolder_Format_OaiDcq',
-            'description' => __('Qualified Dublin Core (deprecated)'),
-        );
-        $archiveFolderFormats['mets'] = array(
-            'prefix' => 'mets',
-            'class' => 'ArchiveFolder_Format_Mets',
-            'description' => __('METS'),
-        );
-
-        return array_merge($archiveFolderFormats, $formats);
     }
 }

@@ -136,7 +136,7 @@ abstract class ArchiveFolder_Mapping_Abstract
         if ($this->_getParameter('use_dcterms')) {
             // Prepare labels of dc terms.
             require PLUGIN_DIR
-                . DIRECTORY_SEPARATOR . 'ArchiveFolderDocument'
+                . DIRECTORY_SEPARATOR . 'ArchiveDocument'
                 . DIRECTORY_SEPARATOR . 'libraries'
                 . DIRECTORY_SEPARATOR . 'elements_dcterms.php';
             $this->_dcTerms = array();
