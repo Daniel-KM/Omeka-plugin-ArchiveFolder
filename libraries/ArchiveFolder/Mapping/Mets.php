@@ -25,9 +25,13 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
     // Current doc for internal purposes.
     protected $_doc;
 
+    // The name of the "USE" attribute of the file group used for the file that
+    // contains the whole document, generally a pdf or a djvu.
+    protected $_useFileGroupWhole = 'document';
+
     // List of files groups in the files section to process (attribute "USE").
     // This avoids to load thumbnails, etc.
-    // The first one is always added.
+    // The first group is always added.
     protected $_fileSecGrps = array('master', 'ocr', 'MASTER', 'OCR');
 
     protected $_xslOcrText = 'libraries/ArchiveFolder/Mapping/alto2text.xsl';
@@ -106,9 +110,11 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $doc = &$this->_doc;
 
         $referencedFiles = array();
-        $use = empty($this->_fileSecGrps)
+        $fileGroups = array($this->_useFileGroupWhole) + $this->_fileSecGrps;
+        $fileGroups = array_filter($fileGroups);
+        $use = empty($fileGroups)
             ? ''
-            : ('or @USE = "' . implode('" or @USE = "', $this->_fileSecGrps) . '"');
+            : ('or @USE = "' . implode('" or @USE = "', $fileGroups) . '"');
 
         $xpath = "/mets:mets/mets:fileSec[1]//mets:fileGrp[position() = 1 $use]/mets:file[mets:FLocat]";
         $xmlFiles = $this->_xml->xpath($xpath);
@@ -362,6 +368,22 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         }
 
         // More than one descriptive metadata.
+
+        // if there is a file group for the document as a whole, use it.
+        if ($this->_useFileGroupWhole) {
+            $xpath = "/mets:mets/mets:fileSec[1]
+                /mets:fileGrp[@USE = '{$this->_useFileGroupWhole}'][1]
+                /mets:file[1]/@ID";
+            $result = $this->_xml->xpath($xpath);
+            $fileId = (string) reset($result);
+            if (!empty($fileId)) {
+                $xpath = "/mets:mets/mets:structMap[1]
+                    /mets:div[mets:fptr/@FILEID = '$fileId']/@DMDID";
+                $result = $this->_xml->xpath($xpath);
+                $dmdId = (string) array_pop($result);
+                return $dmdId;
+            }
+        }
 
         // If files have a div for themselves, it's the parent one, else this is
         // the deepest div with all file pointers and a dmd id.
