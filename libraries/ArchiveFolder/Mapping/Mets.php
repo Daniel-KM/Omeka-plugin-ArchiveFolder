@@ -122,7 +122,7 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             $use = '';
         }
         else {
-            $fileGroups = array($this->_fileGrpDocument) + $this->_fileGrps;
+            $fileGroups = array_merge(array($this->_fileGrpDocument), $this->_fileGrps);
             $fileGroups = array_filter($fileGroups);
             $use = empty($fileGroups)
                 ? ''
