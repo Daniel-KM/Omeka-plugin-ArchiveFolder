@@ -189,6 +189,14 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
         $this->_helper->redirector->goto('browse');
     }
 
+    public function logsAction()
+    {
+        $db = $this->_helper->db;
+        $archiveFolder = $db->findById();
+
+        $this->view->archiveFolder = $archiveFolder;
+    }
+
     /**
      * Launch a process on a record.
      *

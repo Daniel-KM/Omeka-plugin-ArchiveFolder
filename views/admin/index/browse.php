@@ -70,7 +70,10 @@ echo head(array(
                         <?php else: ?>
                             <ul class="action-links group">
                                 <li>
-	                            <a href="<?php echo ADMIN_BASE_URL; ?>" id="archive-folder-<?php echo $folder->id; ?>" class="archive-folder-details"><?php echo __('Last Messages'); ?></a>
+                                    <a href="<?php echo ADMIN_BASE_URL; ?>" id="archive-folder-<?php echo $folder->id; ?>" class="archive-folder-details"><?php echo __('Last Messages'); ?></a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo ADMIN_BASE_URL . '/archive-folder/index/logs/id/'. $folder->id; ?>"><?php echo __('All Messages'); ?></a>
                                 </li>
                             </ul>
                             <div class="details" style="display: none;">
