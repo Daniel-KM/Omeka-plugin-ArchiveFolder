@@ -16,6 +16,9 @@ class Table_ArchiveFolder_Folder extends Omeka_Db_Table
      */
     public function findByUri($uri)
     {
+        if (strlen($uri) == 0) {
+            return;
+        }
         $select = $this->getSelectForFindBy(array(
             'uri' => $uri,
         ));
@@ -31,6 +34,9 @@ class Table_ArchiveFolder_Folder extends Omeka_Db_Table
      */
     public function findByIdentifier($identifier)
     {
+        if (strlen($identifier) == 0) {
+            return;
+        }
         $select = $this->getSelectForFindBy(array(
             'identifier' => $identifier,
         ));
