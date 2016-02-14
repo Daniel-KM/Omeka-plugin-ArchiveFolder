@@ -909,7 +909,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
      */
     private function _keepAlphanumericOnly($string)
     {
-        return preg_replace("/[^a-zA-Z0-9\-_\.]/", '', $string);
+        return preg_replace('/[^a-zA-Z0-9\-_\.]/', '', $string);
     }
 
     /**

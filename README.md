@@ -370,7 +370,7 @@ there is no column "action", in which case each row is processed separately.
 Metadata for a file should be set after the item ones and require a column
 `Document` that indicates the item to which the file is attached.
 
-Beside [Csv Import], some headers changed:
+Beside the [fork of Csv Import], some headers changed:
 
 - `ItemType` and `RecordType` are replaced by `Item Type` and `Record Type`;
 - `FileUrl` is replaced by `Files` (or `File`);
