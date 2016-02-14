@@ -79,6 +79,12 @@ echo head(array(
                             <div class="details" style="display: none;">
                                 <?php  echo nl2br(str_replace(']', "]\n", substr($folder->messages, -400))); ?>
                             </div>
+                            <div class="last-message" style="display: auto;">
+                                <?php
+                                    $pos = strrpos($folder->messages, PHP_EOL . '[');
+                                    echo $pos ? nl2br(substr($folder->messages, $pos + 1)) : $folder->messages;
+                                ?>
+                            </div>
                         <?php endif; ?>
                     </td>
                     <td>
