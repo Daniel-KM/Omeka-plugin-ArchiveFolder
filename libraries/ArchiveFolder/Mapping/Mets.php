@@ -27,12 +27,12 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
 
     // The name of the "USE" attribute of the file group used for the file that
     // contains the whole document, generally a pdf or a djvu.
-    protected $_useFileGroupWhole = 'document';
+    protected $_fileGrpDocument = 'document';
 
     // List of files groups in the files section to process (attribute "USE").
     // This avoids to load thumbnails, etc.
     // The first group is always added.
-    protected $_fileSecGrps = array('master', 'ocr', 'MASTER', 'OCR');
+    protected $_fileGrps = array('master', 'ocr', 'MASTER', 'OCR');
 
     protected $_xslOcrText = 'libraries/ArchiveFolder/Mapping/alto2text.xsl';
     protected $_xslOcrData = 'libraries/ArchiveFolder/Mapping/alto2json.xsl';
@@ -51,6 +51,13 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             . DIRECTORY_SEPARATOR . $this->_xslOcrProcess;
 
         parent::__construct($uri, $parameters);
+
+        if (isset($this->_parameters['extra_parameters']['mets_fileGrp_document'])) {
+            $this->_fileGrpDocument = $this->_parameters['extra_parameters']['mets_fileGrp_document'];
+        }
+        if (isset($this->_parameters['extra_parameters']['mets_fileGrps'])) {
+            $this->_fileGrps = array_filter(array_map('trim', explode(',', $this->_parameters['extra_parameters']['mets_fileGrps'])));
+        }
     }
 
     /**
@@ -110,13 +117,18 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $doc = &$this->_doc;
 
         $referencedFiles = array();
-        $fileGroups = array($this->_useFileGroupWhole) + $this->_fileSecGrps;
-        $fileGroups = array_filter($fileGroups);
-        $use = empty($fileGroups)
-            ? ''
-            : ('or @USE = "' . implode('" or @USE = "', $fileGroups) . '"');
 
-        $xpath = "/mets:mets/mets:fileSec[1]//mets:fileGrp[position() = 1 $use]/mets:file[mets:FLocat]";
+        if (empty($this->_fileGrps)) {
+            $use = '';
+        }
+        else {
+            $fileGroups = array($this->_fileGrpDocument) + $this->_fileGrps;
+            $fileGroups = array_filter($fileGroups);
+            $use = empty($fileGroups)
+                ? ''
+                : ('[@USE = "' . implode('" or @USE = "', $fileGroups) . '"]');
+        }
+        $xpath = "/mets:mets/mets:fileSec[1]//mets:fileGrp{$use}/mets:file[mets:FLocat]";
         $xmlFiles = $this->_xml->xpath($xpath);
         foreach ($xmlFiles as $xmlFile) {
             $xmlFile->registerXPathNamespace(self::XML_PREFIX, self::XML_NAMESPACE);
@@ -145,7 +157,8 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             // The dmd id can be set in files section or in the structural map,
             // else there is no metadata for this file.
             if (empty($dmdId)) {
-                $xpath = "/mets:mets/mets:structMap[1]//mets:div[mets:fptr[@FILEID = '$fileId']][1]/@DMDID";
+                $xpath = "/mets:mets/mets:structMap[@TYPE='physical'][1]
+                    //mets:div[mets:fptr[@FILEID = '$fileId']][1]/@DMDID";
                 $result = $this->_xml->xpath($xpath);
                 $dmdId = (string) reset($result);
             }
@@ -156,7 +169,8 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             // The amd id can be used to save some interesting data.
             $amdId = (string) $xmlFile->attributes()->ADMID;
             if (empty($amdId)) {
-                $xpath = "/mets:mets/mets:structMap[1]//mets:div[mets:fptr[@FILEID = '$fileId']][1]/@ADMID";
+                $xpath = "/mets:mets/mets:structMap[@TYPE='physical'][1]
+                    //mets:div[mets:fptr[@FILEID = '$fileId']][1]/@ADMID";
                 $result = $this->_xml->xpath($xpath);
                 $amdId = (string) reset($result);
             }
@@ -166,7 +180,8 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
 
             // The siblings are all files that share the same metadata.
             // They allow too associate alto xml files to images, for example.
-            $xpath = "/mets:mets/mets:structMap[1]//mets:div[mets:fptr[@FILEID = '$fileId']][1]
+            $xpath = "/mets:mets/mets:structMap[@TYPE='physical'][1]
+                //mets:div[mets:fptr[@FILEID = '$fileId']][1]
                 /mets:fptr/@FILEID[. != '$fileId']";
             $result = $this->_xml->xpath($xpath);
             $siblingIds = array();
@@ -370,14 +385,14 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         // More than one descriptive metadata.
 
         // if there is a file group for the document as a whole, use it.
-        if ($this->_useFileGroupWhole) {
+        if ($this->_fileGrpDocument) {
             $xpath = "/mets:mets/mets:fileSec[1]
-                /mets:fileGrp[@USE = '{$this->_useFileGroupWhole}'][1]
+                /mets:fileGrp[@USE = '{$this->_fileGrpDocument}'][1]
                 /mets:file[1]/@ID";
             $result = $this->_xml->xpath($xpath);
             $fileId = (string) reset($result);
             if (!empty($fileId)) {
-                $xpath = "/mets:mets/mets:structMap[1]
+                $xpath = "/mets:mets/mets:structMap[@TYPE='physical'][1]
                     /mets:div[mets:fptr/@FILEID = '$fileId']/@DMDID";
                 $result = $this->_xml->xpath($xpath);
                 $dmdId = (string) array_pop($result);
@@ -392,7 +407,7 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $result = $this->_xml->xpath($xpath);
         $countFiles = count($result);
 
-        $xpath = "/mets:mets/mets:structMap[1]
+        $xpath = "/mets:mets/mets:structMap[@TYPE='physical'][1]
             //mets:div[count(.//mets:fptr) = $countFiles]/@DMDID";
         $result = $this->_xml->xpath($xpath);
         $dmdId = (string) array_pop($result);

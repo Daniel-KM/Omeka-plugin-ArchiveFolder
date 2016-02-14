@@ -45,8 +45,9 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
 
     public function addAction()
     {
-        $this->view->form = new ArchiveFolder_Form_Add();
-        $this->view->form->setAction($this->_helper->url('add'));
+        $form = new ArchiveFolder_Form_Add();
+        $form->setAction($this->_helper->url('add'));
+        $this->view->form = $form;
 
         // From parent::addAction(), to allow to set parameters as array.
         $class = $this->_helper->db->getDefaultModelName();
@@ -64,6 +65,13 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                 $this->view->$varName = $record;
                 return;
             }
+
+            if (!$form->isValid($this->getRequest()->getPost())) {
+                $this->_helper->_flashMessenger(__('There was an error on the form. Please try again.'), 'error');
+                $this->view->$varName = $record;
+                return;
+            }
+
             $record->setPostData($_POST);
 
             // Specific is here.
@@ -102,6 +110,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             'fill_ocr_text',
             'fill_ocr_data',
             'fill_ocr_process',
+            'extra_parameters',
             'records_for_files',
             // The item_type_id is in _postData().
             'item_type_name',

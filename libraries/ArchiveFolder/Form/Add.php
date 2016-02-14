@@ -29,9 +29,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                     'Callback',
                     true,
                     array(
-                        'callback' => function($value) {
-                            return Zend_Uri::check($value);
-                        }
+                        'callback' => array('ArchiveFolder_Form_Validator', 'validateUri'),
                     ),
                     'messages' => array(
                         Zend_Validate_Callback::INVALID_VALUE => __('An url or a path is required to add a folder.'),
@@ -116,6 +114,31 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'value' => false,
             ));
         }
+
+        $this->addElement('textarea', 'extra_parameters', array(
+            'label' => __('Add specific parameters'),
+            'description' => __('Some formats require specific parameters, for example to be used in the xsl sheets.')
+                . ' ' . __('You can specify them here, one by line.'),
+            'value' => '',
+            'required' => false,
+            'rows' => 5,
+            'placeholder' => __('parameter_1_name = parameter 1 value'),
+            'filters' => array(
+                'StringTrim',
+            ),
+            'validators' => array(
+                array(
+                    'callback',
+                    false,
+                    array(
+                        'callback' => array('ArchiveFolder_Form_Validator', 'validateExtraParameters'),
+                    ),
+                    'messages' => array(
+                        Zend_Validate_Callback::INVALID_VALUE => __('Each extra parameter, one by line, should have a name separated from the value with a "=".'),
+                    ),
+                ),
+            ),
+        ));
 
         $values = array(
             '' => __('No default item type'),
@@ -232,6 +255,15 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                     'description' => __('Set specific parameters for OCR.'),
             ));
         }
+
+        $this->addDisplayGroup(
+            array(
+                'extra_parameters',
+            ),
+            'archive_folder_extra_parameters',
+            array(
+                'legend' => __('Extra Parameters'),
+        ));
 
         // Parameters for the folder of original files.
         $this->addDisplayGroup(

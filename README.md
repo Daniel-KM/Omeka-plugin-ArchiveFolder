@@ -342,8 +342,17 @@ somewhere else.
 The plugin [OcrElementSet] saves ocr about each image at file level, so the
 option "File Metadata" should be set.
 
+Two extra parameters can be managed:
+
+- "mets_fileGrp_document": allows to set the main file, if wanted and if any
+("document" by default).
+- "mets_fileGrps": allows to set the groups of files to import. This avoids
+to import only main files and not the thumbnails or other unwanted files. The
+default is "master, ocr, MASTER, OCR". If set to empty, only the first file
+group will be imported.
+
 Note: The namespace of the xslt stylesheets may need to be changed according to
-your files.
+your files, or extend the class "ArchiveFolder_Mapping_Mets".
 
 ### Table via OpenDocument Spreadsheet (`ods`)
 

@@ -223,6 +223,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
             'fill_ocr_text' => true,
             'fill_ocr_data' => true,
             'fill_ocr_process' => true,
+            'extra_parameters' => array(),
             'records_for_files' => true,
             'item_type_name' => '',
             'identifier_field' => ArchiveFolder_Importer::DEFAULT_IDFIELD,
@@ -264,10 +265,37 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
 
         $parameters['item_type_name'] = $this->_getItemTypeName();
 
+        $parameters['extra_parameters'] = $this->_getExtraParameters($parameters['extra_parameters']);
+
         // Other parameters are not changed, so save them.
         $this->setParameters($parameters);
 
         $this->identifier = $parameters['repository_identifier'];
+    }
+
+    /**
+     * Convert a string into a list of extra parameters.
+     *
+     * @internal The parameters are already checked via Zend form validator.
+     *
+     * @param array|string $extraParameters
+     * @return array
+     */
+    protected function _getExtraParameters($extraParameters)
+    {
+        if (is_array($extraParameters)) {
+            return $extraParameters;
+        }
+
+        $parameters = array();
+
+        $parametersAdded = array_values(array_filter(array_map('trim', explode(PHP_EOL, $extraParameters))));
+        foreach ($parametersAdded as $parameterAdded) {
+            list($paramName, $paramValue) = explode('=', $parameterAdded);
+            $parameters[trim($paramName)] = trim($paramValue);
+        }
+
+        return $parameters;
     }
 
     /**
@@ -414,9 +442,6 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
 
         if (empty($this->id)) {
             $folder = $this->getTable('ArchiveFolder_Folder')->findByUri($this->uri);
-            if (empty($this->uri)) {
-               $this->addError('uri', __('The uri is required.'));
-            }
             if (!empty($folder)) {
                $this->addError('uri', __('The folder for uri "%s" exists already.', $this->uri));
             }
