@@ -508,7 +508,9 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
 
     public function build($type = ArchiveFolder_Builder::TYPE_CHECK)
     {
-        _log('[ArchiveFolder] ' . __('Folder #%d [%s]: Process started.', $this->id, $this->uri));
+        $message = __('Process "%s" started.', $type);
+        $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_DEBUG);
+        _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
 
         $this->setStatus(ArchiveFolder_Folder::STATUS_PROGRESS);
         $this->save();
