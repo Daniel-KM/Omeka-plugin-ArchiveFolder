@@ -97,38 +97,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             'value' => ArchiveFolder_Mapping_Table::DEFAULT_EMPTY_VALUE,
         ));
 
-        if (plugin_is_active('OcrElementSet')) {
-            $this->addElement('checkbox', 'fill_ocr_text', array(
-                'label' => __('Fill OCR Text'),
-                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Text" too.'),
-                'value' => true,
-            ));
-            $this->addElement('checkbox', 'fill_ocr_data', array(
-                'label' => __('Fill OCR Data'),
-                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Data" too.')
-                    . ' ' . __('This field is needed only if it is reused somewhere else (highlight, correction, search...).')
-                    . ' ' . __('Warning: Data can be heavy and they are duplicated by default in the search table of the base.'),
-                'value' => true,
-            ));
-            $this->addElement('checkbox', 'fill_ocr_process', array(
-                'label' => __('Fill OCR Process'),
-                'description' => __('If Alto xml files are imported via Mets, fill the field "OCR : Process" too.')
-                    . ' ' . __('These values are useless for end user.'),
-                'value' => true,
-            ));
-        }
-        else {
-            $this->addElement('hidden', 'fill_ocr_text', array(
-                'value' => false,
-            ));
-            $this->addElement('hidden', 'fill_ocr_data', array(
-                'value' => false,
-            ));
-            $this->addElement('hidden', 'fill_ocr_process', array(
-                'value' => false,
-            ));
-        }
-
         $this->addElement('textarea', 'extra_parameters', array(
             'label' => __('Add specific parameters'),
             'description' => __('Some formats require specific parameters, for example to be used in the xsl sheets.')
@@ -245,19 +213,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'description' => __('Set specific parameters for table or spreadsheets.'),
         ));
 
-        if (plugin_is_active('OcrElementSet')) {
-            $this->addDisplayGroup(
-                array(
-                    'fill_ocr_text',
-                    'fill_ocr_data',
-                    'fill_ocr_process',
-                ),
-                'archive_folder_ocr',
-                array(
-                    'legend' => __('OCR'),
-                    'description' => __('Set specific parameters for OCR.'),
-            ));
-        }
+        apply_filters('archive_folder_add_parameters', $this);
 
         $this->addDisplayGroup(
             array(

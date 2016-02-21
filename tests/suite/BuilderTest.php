@@ -121,6 +121,12 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
 
     public function testMetsAlto()
     {
+        if (!plugin_is_active('OcrElementSet')) {
+            $this->markTestSkipped(
+                __('This test requires OcrElementSet.')
+            );
+        }
+
         $uri = TEST_FILES_DIR
             . DIRECTORY_SEPARATOR . 'Folder_Test_Mets_Alto';
 
