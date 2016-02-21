@@ -51,9 +51,22 @@ class ArchiveFolder_UpdateJob extends Omeka_Job_AbstractJob
 
             // Importer.
             else {
+                $slowProcess = get_option('archive_folder_slow_process');
+
                  // Don't use resend(), because it will nest process.
                 do {
-                     $folder->import();
+                    $folder->import();
+                    if ($slowProcess) {
+                        $status = $folder->status;
+                        $folder->setStatus(ArchiveFolder_Folder::STATUS_PROGRESS);
+                        $folder->save();
+                        sleep($slowProcess);
+                        if ($folder->hasBeenStopped()) {
+                            break;
+                        }
+                        $folder->setStatus($status);
+                        $folder->save();
+                    }
                 }
                 while ($folder->countRecordsToImport()
                     && !($folder->isError() || $folder->hasBeenStopped()));

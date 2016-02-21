@@ -1,14 +1,16 @@
-<fieldset id="fieldset-archive-folder"><legend></legend>
+<fieldset id="fieldset-archive-folder-process"><legend><?php echo __('Process'); ?></legend>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('archive_folder_memory_limit',
-                __('Memory Limit')); ?>
+            <?php echo $this->formLabel('archive_folder_processor',
+                __('Command of the processor')); ?>
         </div>
         <div class="inputs five columns omega">
             <p class="explanation">
-                <?php echo __('The memory limit for the background processes.'); ?>
+                <?php echo __('Command of the processor. Let empty to use the internal xslt processor of php.'); ?>
+                <?php echo __('This is required by some formats that need to parse a xslt 2 stylesheet.'); ?>
+                <?php echo __('See format of the command and examples in the readme.'); ?>
             </p>
-            <?php echo $this->formText('archive_folder_memory_limit', get_option('archive_folder_memory_limit'), null); ?>
+            <?php echo get_view()->formText('archive_folder_processor', get_option('archive_folder_processor'), null); ?>
         </div>
     </div>
     <div class="field">
@@ -30,16 +32,26 @@
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('archive_folder_processor',
-                __('Command of the processor')); ?>
+            <?php echo $this->formLabel('archive_folder_slow_process', __('Slow the process')); ?>
+        </div>
+        <div class="inputs five columns omega">
+            <?php echo $this->formText('archive_folder_slow_process', get_option('archive_folder_slow_process'), null); ?>
+            <p class="explanation">
+                <?php echo __('Some providers check if too many files are uploaded in one shot and prevent the import.'); ?>
+                <?php echo __('This option sleeps the process during this number of seconds to avoid such a limit.'); ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('archive_folder_memory_limit',
+                __('Memory Limit')); ?>
         </div>
         <div class="inputs five columns omega">
             <p class="explanation">
-                <?php echo __('Command of the processor. Let empty to use the internal xslt processor of php.'); ?>
-                <?php echo __('This is required by some formats that need to parse a xslt 2 stylesheet.'); ?>
-                <?php echo __('See format of the command and examples in the readme.'); ?>
+                <?php echo __('The memory limit for the background processes.'); ?>
             </p>
-            <?php echo get_view()->formText('archive_folder_processor', get_option('archive_folder_processor'), null); ?>
+            <?php echo $this->formText('archive_folder_memory_limit', get_option('archive_folder_memory_limit'), null); ?>
         </div>
     </div>
 </fieldset>
