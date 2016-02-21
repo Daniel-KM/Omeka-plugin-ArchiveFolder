@@ -81,6 +81,14 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             'value' => '',
         ));
 
+        $this->addElement('checkbox', 'add_relations', array(
+            'label' => __('Add unique identifiers'),
+            'description' => __('To add unique identifiers allows to link items and files easily and independantly from Omeka.')
+                . ' ' . __('Added identifiers are absolute urls.')
+                . ' ' . __("This option is only usefull when there aren't such identifiers."),
+            'value' => false,
+        ));
+
         $this->addElement('text', 'element_delimiter', array(
             'label' => __('Table/Spreadsheet element separator'),
             'description' => __('If metadata are available in a table (as Open Document Spreadsheet ods), multiple elements can be set within one cell for the same field.')
