@@ -206,15 +206,43 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
     }
 
     /**
-     * Prepare parameters from a form, in order to make them coherent.
+     * Filter the form input according to some criteria.
      *
-     * @param array $parameters
+     * @todo Move part of these filter inside save().
+     *
+     * @param array $post
+     * @return array Filtered post data.
      */
-    public function prepareParameters($parameters)
+    protected function filterPostData($post)
     {
-        $this->uri = rtrim(trim($this->uri), '/.');
+        // Remove superfluous whitespace.
+        $options = array('inputNamespace'=>'Omeka_Filter');
+        $filters = array(
+            'uri' => array('StripTags', 'StringTrim'),
+            // 'item_type_id'  => 'ForeignKey',
+            'records_for_files' => 'Boolean',
+        );
+        $filter = new Zend_Filter_Input($filters, null, $post, $options);
+        $post = $filter->getUnescaped();
 
-        // Default parameters if not set.
+        $post['uri'] = rtrim(trim($post['uri']), '/.');
+
+        // Unset immutable or specific properties from $_POST.
+        $immutable = array('id', 'identifier', 'parameters', 'status', 'messages', 'owner_id', 'added', 'modified');
+        foreach ($properties as $value) {
+            unset($post[$value]);
+        }
+
+        // This filter move all parameters inside 'parameters' of the folder.
+        $parameters = $post;
+        // Property level.
+        unset($parameters['uri']);
+        unset($parameters['item_type_id']);
+        // Not properties.
+        unset($parameters['csrf_token']);
+        unset($parameters['submit']);
+
+        // Set default parameters if needed.
         $defaults = array(
             'unreferenced_files' => 'by_file',
             'exclude_extensions' => '',
@@ -229,17 +257,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
             'identifier_field' => ArchiveFolder_Importer::DEFAULT_IDFIELD,
             'action' => ArchiveFolder_Importer::DEFAULT_ACTION,
         );
-
         $parameters = array_merge($defaults, $parameters);
-
-        // Manage empty values for some parameters.
-        foreach (array(
-                'unreferenced_files',
-            ) as $value) {
-            if (empty($parameters[$value])) {
-                $parameters[$value] = $defaults[$value];
-            }
-        }
 
         // Manage some exceptions.
 
@@ -247,30 +265,34 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         // compatibility with the plugin OAI-PMH Static Repository.
 
         // Remove the web dir when possible.
-        if (strpos($this->uri, WEB_DIR) === 0) {
-            $repositoryIdentifierBase = substr($this->uri, strlen(WEB_DIR));
+        if (strpos($post['uri'], WEB_DIR) === 0) {
+            $repositoryIdentifierBase = substr($post['uri'], strlen(WEB_DIR));
         }
         // Else remove the protocol and the domain.
-        elseif (parse_url($this->uri, PHP_URL_HOST)) {
-            $repositoryIdentifierBase = parse_url($this->uri, PHP_URL_PATH);
+        elseif (parse_url($post['uri'], PHP_URL_HOST)) {
+            $repositoryIdentifierBase = parse_url($post['uri'], PHP_URL_PATH);
         }
         // Else keep the full uri.
         else {
-            $repositoryIdentifierBase = $this->uri;
+            $repositoryIdentifierBase = $post['uri'];
         }
         $repositoryIdentifierBase .= '-' . date('Ymd-His') . '-' . rtrim(strtok(substr(microtime(), 2), ' '), '0');
         $parameters['repository_identifier'] = $this->_keepAlphanumericOnly($repositoryIdentifierBase);
 
-        $parameters['records_for_files'] = (boolean) $parameters['records_for_files'];
-
-        $parameters['item_type_name'] = $this->_getItemTypeName();
+        $parameters['item_type_name'] = $this->_getItemTypeName($post['item_type_id']);
 
         $parameters['extra_parameters'] = $this->_getExtraParameters($parameters['extra_parameters']);
+
+        if (empty($parameters['unreferenced_files'])) {
+            $parameters['unreferenced_files'] = $defaults['unreferenced_files'];
+        }
 
         // Other parameters are not changed, so save them.
         $this->setParameters($parameters);
 
-        $this->identifier = $parameters['repository_identifier'];
+        $post['identifier'] = $parameters['repository_identifier'];
+
+        return $post;
     }
 
     /**
@@ -378,11 +400,11 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
     /**
      * Allow to set the item type name from filename (default) or to force it.
      *
+     * @param string $itemTypeId
      * @return string
      */
-    protected function _getItemTypeName()
+    protected function _getItemTypeName($itemTypeId)
     {
-        $itemTypeId = $this->_postData['item_type_id'];
         if (empty($itemTypeId)) {
             $itemTypeName = '';
         }

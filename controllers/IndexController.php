@@ -66,6 +66,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                 return;
             }
 
+            // Specific is here.
             if (!$form->isValid($this->getRequest()->getPost())) {
                 $this->_helper->_flashMessenger(__('There was an error on the form. Please try again.'), 'error');
                 $this->view->$varName = $record;
@@ -73,11 +74,6 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             }
 
             $record->setPostData($_POST);
-
-            // Specific is here.
-            $parameters = $this->_getParameters($record);
-            $record->prepareParameters($parameters);
-
             if ($record->save(false)) {
                 $successMessage = $this->_getAddSuccessMessage($record);
                 if ($successMessage != '') {
@@ -91,36 +87,6 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
             }
         }
         $this->view->$varName = $record;
-    }
-
-    /**
-     * Clean the parameters to save from the form.
-     *
-     * @param Record $record The record that is currently prepared.
-     * @return array
-     */
-    protected function _getParameters($record)
-    {
-        // Specific is here.
-        $parameters = array_flip(array(
-            'unreferenced_files',
-            'exclude_extensions',
-            'element_delimiter',
-            'empty_value',
-            'fill_ocr_text',
-            'fill_ocr_data',
-            'fill_ocr_process',
-            'extra_parameters',
-            'records_for_files',
-            // The item_type_id is in _postData().
-            'item_type_name',
-            'identifier_field',
-            'action',
-        ));
-        foreach ($parameters as $parameter => &$value) {
-            $value = isset($record->$parameter) ? $record->$parameter : null;
-        }
-        return $parameters;
     }
 
     public function stopAction()
