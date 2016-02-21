@@ -77,7 +77,7 @@ echo head(array(
                                 </li>
                             </ul>
                             <div class="details" style="display: none;">
-                                <?php  echo nl2br(str_replace(']', "]\n", substr($folder->messages, -400))); ?>
+                                <?php  echo nl2br(str_replace(']', "]\n", substr($folder->messages, -1000))); ?>
                             </div>
                             <div class="last-message" style="display: auto;">
                                 <?php
