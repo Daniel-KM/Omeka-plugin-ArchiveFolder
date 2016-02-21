@@ -55,7 +55,14 @@ class ArchiveFolder_Tool_ProcessXslt
         $result = $proc->transformToURI($domXml, $output);
         @chmod($output, 0640);
 
-        return ($result === false) ? null : $output;
+        // There is no specific message for error with this processor.
+        if ($result === false) {
+            $msg = __('An error occurs during the xsl transformation of the file "%s" with the sheet "%s".',
+                $input, $stylesheet);
+            throw new ArchiveFolder_Exception($msg);
+        }
+
+        return $output;
     }
 
     /**
@@ -78,11 +85,11 @@ class ArchiveFolder_Tool_ProcessXslt
             $xmlContent = file_get_contents($filepath);
             if ($xmlContent === false) {
                 $message = __('Enable to load "%s". Verify that you have rights to access this folder and subfolders.', $filepath);
-                throw new Exception($message);
+                throw new ArchiveFolder_Exception($message);
             }
             elseif (empty($xmlContent)) {
                 $message = __('The file "%s" is empty. Process is aborted.', $filepath);
-                throw new Exception($message);
+                throw new ArchiveFolder_Exception($message);
             }
             $domDocument->loadXML($xmlContent);
         }
@@ -113,10 +120,16 @@ class ArchiveFolder_Tool_ProcessXslt
             $command .= ' ' . escapeshellarg($name . '=' . $parameter);
         }
 
-        $result = (int) shell_exec($command . ' 2>&- || echo 1');
+        $result = shell_exec($command . ' 2>&1 1>&-');
         @chmod($output, 0640);
 
-        // In Shell, 0 is a correct result.
-        return ($result == 1) ? null : $output;
+        // In Shell, empty is a correct result.
+        if (!empty($result)) {
+            $msg = __('An error occurs during the xsl transformation of the file "%s" with the sheet "%s" : %s',
+                $input, $stylesheet, $result);
+            throw new ArchiveFolder_Exception($msg);
+        }
+
+        return $output;
     }
 }

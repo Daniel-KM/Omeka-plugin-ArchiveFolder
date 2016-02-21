@@ -174,6 +174,8 @@ class ArchiveFolder_Builder
             $this->_listDocuments();
         } catch (ArchiveFolder_BuilderException $e) {
             throw new ArchiveFolder_BuilderException($e->getMessage());
+        } catch (ArchiveFolder_Exception $e) {
+            throw new ArchiveFolder_BuilderException($e->getMessage());
         } catch (Exception $e) {
             throw new ArchiveFolder_BuilderException(__('The static repository cannot be built: %s', $e->getMessage()));
         }

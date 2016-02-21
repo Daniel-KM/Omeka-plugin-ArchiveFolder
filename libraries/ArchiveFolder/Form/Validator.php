@@ -4,6 +4,8 @@ class ArchiveFolder_Form_Validator extends Zend_Validate_Callback
     /**
      * Callback to check extra-parameters.
      *
+     * @internal The availability will be ckecked just before import.
+     *
      * @param string $value The value to check.
      * @return boolean
      */
@@ -12,7 +14,7 @@ class ArchiveFolder_Form_Validator extends Zend_Validate_Callback
         $scheme = parse_url($uri, PHP_URL_SCHEME);
         // The check is done via the server for external urls.
         if (in_array($scheme, array('http', 'https', 'ftp', 'sftp'))) {
-            return Zend_Uri::check($value);
+            return Zend_Uri::check($uri);
         }
 
         // Unknown or unmanaged scheme.
@@ -64,7 +66,7 @@ class ArchiveFolder_Form_Validator extends Zend_Validate_Callback
         $parameterValueErrors = array();
         foreach ($parametersAdded as $parameterAdded) {
             if (strpos($parameterAdded, '=') === FALSE) {
-                        return false;
+                return false;
             }
 
             list($paramName, $paramValue) = explode('=', $parameterAdded);

@@ -4,6 +4,6 @@
  *
  * @package ArchiveFolder
  */
-class ArchiveFolder_BuilderException extends Exception
+class ArchiveFolder_BuilderException extends ArchiveFolder_Exception
 {
 }
