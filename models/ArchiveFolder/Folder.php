@@ -772,8 +772,11 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         // Check if there was an error.
         if ($result) {
             // Update the count to avoid to import the same record.
+            $hasBeenStopped = $this->hasBeenStopped();
             $this->setParameter('imported_records', $importeds + 1);
-            $this->setStatus(ArchiveFolder_Folder::STATUS_COMPLETED);
+            $this->setStatus($hasBeenStopped
+                ? ArchiveFolder_Folder::STATUS_STOPPED
+                : ArchiveFolder_Folder::STATUS_COMPLETED);
             $message = __('Process of record #%d/%d finished.', $importeds + 1, $total);
             $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_DEBUG);
             _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
