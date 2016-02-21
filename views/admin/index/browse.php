@@ -56,7 +56,7 @@ echo head(array(
                 <?php foreach (loop('ArchiveFolder_Folder') as $folder): ?>
                 <tr class="archive-folder <?php if (++$key%2 == 1) echo 'odd'; else echo 'even'; ?>">
                     <?php if (is_allowed('ArchiveFolder_Index', 'edit')): ?>
-                    <td class="batch-edit-check" scope="row">
+                    <td class="batch-edit-check" scope="row" href="<?php echo ADMIN_BASE_URL; ?>" id="archive-folder-<?php echo $folder->id; ?>">
                         <input type="checkbox" name="folders[]" value="<?php echo $folder->id; ?>" />
                     </td>
                     <?php endif; ?>
@@ -70,7 +70,7 @@ echo head(array(
                         <?php else: ?>
                             <ul class="action-links group">
                                 <li>
-                                    <a href="<?php echo ADMIN_BASE_URL; ?>" id="archive-folder-<?php echo $folder->id; ?>" class="archive-folder-details"><?php echo __('Last Messages'); ?></a>
+                                    <a href="<?php echo ADMIN_BASE_URL; ?>" class="archive-folder-details"><?php echo __('Last Messages'); ?></a>
                                 </li>
                                 <li>
                                     <a href="<?php echo ADMIN_BASE_URL . '/archive-folder/index/logs/id/'. $folder->id; ?>"><?php echo __('All Messages'); ?></a>
