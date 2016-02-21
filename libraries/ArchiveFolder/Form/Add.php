@@ -32,7 +32,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                         'callback' => array('ArchiveFolder_Form_Validator', 'validateUri'),
                     ),
                     'messages' => array(
-                        Zend_Validate_Callback::INVALID_VALUE => __('An url or a path is required to add a folder.'),
+                        Zend_Validate_Callback::INVALID_VALUE => __('A url or a path is required to add a folder.'),
                     ),
                 ),
             ),
@@ -65,6 +65,20 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             'label' => __('File extensions to exclude'),
             'description' => __('A black-list of extensions (normal or double) to exclude from the source, separated by a space or a comma and without the initial dot.')
                 . ' ' . __('The white-list is the Omeka one, defined in the security page.'),
+        ));
+
+        $values = array(
+            '' => __('No default item type'),
+            'default' => __('Default type according to first file of each item'),
+        ) + get_table_options('ItemType');
+        $this->addElement('select', 'item_type_id', array(
+            'label' => __('Default Item Type'),
+            'description' => __('Set  the item type during import as Omeka Item Type and Dublin Core Type.')
+                . ' ' . __('For the second option (type of the first file), it can be:')
+                . ' ' . __('"Still image" for an item with a single Image, "Text" for an item with multiple image or a pdf, '
+                . '"Sound" for an audio file, "Moving Image" for a video file and none in all other cases.'),
+            'multiOptions' => $values,
+            'value' => '',
         ));
 
         $this->addElement('text', 'element_delimiter', array(
@@ -140,20 +154,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
             ),
         ));
 
-        $values = array(
-            '' => __('No default item type'),
-            'default' => __('Default type according to first file of each item'),
-        ) + get_table_options('ItemType');
-        $this->addElement('select', 'item_type_id', array(
-            'label' => __('Default Item Type'),
-            'description' => __('Set  the item type during import as Omeka Item Type and Dublin Core Type.')
-                . ' ' . __('For the second option (type of the first file and the number of files, it can be:')
-                . ' ' . __('"Still image" for an item with a single Image, "Text" for an item with multiple image or a pdf, '
-                . '"Sound" for an audio file, "Moving Image" for a video file and none in all other cases.'),
-            'multiOptions' => $values,
-            'value' => '',
-        ));
-
         $identifierField = get_option('archive_folder_identifier_field');
         if (!empty($identifierField) && $identifierField != ArchiveFolder_Importer::IDFIELD_INTERNAL_ID) {
             $currentIdentifierField = $this->_getElementFromIdentifierField($identifierField);
@@ -175,7 +175,9 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         $this->addElement('select', 'identifier_field', array(
             'label' => __('Identifier field (required)'),
             'description' => __('The identifier field is used to simplify the update of records.')
-                . ' ' . __('This is the link between the files in the folder and the records in the Omeka base.'),
+                . ' ' . __('This is the link between the files in the folder and the records in the Omeka base.')
+                . ' ' . __('The identifier should be set and unique in all records (collections, items, files).')
+                . ' ' . __('This is generally the Dublin Core : Identifier or a specific element.'),
             'multiOptions' => $values,
             'value' => $identifierField,
         ));
@@ -217,6 +219,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'unreferenced_files',
                 'records_for_files',
                 'exclude_extensions',
+                'item_type_id',
             ),
             'archive_folder_records',
             array(
@@ -269,7 +272,6 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         $this->addDisplayGroup(
             array(
                 'identifier_field',
-                'item_type_id',
                 'action',
             ),
             'archive_folder_process',
