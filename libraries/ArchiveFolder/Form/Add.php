@@ -290,9 +290,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
     private function _getElementFromIdentifierField($identifierField)
     {
         if (strlen($identifierField) > 0) {
-            $parts = explode(
-                    CsvImport_ColumnMap_MixElement::DEFAULT_COLUMN_NAME_DELIMITER,
-                    $identifierField);
+            $parts = explode(':', $identifierField);
             if (count($parts) == 2) {
                 $elementSetName = trim($parts[0]);
                 $elementName = trim($parts[1]);
