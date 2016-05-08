@@ -583,6 +583,13 @@ re-process, or to check settings of the proxy and the server.
 The namespace of the xslt stylesheets may need to be changed according to your
 files.
 
+### Order of files
+
+When a large number of files are attached to an item, their order may be lost
+because the server imports them in parallel. So an option in the batch edit
+mechanism allows to reorder them by filename: go to items/browse > check boxes
+of items > click the main button Edit > check the box "Order files" and process.
+
 
 Warning
 -------
