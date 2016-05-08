@@ -51,7 +51,7 @@
         <p><?php echo __('This is not an archive folder.'); ?></p>
     <?php endif; ?>
     <p><?php echo __('Back to %sArchive Folder%s.',
-        '<a href="' . ADMIN_BASE_URL . '/archive-folder">', '</a>'); ?></p>
+        '<a href="' . ADMIN_BASE_URL . '/archive-folder">', '</a>'); ?>
     </p>
 </div>
 

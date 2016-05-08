@@ -32,12 +32,12 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
      */
     public function browseAction()
     {
-        if (!$this->_hasParam('sort_field')) {
-            $this->_setParam('sort_field', 'modified');
+        if (!$this->hasParam('sort_field')) {
+            $this->setParam('sort_field', 'modified');
         }
 
-        if (!$this->_hasParam('sort_dir')) {
-            $this->_setParam('sort_dir', 'd');
+        if (!$this->hasParam('sort_dir')) {
+            $this->setParam('sort_dir', 'd');
         }
 
         parent::browseAction();

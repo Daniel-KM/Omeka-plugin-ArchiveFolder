@@ -11,6 +11,10 @@ class ArchiveFolder_Form_Validator extends Zend_Validate_Callback
      */
     public function validateUri($uri)
     {
+        if (empty($uri)) {
+            return false;
+        }
+
         $scheme = parse_url($uri, PHP_URL_SCHEME);
         // The check is done via the server for external urls.
         if (in_array($scheme, array('http', 'https', 'ftp', 'sftp'))) {
