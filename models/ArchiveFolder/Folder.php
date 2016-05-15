@@ -216,7 +216,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
     protected function filterPostData($post)
     {
         // Remove superfluous whitespace.
-        $options = array('inputNamespace'=>'Omeka_Filter');
+        $options = array('inputNamespace' => 'Omeka_Filter');
         $filters = array(
             'uri' => array('StripTags', 'StringTrim'),
             // 'item_type_id'  => 'ForeignKey',
@@ -229,7 +229,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
 
         // Unset immutable or specific properties from $_POST.
         $immutable = array('id', 'identifier', 'parameters', 'status', 'messages', 'owner_id', 'added', 'modified');
-        foreach ($properties as $value) {
+        foreach ($immutable as $value) {
             unset($post[$value]);
         }
 
