@@ -97,12 +97,13 @@ echo head(array(
                         switch ($folder->status):
                             case ArchiveFolder_Folder::STATUS_QUEUED:
                             case ArchiveFolder_Folder::STATUS_PROGRESS:
-                                $actionUri = $this->url(array(
-                                        'action' => 'stop',
-                                        'id' => $folder->id,
-                                    ),
-                                    'default');
-                                $action = __('Stop');
+                                if (is_allowed('ArchiveFolder_Index', 'edit')):
+                                    $actionUri = $this->url(array(
+                                            'action' => 'stop',
+                                            'id' => $folder->id,
+                                        ),
+                                        'default');
+                                    $action = __('Stop');
                                 ?>
                         <a href="<?php echo html_escape($actionUri); ?>" class="stop button blue"><?php echo $action; ?></a>
 
@@ -114,7 +115,9 @@ echo head(array(
                                 $action = __('Refresh page');
                                 ?>
                         <a href="<?php echo html_escape($actionUri); ?>" class="refresh button blue"><?php echo $action; ?></a>
-                            <?php break;
+                            <?php
+                                endif;
+                                break;
                             case ArchiveFolder_Folder::STATUS_ADDED:
                             case ArchiveFolder_Folder::STATUS_RESET:
                             case ArchiveFolder_Folder::STATUS_PAUSED:
@@ -124,7 +127,6 @@ echo head(array(
                             case ArchiveFolder_Folder::STATUS_DELETED:
                             case ArchiveFolder_Folder::STATUS_ERROR:
                             default:
-
                                  if (is_allowed('ArchiveFolder_Index', 'edit')):
                                     $actionUri = $this->url(array(
                                             'action' => 'check',
