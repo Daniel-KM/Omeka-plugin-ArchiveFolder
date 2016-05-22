@@ -157,7 +157,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                 : ArchiveFolder_Builder::TYPE_CHECK;
 
             foreach ($folderIds as $folderId) {
-                $result = $this->_launchJob(ArchiveFolder_Builder::TYPE_UPDATE, $folderId);
+                $result = $this->_launchJob($action, $folderId);
             }
         }
 
