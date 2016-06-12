@@ -84,7 +84,7 @@ class ArchiveFolder_Tool_ProcessXslt
         else {
             $xmlContent = file_get_contents($filepath);
             if ($xmlContent === false) {
-                $message = __('Enable to load "%s". Verify that you have rights to access this folder and subfolders.', $filepath);
+                $message = __('Could not load "%s". Verify that you have rights to access this folder and subfolders.', $filepath);
                 throw new ArchiveFolder_Exception($message);
             }
             elseif (empty($xmlContent)) {

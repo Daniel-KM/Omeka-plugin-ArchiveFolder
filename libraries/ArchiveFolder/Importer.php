@@ -112,7 +112,7 @@ class ArchiveFolder_Importer
             if (in_array($document['process']['action'], array(
                     ArchiveFolder_Importer::ACTION_CREATE,
                 ))) {
-                $message = __('Cannot process action "%s" for record #%d: the record exists (%s id %d) ).',
+                $message = __('Cannot process action "%s" for record #%d: the record exists (%s id %d).',
                     $document['process']['action'], $document['process']['index'], get_class($record), $record->id);
                 throw new ArchiveFolder_ImporterException($message);
             }
