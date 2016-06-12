@@ -67,6 +67,13 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 . ' ' . __('The white-list is the Omeka one, defined in the security page.'),
         ));
 
+        $this->addElement('checkbox', 'allow_no_extension', array(
+            'label' => __('Allow file without extension'),
+            'description' => __('This option allows to import some specific files and urls.')
+                . ' ' . __('The option "Disable File Upload Validation" in Settings > Security should be set too.'),
+            'value' => false,
+        ));
+
         $values = array(
             '' => __('No default item type'),
             'default' => __('Default type according to first file of each item'),
@@ -195,6 +202,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'unreferenced_files',
                 'records_for_files',
                 'exclude_extensions',
+                'allow_no_extension',
                 'item_type_id',
             ),
             'archive_folder_records',

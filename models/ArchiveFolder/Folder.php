@@ -246,6 +246,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         $defaults = array(
             'unreferenced_files' => 'by_file',
             'exclude_extensions' => '',
+            'allow_no_extension' => false,
             'element_delimiter' => ArchiveFolder_Mapping_Table::DEFAULT_ELEMENT_DELIMITER,
             'empty_value' => ArchiveFolder_Mapping_Table::DEFAULT_EMPTY_VALUE,
             'extra_parameters' => array(),
