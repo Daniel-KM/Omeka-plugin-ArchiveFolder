@@ -6,7 +6,8 @@
         </div>
         <div class="inputs five columns omega">
             <p class="explanation">
-                <?php echo __('Command of the processor. Let empty to use the internal xslt processor of php.'); ?>
+                <?php echo __('Command of the processor.'); ?>
+                <?php echo __('Let empty to use the internal xslt processor of php.'); ?>
                 <?php echo __('This is required by some formats that need to parse a xslt 2 stylesheet.'); ?>
                 <?php echo __('See format of the command and examples in the readme.'); ?>
             </p>
