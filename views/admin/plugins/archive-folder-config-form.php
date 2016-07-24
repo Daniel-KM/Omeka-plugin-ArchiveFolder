@@ -36,11 +36,11 @@
             <?php echo $this->formLabel('archive_folder_slow_process', __('Slow the process')); ?>
         </div>
         <div class="inputs five columns omega">
-            <?php echo $this->formText('archive_folder_slow_process', get_option('archive_folder_slow_process'), null); ?>
             <p class="explanation">
                 <?php echo __('Some providers check if too many files are uploaded in one shot and prevent the import.'); ?>
                 <?php echo __('This option sleeps the process during this number of seconds to avoid such a limit.'); ?>
             </p>
+            <?php echo $this->formText('archive_folder_slow_process', get_option('archive_folder_slow_process'), null); ?>
         </div>
     </div>
     <div class="field">
