@@ -759,9 +759,26 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         }
 
         if ($this->status != ArchiveFolder_Folder::STATUS_COMPLETED) {
-            $message = __('Folder is not ready to be processed.');
+            $message = __('Folder is not ready to be processed (status: %s).', $this->status);
             $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
             _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
+
+            // To avoid a infinite loop in case of an error, a check is done
+            // after one minute.
+            $previous = $this->getParameter('loop_completed');
+            if (empty($previous)) {
+                $this->setParameter('loop_completed', time());
+            }
+            // Check if one minute.
+            else {
+                if (($previous + 60) <= time()) {
+                    $this->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+                    $message = __('An error occured during import.')
+                        . ' ' . __("You should relaunch the process (imported items won't be reimported).");
+                    $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+                    _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::ERR);
+                }
+            }
             return;
         }
 
