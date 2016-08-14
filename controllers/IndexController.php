@@ -79,7 +79,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                 if ($successMessage != '') {
                     $this->_helper->flashMessenger($successMessage, 'success');
                 }
-                // Save the identifier field.
+                // Save main options.
                 set_option('archive_folder_unreferenced_files', $record->getParameter('unreferenced_files'));
                 set_option('archive_folder_identifier_field', $record->getParameter('identifier_field'));
                 $this->_redirectAfterAdd($record);
@@ -94,7 +94,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
     {
         $folder = $this->_db->findById();
         if (empty($folder)) {
-            $message = __('Folder #%d does not exist.', $this->_getParam('id'));
+            $message = __('Folder #%d does not exist.', $this->getParam('id'));
             $this->_helper->flashMessenger($message, 'error');
             return $this->_helper->redirector->goto('browse');
         }
@@ -110,7 +110,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
     {
         $folder = $this->_db->findById();
         if (empty($folder)) {
-            $message = __('Folder #%d does not exist.', $this->_getParam('id'));
+            $message = __('Folder #%d does not exist.', $this->getParam('id'));
             $this->_helper->flashMessenger($message, 'error');
             return $this->_helper->redirector->goto('browse');
         }
@@ -155,7 +155,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
      */
     public function batchEditAction()
     {
-        $folderIds = $this->_getParam('folders');
+        $folderIds = $this->getParam('folders');
         if (empty($folderIds)) {
             $this->_helper->flashMessenger(__('You must choose some folders to batch edit.'), 'error');
         }
@@ -190,7 +190,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
      */
     protected function _launchJob($processType = null, $recordId = 0)
     {
-        $id = (integer) ($recordId ?: $this->_getParam('id'));
+        $id = (integer) ($recordId ?: $this->getParam('id'));
 
         $folder = $this->_db->find($id);
         if (empty($folder)) {

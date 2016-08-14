@@ -713,7 +713,7 @@ class ArchiveFolder_Builder
 
         $path = realpath($path);
         if (!is_readable($path)) {
-            _log(__('The folder "%s" is not readable.'), Zend_Log::NOTICE);
+            _log(__('The folder "%s" is not readable.', $path), Zend_Log::NOTICE);
             return array();
         }
 

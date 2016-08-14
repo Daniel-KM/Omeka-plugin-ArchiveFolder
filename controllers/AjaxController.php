@@ -28,7 +28,7 @@ class ArchiveFolder_AjaxController extends Omeka_Controller_AbstractActionContro
 
         // Handle action.
         try {
-            $id = (integer) $this->_getParam('id');
+            $id = (integer) $this->getParam('id');
             $folder = $this->_helper->db->find($id);
             if (!$folder) {
                 $this->getResponse()->setHttpResponseCode(400);
