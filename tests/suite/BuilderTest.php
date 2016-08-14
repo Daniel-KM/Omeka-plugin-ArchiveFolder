@@ -42,7 +42,9 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
             . DIRECTORY_SEPARATOR . 'Folder_Test'
             . DIRECTORY_SEPARATOR . 'Basic';
 
-        $parameters = array();
+        $parameters = array(
+            'add_relations' => true,
+        );
 
         $this->_expectedXml = $this->_expectedBaseDir
             . DIRECTORY_SEPARATOR . 'FolderTest_BasicByFile.xml';
@@ -79,6 +81,7 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $parameters = array(
             'repository_identifier' => 'BasicByDirectory',
             'unreferenced_files' => 'by_directory',
+            'add_relations' => true,
         );
 
         $this->_expectedXml = $this->_expectedBaseDir
@@ -94,7 +97,9 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
             . DIRECTORY_SEPARATOR . 'Folder_Test'
             . DIRECTORY_SEPARATOR . 'Dir_A';
 
-        $parameters = array();
+        $parameters = array(
+            'add_relations' => true,
+        );
 
         $this->_expectedXml = $this->_expectedBaseDir
             . DIRECTORY_SEPARATOR . 'FolderTest_DirA.xml';
@@ -150,7 +155,9 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $uri = TEST_FILES_DIR
             . DIRECTORY_SEPARATOR . 'Folder_Test_Characters_Local';
 
-        $parameters = array();
+        $parameters = array(
+            'add_relations' => true,
+        );
 
         $this->_expectedXml = $this->_expectedBaseDir
             . DIRECTORY_SEPARATOR . 'FolderTest_CharactersLocal.xml';
