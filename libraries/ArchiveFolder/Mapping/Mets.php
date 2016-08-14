@@ -2,6 +2,8 @@
 /**
  * Map Mets xml files into Omeka elements for each item and file.
  *
+ * @todo Remove this class and use the sheet "mets2document.xslt1.xsl" like Mag.
+ *
  * @package ArchiveFolder
  */
 class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract

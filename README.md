@@ -16,17 +16,59 @@ won't be maintained any more. All of their features have equivalents in this
 tool via internal functions, classes (for the mapping between specific metadata
 and Omeka elements) and hooks (for special data).
 
+Default mappings are set to import:
+
+- [Open Document Spreadsheet (ods)]: The normalized format for spreadsheets,
+available in tools like [LibreOffice], simpler to use than csv. The headers are
+the element set name and the element name, separated with a ":". It can manage
+collections, items, and files metadata, multiple columns with the same name,
+multiple values by cell, and content with multiple lines.
+- [Mets]: A format to manage digitalized books, journals, etc.
+- [Alto]: A format to manage OCR (requires the plugin [Ocr Element Set]).
+- [Mag]: "Metadati Amministrativi e Gestionali" is an xml format similar to
+[Mets]. It is used in Italy to manage administrative data about digitalized
+documents.
+- [Omeka Xml]: The official output format of Omeka, available in items/browse >
+"omeka-xml". Only the version 5 (2012) is managed, but it's possible to change
+the namespace to support earlier versions.
+
+Of course, other formats can be included. [Ead], a format used to describe
+finding aids and archives, is included via the plugin [Ead for Omeka].
+
+To import other xml formats, an xsl sheet should be written to convert it to
+Dublin Core or other elements sets, then a simple class should be added. See [below].
+
 
 Examples
 --------
 
-An example is included, but you can build your own before importing true files
-and metadata.
+Examples are included in the directory [tests/suite/_files/], but you can build
+your own before importing true files and metadata.
 
-### Included Example
+### Included Example "Folder_Test_Xml_Mag"
 
-A sample folder with some metadata is available in "tests/suite/_files/Folder_test".
+This is a simple example with one item with two files, that doesn't require any
+other plugin (only internal xml support by php, or the external xsl command).
+
+- copy the folder `tests/suite/_files/Folder_Test_Xml_Mag` outside of the folder
+where Omeka is installed, somewhere the server can access (or in a subdirectory
+of `files`);
+- click on "Add a new archive folder" in the "Archive Folders" tab;
+- fill the base uri, something like `http://localhost/path/to/the/Folder_Test_Xml_Mag`;
+- let other options.
+- click on the submit button;
+- click on "Check" to check the folder (results are displayed when the page is
+refreshed);
+- if there is no issue, click "Process" to process the folder.
+
+After one second, the item, the collection and the files will be automatically
+created.
+
+### Included Example "Folder_Test"
+
+A bigger sample folder with some metadata is available in `tests/suite/_files/Folder_Test`.
 To test it, follow these steps:
+
 - if you want to test import of extra data, install [Geolocation] too;
 - if you want to import all metadata that are in examples, allow the formats
 `xml` and `json` and check the default extensions for `ods`, `odt` and `txt` in
@@ -35,7 +77,7 @@ media types `application/xml`, `text/xml`, `application/json`, and default
 `application/vnd.oasis.opendocument.spreadsheet`, `application/vnd.oasis.opendocument.text`
 and `text/plain`;
 - copy the folder outside of the folder where Omeka is installed, somewhere the
-server can access (or in a subdirectory of `files`.
+server can access (or in a subdirectory of `files`).
 - click on "Add a new archive folder" in the "Archive Folders" tab;
 - fill the base uri, something like `http://localhost/path/to/the/Folder_Test`;
 - select "One item by repository" (all files in a subfolder belong to one item);
@@ -46,7 +88,104 @@ server can access (or in a subdirectory of `files`.
 refreshed);
 - if there is no issue, click "Process" to process the folder.
 
-After a few seconds, the items and files will be automatically created.
+After a few seconds, the items and files will be automatically created. Some
+items of this import may need to be updated with another folder.
+
+
+Installation
+------------
+
+Uncompress files and rename plugin folder `ArchiveFolder`.
+
+Then install it like any other Omeka plugin and follow the config instructions.
+
+The plugin [Ocr Element Set] can be installed to import ocr data (xml Alto).
+The plugin [Ead for Omeka] can be installed to import Ead data.
+The plugin [Dublin Core Extended] can be installed too to manage the full Dublin Core.
+
+Some points should be checked too.
+
+* Server Access
+
+The server should allow the indexing of the folder for the localhost. So,
+for [Apache httpd], the following commands may be added in a file `.htaccess` at
+the root of the folder (this is the default in the folder test, so it may be
+needed to change it):
+
+```
+Options Indexes FollowSymLinks
+# AllowOverride all
+Order Deny,Allow
+Deny from all
+Allow from 127.0.0.1 ::1
+```
+
+* Local path
+
+If the server doesn't allow indexing, you can use the equivalent path `/var/www/path/to/the/Folder_Test`
+or something similar. Nevertheless, for security reasons, the allowed base path
+or a parent should be defined before in the file `security.ini` of the plugin.
+
+* Characters
+
+It is recommended to have filenames with characters whose representations are
+the same in metadata files, on the source file system, the transport layer
+(http) and the destination file system, in particular for uppercase/lowercase,
+for non-latin characters and even if they simply contains spaces. Furthermore,
+the behavior depends on the version of PHP.
+
+Nevertheless, the plugin manages all unicode characters. A quick check can be
+done with the folders "Folder_Test_Characters_Http" and "Folder_Test_Characters_Local".
+These folders contains files with spaces and some non-alphanumeric characters
+and metadata adapted for an ingest via http or local path.
+
+In fact, currently, if the main uri is an url, all paths in metadata files
+should be raw url encoded, except the reserved characters: `$-_.+!*'()[],`.
+
+* Files extensions
+
+For security reasons, the plugin checks the extension of each ingested file. So,
+if you import specific files, in particular XML metadata files and json ones,
+they should be allowed in the page "/admin/settings/edit-security".
+
+* XSLT processor
+
+Xslt has two main versions:  xslt 1.0 and xslt 2.0. The first is often installed
+with php via the extension "php-xsl" or the package "php5-xsl", depending on
+your system. It is until ten times slower than xslt 2.0 and sheets are more
+complex to write.
+
+So it's recommended to install an xslt 2 processor, that can process xslt 1.0
+and xslt 2.0 sheets. The command can be configured in the configuration page of
+the plugin. Use "%1$s", "%2$s", "%3$s", without escape, for the file input, the
+stylesheet, and the output.
+
+Examples for Debian 6, 7, 8 / Ubuntu / Mint (with the package "libsaxonb-java"):
+```
+saxonb-xslt -ext:on -versionmsg:off -warnings:silent -s:%1$s -xsl:%2$s -o:%3$s
+```
+
+Examples for Debian 8 / Ubuntu / Mint (with the package "libsaxonhe-java"):
+```
+CLASSPATH=/usr/share/java/Saxon-HE.jar java net.sf.saxon.Transform -ext:on -versionmsg:off -warnings:silent -s:%1$s -xsl:%2$s -o:%3$s
+```
+
+Example for Fedora / RedHat / Centos / Mandriva / Mageia:
+```
+saxon -ext:on -versionmsg:off -warnings:silent -s:%1$s -xsl:%2$s -o:%3$s
+```
+
+Note: Only saxon is currently supported as xslt 2 processor. Because Saxon is a
+Java tool, a JRE should be installed, for example "openjdk-8-jre-headless".
+
+Note: Warnings are processed as errors. That's why the parameter "-warnings:silent"
+is important to be able to process an import with a bad xsl sheet. It can be
+removed with default xsl, that doesn't warn anything.
+
+Anyway, if there is no xslt2 processor installed, the command field should be
+cleared. The plugin will use the default xslt 1 processor of php, if installed.
+
+* Other notes
 
 In order to preserve memory and cpu, the process is done one record by one, via
 a background job. In case of error, the process can be relaunched at the last
@@ -55,6 +194,23 @@ record.
 See the notes below for other issues.
 
 Currently, the update process is not available.
+
+* Deletion of records
+
+Imported records can be deleted.
+
+_*WARNING*_: When identifiers are duplicate, existing records can be updated, so
+the deletion process will remove them.
+
+* TODO
+
+Rebuild the plugin with json as internal format instead of xml (that is used in
+[OAI-PMH Static Repository], on which Archive Folder was based firstly) in order
+to avoid some conversions and checks.
+
+
+Organization of files
+---------------------
 
 ### Simple folder
 
@@ -163,107 +319,13 @@ are saved in [Alto]. All of them can be imported automagically.
 The xml Mets file contains path to each subordinate file (master, ocr, etc.), so
 the structure may be different.
 
-The plugin [OcrElementSet] should be installed to import ocr data, if any.
+The plugin [Ocr Element Set] should be installed to import ocr data, if any.
 
 If there are other files in folders, for example old xml [refNum] or any other
 old texts files that may have been used previously for example for a conversion
 from refNum to Mets via the tool [refNum2Mets], they need to be skipped via
 the option "Unreferenced files" and/or the option "File extensions to exclude",
 with "refnum.xml ods txt" for example.
-
-
-Installation
-------------
-
-Uncompress files and rename plugin folder `ArchiveFolder`.
-
-Then install it like any other Omeka plugin and follow the config instructions.
-
-The plugin [OcrElementSet] can be installed to import ocr data (xml Alto).
-The plugin [Ead for Omeka] can be installed to import Ead data.
-The plugin [Dublin Core Extended] can be installed too.
-
-Some points should be checked too.
-
-* Server Access
-
-The server should allow the indexing of the folder for the localhost. So,
-for [Apache httpd], the following commands may be added in a file `.htaccess` at
-the root of the folder (this is the default in the folder test, so it may be
-needed to change it):
-
-```
-Options Indexes FollowSymLinks
-# AllowOverride all
-Order Deny,Allow
-Deny from all
-Allow from 127.0.0.1 ::1
-```
-
-* Local path
-
-If the server doesn't allow indexing, you can use the equivalent path `/var/www/path/to/the/Folder_Test`
-or something similar. Nevertheless, for security reasons, the allowed base path
-or a parent should be defined before in the file `security.ini` of the plugin.
-
-* Characters
-
-It is recommended to have filenames with characters whose representations are
-the same in metadata files, on the source file system, the transport layer
-(http) and the destination file system, in particular for uppercase/lowercase,
-for non-latin characters and even if they simply contains spaces. Furthermore,
-the behavior depends on the version of PHP.
-
-Nevertheless, the plugin manages all unicode characters. A quick check can be
-done with the folders "Folder_Test_Characters_Http" and "Folder_Test_Characters_Local".
-These folders contains files with spaces and some non-alphanumeric characters
-and metadata adapted for an ingest via http or local path.
-
-In fact, currently, if the main uri is an url, all paths in metadata files
-should be raw url encoded, except the reserved characters: `$-_.+!*'()[],`.
-
-* Files extensions
-
-For security reasons, the plugin checks the extension of each ingested file. So,
-if you import specific files, in particular XML metadata files and json ones,
-they should be allowed in the page "/admin/settings/edit-security".
-
-* XSLT processor
-
-Xslt has two main versions:  xslt 1.0 and xslt 2.0. The first is often installed
-with php via the extension "php-xsl" or the package "php5-xsl", depending on
-your system. It is until ten times slower than xslt 2.0 and sheets are more
-complex to write.
-
-So it's recommended to install an xslt 2 processor, that can process xslt 1.0
-and xslt 2.0 sheets. The command can be configured in the configuration page of
-the plugin. Use "%1$s", "%2$s", "%3$s", without escape, for the file input, the
-stylesheet, and the output.
-
-Examples for Debian 6, 7, 8 / Ubuntu / Mint (with the package "libsaxonb-java"):
-```
-saxonb-xslt -ext:on -versionmsg:off -warnings:silent -s:%1$s -xsl:%2$s -o:%3$s
-```
-
-Examples for Debian 8 / Ubuntu / Mint (with the package "libsaxonhe-java"):
-```
-CLASSPATH=/usr/share/java/Saxon-HE.jar java net.sf.saxon.Transform -ext:on -versionmsg:off -warnings:silent -s:%1$s -xsl:%2$s -o:%3$s
-```
-
-Example for Fedora / RedHat / Centos / Mandriva / Mageia:
-```
-saxon -ext:on -versionmsg:off -warnings:silent -s:%1$s -xsl:%2$s -o:%3$s
-```
-
-Note: Only saxon is currently supported as xslt 2 processor. Because Saxon is a
-Java tool, a JRE should be installed, for example "openjdk-8-jre-headless".
-
-Note: Warnings are processed as errors. That's why the parameter "-warnings:silent"
-is important to be able to process an import with a bad xsl sheet. It can be
-removed with default xsl, that doesn't warn anything.
-
-Anyway, if there is no xslt2 processor installed, the command field should be
-cleared. The plugin will use the default xslt 1 processor of php, if installed.
 
 
 Formats of metadata
@@ -317,7 +379,7 @@ data too.
 Here is the structure (see true examples for details):
 
 ```xml
-<record xmlns="http://localhost/documents/" name="my-doc #1">
+<record xmlns="http://localhost/documents/" name="my-doc #1" recordType="Item">
     <elementSet name="Dublin Core">
         <element name="Title">
             <data>Foo Bar</data>
@@ -345,11 +407,11 @@ Any METS file can be imported as long as the profile uses Dublin Core metadata.
 Else, the class should be extended.
 
 The associated [Alto] file, an OCR format, can be ingested too as text. The
-plugin [OcrElementSet] should be installed first to create fields for it,
+plugin [Ocr Element Set] should be installed first to create fields for it,
 because texts are saved at file level. Else, a hook can be used to import data
 somewhere else.
 
-The plugin [OcrElementSet] saves ocr about each image at file level, so the
+The plugin [Ocr Element Set] saves ocr about each image at file level, so the
 option "File Metadata" should be set.
 
 Two extra parameters can be managed:
@@ -470,6 +532,13 @@ replaced by two underscores `__`. It is only added as an example.
 Add a custom format
 -------------------
 
+For examples of format, see the [sheet and code] used for Omeka Xml, or the
+[sheet] used for Mag, and the respective examples of source ([tests/suite/_files/Folder_Test_Xml_Omeka]
+and [tests/suite/_files/Folder_Test_Xml_Mag]) and results in the test folder
+([tests/suite/_files/Results/Documents/FolderTest_Xml_Omeka.xml] and
+[tests/suite/_files/Results/Documents/FolderTest_Xml_Mag.xml]). Anyway, all
+managed formats have examples in the folder [tests/suite/_files/].
+
 Two filters and associated classes are available to create xml documents for
 custom formats.
 
@@ -515,6 +584,7 @@ So, three modes of update are possible:
 ### Deletion of documents
 
 A record can be deleted with the action "delete".
+
 
 Known issues
 ------------
@@ -648,18 +718,31 @@ Copyright
 [fork of Csv Import]: https://github.com/Daniel-KM/CsvImport
 [Xml Import]: https://github.com/Daniel-KM/XmlImport
 [fixed release]: https://github.com/Daniel-KM/Geolocation
+[Open Document Spreadsheet (ods)]: http://opendocumentformat.org
+[LibreOffice]: https://www.libreoffice.org
 [Mets]: https://www.loc.gov/standards/mets
 [Ead]: https://www.loc.gov/standards/ead
 [Ead for Omeka]: https://github.com/Daniel-KM/Ead4Omeka
 [Dublin Core Extended]: https://github.com/omeka/plugin-DublinCoreExtended
 [Alto]: https://www.loc.gov/standards/alto
-[OcrElementSet]: https://github.com/Daniel-KM/OcrElementSet
+[Mag]: http://www.iccu.sbn.it/opencms/opencms/it/main/standard/metadati/pagina_267.html
+[Omeka Xml]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
+[below]: https://github.com/Daniel-KM/ArchiveFolder#add-a-custom-format
+[Ocr Element Set]: https://github.com/Daniel-KM/OcrElementSet
 [Geolocation]: https://omeka.org/add-ons/plugins/geolocation
 [fork of Geolocation]: https://github.com/Daniel-KM/Geolocation
+[OAI-PMH Static Repository]: https://github.com/Daniel-KM/OaiPmhStaticRepository
 [Apache httpd]: https://httpd.apache.org
 [Jpeg 2000]: http://www.jpeg.org/jpeg2000
 [refNum]: http://bibnum.bnf.fr/refNum
 [refNum2Mets]: https://github.com/Daniel-KM/refNum2Mets
+[sheet and code]: https://github.com/Daniel-KM/ArchiveFolder/commit/2ea100cc9a2cb3557a0cf7091a88cebfc42cebb0
+[sheet]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/libraries/xsl/mag2document.xslt1.xsl
+[tests/suite/_files/Folder_Test_Xml_Omeka]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Folder_Test_Xml_Omeka
+[tests/suite/_files/Folder_Test_Xml_Mag]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Folder_Test_Xml_Mag
+[tests/suite/_files/Results/Documents/FolderTest_Xml_Omeka.xml]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Results/Documents/FolderTest_Xml_Omeka.xml
+[tests/suite/_files/Results/Documents/FolderTest_Xml_Mag.xml]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Results/Documents/FolderTest_Xml_Mag.xml
+[tests/suite/_files/]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files
 [plugin issues]: https://github.com/Daniel-KM/ArchiveFolder/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
