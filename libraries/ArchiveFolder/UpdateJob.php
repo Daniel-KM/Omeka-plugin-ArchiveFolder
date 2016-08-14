@@ -49,6 +49,12 @@ class ArchiveFolder_UpdateJob extends Omeka_Job_AbstractJob
                 $folder->build($this->_processType);
             }
 
+            // Delete records.
+            elseif ($this->_processType == 'delete_imported_records') {
+                $folder->setStatus(ArchiveFolder_Folder::STATUS_RESET);
+                $folder->deleteImportedRecords();
+            }
+
             // Importer.
             else {
                 $slowProcess = get_option('archive_folder_slow_process');

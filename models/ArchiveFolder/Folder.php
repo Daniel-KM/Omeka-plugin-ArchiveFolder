@@ -916,10 +916,61 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
     protected function _deleteRecords()
     {
         $archiveRecordsToDelete = $this->getArchiveFolderRecords();
-
-        foreach ($archiveRecordsToDelete as $record) {
-            $record->delete();
+        foreach ($archiveRecordsToDelete as $archiveFolderRecord) {
+            $archiveFolderRecord->delete();
         }
+    }
+
+    /**
+     * Delete all imported records.
+     */
+    public function deleteImportedRecords()
+    {
+        if (!in_array($this->status, array(
+                ArchiveFolder_Folder::STATUS_COMPLETED,
+                ArchiveFolder_Folder::STATUS_RESET,
+            ))) {
+            $message = __('The imported records cannot be removed: the status should be "completed" or "reset", not "%s".',
+                $totalImportedRecords, $this->status);
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::NOTICE);
+            return;
+        }
+
+        $archiveRecordsToDelete = $this->getArchiveFolderRecords();
+        $totalImportedRecords = count($archiveRecordsToDelete);
+        if (empty($totalImportedRecords)) {
+            $message = __('No record have been imported, so no record can be removed.');
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_NOTICE);
+            _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::NOTICE);
+            return;
+        }
+
+        $this->setStatus(ArchiveFolder_Folder::STATUS_PROGRESS);
+
+        $currentTotal = $totalImportedRecords;
+        $total = array(
+            'Collection' => 0,
+            'Item' => 0,
+            'File' => 0,
+        );
+        foreach ($archiveRecordsToDelete as $archiveFolderRecord) {
+            $record = get_record_by_id($archiveFolderRecord->record_type, $archiveFolderRecord->record_id);
+            $total[$archiveFolderRecord->record_type]++;
+            if ($record) {
+                $record->delete();
+            }
+            $archiveFolderRecord->delete();
+            $this->setParameter('imported_records', --$currentTotal);
+        }
+
+        // Force to zero.
+        $this->setParameter('imported_records', 0);
+        $this->setStatus(ArchiveFolder_Folder::STATUS_COMPLETED);
+        $message = __('All %d imported records (%d collections, %d items, %d files) have been removed.',
+            $totalImportedRecords, $total['Collection'], $total['Item'], $total['File']);
+        $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_INFO);
+        _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::INFO);
     }
 
     public function addMessage($message, $messageCode = null, $delimiter = PHP_EOL)

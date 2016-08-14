@@ -57,7 +57,7 @@ Omeka.ArchiveFolderBrowse = {};
         // Delete a simple record.
         $('.archive-folder input[name="submit-batch-delete"]').click(function(event) {
             event.preventDefault();
-            if (!confirm(Omeka.messages.archiveFolder.confirmation)) {
+            if (!confirm(Omeka.messages.archiveFolder.confirmBatch)) {
                 return;
             }
             $('table#archive-folders thead tr th.batch-edit-heading input').attr('checked', false);
@@ -84,6 +84,12 @@ Omeka.ArchiveFolderBrowse = {};
             event.preventDefault();
             $(this).closest('td').find('.last-message').slideToggle('fast');
             $(this).closest('td').find('.details').slideToggle('fast');
+        });
+
+        $(".archive-folder .delete-records").click(function(event) {
+            if (!confirm(Omeka.messages.archiveFolder.confirmDeleteRecords)) {
+                event.preventDefault();
+            }
         });
     });
 

@@ -140,6 +140,15 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
     }
 
     /**
+     * Delete all records imported from a folder.
+     */
+    public function deleteRecordsAction()
+    {
+        $result = $this->_launchJob('delete_imported_records');
+        $this->_helper->redirector->goto('browse');
+    }
+
+    /**
      * Batch editing of records.
      *
      * @return void
