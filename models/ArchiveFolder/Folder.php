@@ -74,6 +74,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
     private $_parameters;
 
     // Temporary total of items and files.
+    private $_totalCollections;
     private $_totalItems;
     private $_totalFiles;
 
@@ -643,8 +644,8 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         // Computes total.
         else {
             $this->countRecordsOfDocuments($documents);
-            $message = __('Result: %d items and %d files.',
-                $this->_totalItems, $this->_totalFiles);
+            $message = __('Result: %d collections, %d items and %d files.',
+                $this->_totalCollections, $this->_totalItems, $this->_totalFiles);
         }
         return $message;
     }
@@ -667,8 +668,20 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         $type =  ucfirst(strtolower($recordType));
         $totalDocuments = 0;
         switch ($type) {
-            case 'Item':-
-                $totalDocuments = count($documents);
+            case 'Collection':
+                foreach ($documents as $document) {
+                    if ($document['process']['record type'] == 'Collection') {
+                        ++$totalDocuments;
+                    }
+                }
+                $this->_totalCollections = $totalDocuments;
+                break;
+            case 'Item':
+                foreach ($documents as $document) {
+                    if ($document['process']['record type'] == 'Item') {
+                        ++$totalDocuments;
+                    }
+                }
                 $this->_totalItems = $totalDocuments;
                 break;
             // In Omeka, files aren't full records because they depend of items.
@@ -681,9 +694,10 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
                 $this->_totalFiles = $totalDocuments;
                 break;
             default:
+                $totalCollections = $this->countRecordsOfDocuments($documents, 'Collection');
                 $totalItems = $this->countRecordsOfDocuments($documents, 'Item');
                 $totalFiles = $this->countRecordsOfDocuments($documents, 'File');
-                $totalDocuments = $totalItems + $totalFiles;
+                $totalDocuments = $totalCollections + $totalItems + $totalFiles;
                 break;
         }
 
