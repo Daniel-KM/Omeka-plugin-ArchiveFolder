@@ -225,6 +225,13 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         $filter = new Zend_Filter_Input($filters, null, $post, $options);
         $post = $filter->getUnescaped();
 
+        // Avoid some notices with missed values.
+        $basePost = array(
+            'uri' => '',
+            'item_type_id' => 0,
+        );
+        $post = array_merge($basePost, $post);
+
         $post['uri'] = rtrim(trim($post['uri']), '/.');
 
         // Unset immutable or specific properties from $_POST.
