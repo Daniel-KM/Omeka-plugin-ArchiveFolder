@@ -41,7 +41,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         $this->addElement('radio', 'unreferenced_files', array(
             'label' => __('Unreferenced Files'),
             'description'   => __('This option indicates what to do with files, maybe all of them, that are not referenced inside metadata files ("%s").', implode('", "', array_keys($mappings))),
-            'value' => 'by_file',
+            'value' => get_option('archive_folder_unreferenced_files') ?: 'by_file',
             'multiOptions' => array(
                 'by_file' => __('One item by file'),
                 'by_directory' => __('One item by directory'),

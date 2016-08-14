@@ -80,6 +80,7 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                     $this->_helper->flashMessenger($successMessage, 'success');
                 }
                 // Save the identifier field.
+                set_option('archive_folder_unreferenced_files', $record->getParameter('unreferenced_files'));
                 set_option('archive_folder_identifier_field', $record->getParameter('identifier_field'));
                 $this->_redirectAfterAdd($record);
             } else {

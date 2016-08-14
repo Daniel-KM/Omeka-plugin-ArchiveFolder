@@ -55,6 +55,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         // With roles, in particular if Guest User is installed.
         'archive_folder_allow_roles' => 'a:1:{i:0;s:5:"super";}',
         // Options for a new archive folder.
+        'archive_folder_unreferenced_files' => 'by_file',
         'archive_folder_identifier_field' => ArchiveFolder_Importer::DEFAULT_IDFIELD,
         'archive_folder_action' => ArchiveFolder_Importer::DEFAULT_ACTION,
     );
