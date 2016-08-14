@@ -93,6 +93,19 @@ class Table_ArchiveFolder_Record extends Omeka_Db_Table
     }
 
     /**
+     * Count the records created by the process of a folder.
+     *
+     * @param Folder|integer|array $folder May be multiple.
+     * @return integer Total of created records of the folder.
+     */
+    public function countByFolder($folder)
+    {
+        $select = $this->getSelectForCount();
+        $this->filterByFolder($select, $folder);
+        return $this->getDb()->fetchOne($select);
+    }
+
+    /**
      * @param Omeka_Db_Select
      * @param array
      * @return void

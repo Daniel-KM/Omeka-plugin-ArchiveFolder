@@ -827,7 +827,9 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
             $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_DEBUG);
             _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::DEBUG);
             if ($importeds + 1 == $total) {
-                $message = __('All %d records have been processed.', $total);
+                $totalManagedRecords = $this->countManagedRecords();
+                $message = __('All %d records have been processed (%d managed).',
+                    $total, $totalManagedRecords);
                 $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_INFO);
                 _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::INFO);
             }
@@ -853,6 +855,12 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
     public function countImportedRecords()
     {
         return (integer) $this->getParameter('imported_records');
+    }
+
+    public function countManagedRecords()
+    {
+        return $this->_db->getTable('ArchiveFolder_Record')
+            ->countByFolder($this);
     }
 
     public function countRecordsToImport()
