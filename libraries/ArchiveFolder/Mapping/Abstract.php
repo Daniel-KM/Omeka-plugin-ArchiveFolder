@@ -850,7 +850,7 @@ abstract class ArchiveFolder_Mapping_Abstract
     /**
      * Unzip a file to get the selected file content.
      *
-     *@uses Extension php-zip or command line unzip.
+     * @uses Extension php-zip or command line unzip.
      *
      * @param string $zipFile
      * @param string $filename The path to extract from the zip file.

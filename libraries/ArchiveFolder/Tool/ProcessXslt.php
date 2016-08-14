@@ -32,13 +32,13 @@ class ArchiveFolder_Tool_ProcessXslt
             $filepath = tempnam(sys_get_temp_dir(), basename($input));
             $result = file_put_contents($filepath, file_get_contents($input));
             if (empty($result)) {
-                $msg = __('The remote file "%s" is not readable or empty.', $input);
-                throw new ArchiveFolder_Exception($msg);
+                $message = __('The remote file "%s" is not readable or empty.', $input);
+                throw new ArchiveFolder_Exception($message);
             }
         }
         elseif (!is_file($filepath) || !is_readable($filepath) || !filesize($filepath)) {
-            $msg = __('The input file "%s" is not readable.', $filepath);
-            throw new ArchiveFolder_Exception($msg);
+            $message = __('The input file "%s" is not readable.', $filepath);
+            throw new ArchiveFolder_Exception($message);
         }
 
         // Default is the internal xslt processor of php.
@@ -84,9 +84,9 @@ class ArchiveFolder_Tool_ProcessXslt
 
         // There is no specific message for error with this processor.
         if ($result === false) {
-            $msg = __('An error occurs during the xsl transformation of the file "%s" with the sheet "%s".',
+            $message = __('An error occurs during the xsl transformation of the file "%s" with the sheet "%s".',
                 $input, $stylesheet);
-            throw new ArchiveFolder_Exception($msg);
+            throw new ArchiveFolder_Exception($message);
         }
 
         return $output;
@@ -152,9 +152,9 @@ class ArchiveFolder_Tool_ProcessXslt
 
         // In Shell, empty is a correct result.
         if (!empty($result)) {
-            $msg = __('An error occurs during the xsl transformation of the file "%s" with the sheet "%s" : %s',
+            $message = __('An error occurs during the xsl transformation of the file "%s" with the sheet "%s" : %s',
                 $input, $stylesheet, $result);
-            throw new ArchiveFolder_Exception($msg);
+            throw new ArchiveFolder_Exception($message);
         }
 
         return $output;

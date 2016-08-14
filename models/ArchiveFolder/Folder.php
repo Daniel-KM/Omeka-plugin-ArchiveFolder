@@ -73,7 +73,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
     // Temporary unjsoned parameters.
     private $_parameters;
 
-    // Temporary total of items and files.
+    // Temporary total of collections, items and files.
     private $_totalCollections;
     private $_totalItems;
     private $_totalFiles;
@@ -671,7 +671,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
      *
      * @param null|array $documents If null, computes for the existing
      * documents.
-     * @param string $recordType "Item" or "File", else all types.
+     * @param string $recordType "Collection", "Item" or "File", else all types.
      * @return integer The total of the selected record type.
      */
     public function countRecordsOfDocuments($documents = null, $recordType = null)
@@ -1098,6 +1098,6 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
      */
     private function _keepAlphanumericOnlyForDir($string)
     {
-        return preg_replace("/[^a-zA-Z0-9\-_\.\/]/", '', str_replace(' ', '_', $string));
+        return preg_replace('/[^a-zA-Z0-9\-_\.\/]/', '', str_replace(' ', '_', $string));
     }
 }

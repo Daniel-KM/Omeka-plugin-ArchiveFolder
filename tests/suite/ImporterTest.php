@@ -13,8 +13,6 @@ class ArchiveFolder_ImporterTest extends ArchiveFolder_Test_AppTestCase
         $this->_authenticateUser($this->user);
     }
 
-
-
     public function testFolder()
     {
         $uri = TEST_FILES_DIR

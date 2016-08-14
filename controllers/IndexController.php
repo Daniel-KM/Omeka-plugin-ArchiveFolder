@@ -176,10 +176,9 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
 
     public function logsAction()
     {
-        $db = $this->_helper->db;
-        $archiveFolder = $db->findById();
+        $folder = $this->_db->findById();
 
-        $this->view->archiveFolder = $archiveFolder;
+        $this->view->folder = $folder;
     }
 
     /**

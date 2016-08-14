@@ -24,9 +24,7 @@ class ArchiveFolder_MappingTest extends ArchiveFolder_Test_AppTestCase
                 $prefix = key($metadataFile);
                 $metadataFile = reset($metadataFile);
 
-                $mapping = $this->_mappings[$prefix]['class'];
                 $uri = TEST_FILES_DIR . DIRECTORY_SEPARATOR . $folder;
-                $mapping = new $mapping($uri, array());
 
                 $filepath = TEST_FILES_DIR
                     . DIRECTORY_SEPARATOR . $folder
@@ -55,6 +53,8 @@ class ArchiveFolder_MappingTest extends ArchiveFolder_Test_AppTestCase
                 $this->assertTrue(strlen($expected) > 0,
                     __('Result for file "%s" (prefix "%s") is not readable.', basename($filepath), $prefix));
 
+                $mapping = $this->_mappings[$prefix]['class'];
+                $mapping = new $mapping($uri, array());
                 $result = $mapping->isMetadataFile($filepath);
                 $this->assertTrue($result,
                     __('The file "%s" is not recognized as format "%s".', basename($filepath), $prefix));

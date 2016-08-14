@@ -3,12 +3,12 @@
 <div id="primary">
     <?php echo flash(); ?>
 
-    <?php if (!empty($archiveFolder)): ?>
-        <h2><?php echo __('Logs for folder "%s".', $archiveFolder->uri); ?></h2>
-        <p><?php echo __('Current status: %s.', '<strong>' . __($archiveFolder->status) . '</strong>'); ?></p>
+    <?php if (!empty($folder)): ?>
+        <h2><?php echo __('Logs for folder "%s".', $folder->uri); ?></h2>
+        <p><?php echo __('Current status: %s.', '<strong>' . __($folder->status) . '</strong>'); ?></p>
         <?php
 
-        $messages = $archiveFolder->messages;
+        $messages = $folder->messages;
         if (!empty($messages)):
             $dateTimePattern = '(^\[[1-2][0-9]{3}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1]) (?:[0-1][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])\]) ';
             $priorityPattern = '(.*?): ';
