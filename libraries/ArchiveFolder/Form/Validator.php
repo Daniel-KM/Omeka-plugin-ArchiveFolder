@@ -9,7 +9,7 @@ class ArchiveFolder_Form_Validator extends Zend_Validate_Callback
      * @param string $value The value to check.
      * @return boolean
      */
-    public function validateUri($uri)
+    static public function validateUri($uri)
     {
         if (empty($uri)) {
             return false;
