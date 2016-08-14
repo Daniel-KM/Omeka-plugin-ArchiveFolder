@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests of items and collections. -->
+<documents>
+
+    <record recordType="Item" public="1" featured="0" collection="Collection 1" name="Item 1">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>This is the Item 1 in Collection Test 1</data>
+            </element>
+            <element name="Description">
+                <data>Test of a collection created via an item and without metadata.</data>
+            </element>
+        </elementSet>
+    </record>
+
+    <record recordType="Item" public="1" featured="0" collection="Collection 1" name="Item 2">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>This is the Item 2 in Collection Test 1</data>
+            </element>
+            <element name="Description">
+                <data>Test of a second item with the same collection created via a previous item and without metadata.</data>
+            </element>
+        </elementSet>
+    </record>
+
+    <record recordType="Collection" public="0" featured="1" name="Collection 2">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Collection Test 2</data>
+            </element>
+            <element name="Description">
+                <data>Test of collection with metadata created before item.</data>
+            </element>
+        </elementSet>
+    </record>
+
+    <record recordType="Item" public="0" featured="1" collection="Collection 2" name="Item 3">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>This is the Item 3 in Collection Test 2</data>
+            </element>
+            <element name="Description">
+                <data>Test of item inserted inside an existing collection.</data>
+            </element>
+        </elementSet>
+    </record>
+
+    <record recordType="Item" public="1" featured="0" collection="Collection 3" name="Item 4">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>This is the Item 4 in Collection Test 3</data>
+            </element>
+            <element name="Description">
+                <data>Test of collection created via item.</data>
+            </element>
+        </elementSet>
+    </record>
+
+    <record recordType="Item" public="1" featured="0" collection="Collection 3" name="Item 5">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>This is the Item 5 in Collection Test 3</data>
+            </element>
+            <element name="Description">
+                <data>Test of a second item in an existing collection, before metadata of collection.</data>
+            </element>
+        </elementSet>
+    </record>
+
+    <record recordType="Collection" public="1" featured="0" name="Collection 3">
+        <elementSet name="Dublin Core">
+            <element name="Title">
+                <data>Collection Test 3</data>
+            </element>
+            <element name="Description">
+                <data>Test of a collection created by an item, but with metadata after.</data>
+            </element>
+        </elementSet>
+    </record>
+
+</documents>

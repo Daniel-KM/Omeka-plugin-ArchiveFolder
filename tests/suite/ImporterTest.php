@@ -13,14 +13,32 @@ class ArchiveFolder_ImporterTest extends ArchiveFolder_Test_AppTestCase
         $this->_authenticateUser($this->user);
     }
 
+
+
     public function testFolder()
     {
-        $folder = &$this->_folder;
-
         $uri = TEST_FILES_DIR
             . DIRECTORY_SEPARATOR . 'Folder_Test_Importer';
-
         $parameters = array();
+        $this->_import($uri, $parameters, 12, 12, 12);
+    }
+
+    public function testCollections()
+    {
+        $uri = TEST_FILES_DIR
+            . DIRECTORY_SEPARATOR . 'Folder_Test_Collections';
+        $parameters = array();
+        $this->_import($uri, $parameters, 7, 8, 8);
+    }
+
+    public function _import(
+        $uri,
+        $parameters,
+        $totalImportedRecords,
+        $totalArchiveRecords,
+        $totalRecords
+    ) {
+        $folder = &$this->_folder;
 
         // The result is is checked via mappings.
         $this->_prepareFolderTest($uri, $parameters);
@@ -43,12 +61,12 @@ class ArchiveFolder_ImporterTest extends ArchiveFolder_Test_AppTestCase
             && !($folder->isError() || $folder->hasBeenStopped()));
 
         $this->assertEquals(0, $folder->countRecordsToImport());
-        $this->assertEquals(12, $folder->getParameter('imported_records'));
+        $this->assertEquals($totalImportedRecords, $folder->getParameter('imported_records'));
 
         $archiveRecords = $folder->getArchiveFolderRecords();
-        $this->assertEquals(12, count($archiveRecords));
+        $this->assertEquals($totalArchiveRecords, count($archiveRecords));
 
         $records = $folder->getRecords();
-        $this->assertEquals(12, count($records));
+        $this->assertEquals($totalRecords, count($records));
     }
 }

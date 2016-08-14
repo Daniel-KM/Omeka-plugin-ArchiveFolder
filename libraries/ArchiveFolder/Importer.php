@@ -40,6 +40,8 @@ class ArchiveFolder_Importer
     // Remember the first level record when a sub-record is imported.
     protected $_firstLevelRecord;
     protected $_indexFirstLevelRecord = 0;
+    // The current index.
+    protected $_index = 0;
 
     // The mapper of a xml document into an internal document.
     protected $_mapper;
@@ -57,6 +59,7 @@ class ArchiveFolder_Importer
         $this->_folder = $folder;
         $this->_mapper = new ArchiveFolder_Mapping_Document($folder->uri, $folder->getParameters());
 
+        $index = &$this->_index;
         $index = $folder->countImportedRecords() + 1;
         $recordXml = $this->_getXmlRecord($index);
         if (!is_object($recordXml)) {
@@ -93,6 +96,17 @@ class ArchiveFolder_Importer
 
         // Get the existing Omeka record if any.
         $record = $this->_getExistingRecordFromDocument($document);
+
+        // Manage an exception: a collection can be created by an item and
+        // without a true identifier.
+        if (empty($record)
+                // This is an exception, so check the name.
+                && $document['process']['name']
+                && $document['process']['record type'] == 'Collection'
+                && (empty($document['process']['identifier field']) || $document['process']['identifier field'] == ArchiveFolder_Importer::IDFIELD_NONE)
+            ) {
+            $record = $this->_getPreviousRecordFromName($document['process']['name'], 'Collection');
+        }
 
         // When there is no identifier or record, the only available action is
         // "Create", else all actions are available.
@@ -201,7 +215,7 @@ class ArchiveFolder_Importer
     protected function _createCollection($document)
     {
         $record = $this->_insertCollection($document['specific'], $document['metadata'], $document['extra']);
-        $this->_archiveRecord($record, $document['process']['index']);
+        $this->_archiveRecord($record, $document['process']['index'], $document['process']['name']);
         return $record;
     }
 
@@ -223,7 +237,7 @@ class ArchiveFolder_Importer
         }
 
         $record = $this->_insertItem($document['specific'], $document['metadata'], array(), $document['extra']);
-        $this->_archiveRecord($record, $document['process']['index']);
+        $this->_archiveRecord($record, $document['process']['index'], $document['process']['name']);
         return $record;
     }
 
@@ -304,29 +318,41 @@ class ArchiveFolder_Importer
 
         // Check the collection before creation.
         $collection = $this->_getExistingRecordFromIdentifier($identifier, 'Collection', $this->_identifierField);
-        if (!$collection) {
-            $document = array();
-
-            $document['process'] = array();
-            $document['process']['index'] = 0;
-            $document['process']['record type'] = 'Collection';
-            $document['process']['action'] = ArchiveFolder_Importer::ACTION_CREATE;
-            $document['process']['identifier field'] = ArchiveFolder_Importer::IDFIELD_NAME;
-            $document['process']['identifier'] = $identifier;
-
-            $document['specific'] = array();
-            $document['specific'][Builder_Collection::IS_PUBLIC] = false;
-            $document['specific'][Builder_Collection::IS_FEATURED] = false;
-
-            $document['metadata'] = array();
-            $document['metadata']['Dublin Core']['Title'][] = array('text' => $identifier, 'html' => false);
-            $document['metadata']['Dublin Core']['Identifier'][] = array('text' => $identifier, 'html' => false);
-            $document['metadata']['Dublin Core']['Source'][] = array('text' => $this->_folder->uri, 'html' => false);
-
-            $document['extra'] = array();
-
-            $collection = $this->_createCollection($document);
+        if ($collection) {
+            return $collection;
         }
+
+        // Check if the record exists in the previous documents.
+        if (empty($identifierField) || $this->_identifierField == ArchiveFolder_Importer::IDFIELD_NONE) {
+            $collection = $this->_getPreviousRecordFromName($identifier, 'Collection');
+            if ($collection) {
+                return $collection;
+            }
+        }
+
+        // The collection can't be find, so a new one is created.
+        $document = array();
+
+        $document['process'] = array();
+        $document['process']['index'] = 0;
+        $document['process']['record type'] = 'Collection';
+        $document['process']['action'] = ArchiveFolder_Importer::ACTION_CREATE;
+        $document['process']['identifier field'] = ArchiveFolder_Importer::IDFIELD_NAME;
+        $document['process']['identifier'] = $identifier;
+        $document['process']['name'] = $identifier;
+
+        $document['specific'] = array();
+        $document['specific'][Builder_Collection::IS_PUBLIC] = false;
+        $document['specific'][Builder_Collection::IS_FEATURED] = false;
+
+        $document['metadata'] = array();
+        $document['metadata']['Dublin Core']['Title'][] = array('text' => $identifier, 'html' => false);
+        $document['metadata']['Dublin Core']['Identifier'][] = array('text' => $identifier, 'html' => false);
+        $document['metadata']['Dublin Core']['Source'][] = array('text' => $this->_folder->uri, 'html' => false);
+
+        $document['extra'] = array();
+
+        $collection = $this->_createCollection($document);
 
         return $collection;
     }
@@ -449,7 +475,7 @@ class ArchiveFolder_Importer
         // Update the extra metadata.
         $this->_setExtraData($record, $document['extra'], $action);
 
-        $this->_archiveRecord($record, $document['process']['index']);
+        $this->_archiveRecord($record, $document['process']['index'], $document['process']['name']);
          return $record;
     }
 
@@ -473,7 +499,7 @@ class ArchiveFolder_Importer
                 $message = __('Unable to delete this record: %s', $e->getMessage());
                 throw new ArchiveFolder_ImporterException($message);
             }
-            $this->_archiveRecord($record, $document['process']['index']);
+            $this->_archiveRecord($record, $document['process']['index'], $document['process']['name']);
             return true;
         }
         return false;
@@ -538,6 +564,55 @@ class ArchiveFolder_Importer
         $reader->close();
 
         return $recordXml;
+    }
+
+    /**
+     * Get the index of a record from an xpath.
+     *
+     * @param string $name
+     * @param string $recordType
+     * @param integer $maxIndex
+     * @return integer
+     */
+    protected function _getPositionRecordFromName($name, $recordType = '', $maxIndex = 0)
+    {
+        if (empty($name)) {
+            return false;
+        }
+
+        $reader = $this->_getXmlReader();
+        if (!$reader) {
+            return false;
+        }
+
+        $position = 0;
+        $index = 0;
+        $maxIndex--;
+        while ($reader->read() && ($maxIndex == 0 || $position < $maxIndex)) {
+            if ($reader->nodeType == XMLReader::ELEMENT
+                    && $reader->name == 'record'
+                ) {
+                $position++;
+
+                // Check the name.
+                if ($reader->hasAttributes) {
+                    $attributes = array();
+                    while($reader->moveToNextAttribute()) {
+                        $attributes[$reader->name] = $reader->value;
+                    }
+
+                    if (isset($attributes['name']) && $attributes['name'] == $name) {
+                        if (empty($recordType) || (isset($attributes['recordType']) && $attributes['recordType'] == $recordType)) {
+                            $index = $position;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $reader->close();
+
+        return $index;
     }
 
     protected function _getXmlReader()
@@ -631,6 +706,11 @@ class ArchiveFolder_Importer
             }
         }
 
+        // Simplify some checks.
+        if (!isset($document['process']['name'])) {
+            $document['process']['name'] = '';
+        }
+
         // Normalize the element texts.
         // Add the html boolean to be Omeka compatible.
         foreach ($document['metadata'] as $elementSetName => &$elements) {
@@ -720,6 +800,48 @@ class ArchiveFolder_Importer
     }
 
     /**
+     * Get a record previously imported from the name.
+     *
+     * @param string $name The name of the record.
+     * @param string $recordType The type of the record.
+     * @return Record|null The record if any.
+     */
+    protected function _getPreviousRecordFromName($name, $recordType = '')
+    {
+        $archiveRecord = $this->_folder->getArchiveFolderRecordsByName($name, $recordType, 1);
+        if ($archiveRecord) {
+            return get_record_by_id($archiveRecord->record_type, $archiveRecord->record_id);
+        }
+    }
+
+    /**
+     * Get a record previously imported from the name in the xml file.
+     *
+     * @param string $name The name of the record.
+     * @param string $recordType The type of the record.
+     * @return Record|null The record if any.
+     */
+    protected function _getPreviousRecordFromNameInXml($name, $recordType = '')
+    {
+        $position = $this->_getPositionRecordFromName($name, $recordType, $this->_index);
+        if (empty($position)) {
+            return;
+        }
+
+        $archiveRecord = get_db()->getTable('ArchiveFolder_Record')
+            ->findByFolderAndIndex($this->_folder, $position);
+        if (empty($archiveRecord)) {
+            return;
+        }
+
+        if ($recordType && $recordType != $archiveRecord->record_type) {
+            return;
+        }
+
+        return get_record_by_id($archiveRecord->record_type, $archiveRecord->record_id);
+    }
+
+    /**
      * Get existing record from a document, if any.
      *
      * @param array $document A normalized document.
@@ -746,11 +868,16 @@ class ArchiveFolder_Importer
         $recordType = 'Item',
         $identifierField = ArchiveFolder_Importer::DEFAULT_IDFIELD
     ) {
-        if (empty($identifier)
-                || empty($identifierField)
-                || $identifierField == ArchiveFolder_Importer::IDFIELD_NONE
-            ) {
+        if (empty($identifier) || empty($identifierField)) {
             return;
+        }
+
+        if ($identifierField == ArchiveFolder_Importer::IDFIELD_NONE) {
+            return;
+        }
+
+        if ($identifierField == ArchiveFolder_Importer::IDFIELD_NAME) {
+            return $this->_getPreviousRecordFromName($identifier, $recordType);
         }
 
         $db = get_db();
@@ -970,20 +1097,29 @@ class ArchiveFolder_Importer
      *
      * @param Record $record
      * @param integer $index The index in the folder, or 0.
+     * @param string $name
      * @return boolean|null Success or not.
      */
-    protected function _archiveRecord($record, $index = 0)
+    protected function _archiveRecord($record, $index = 0, $name = '')
     {
-        // Check if the archive record for this record exists.
+        // Avoid duplicates: Check if the archive record for this record exists.
         $archiveRecords = get_db()->getTable('ArchiveFolder_Record')
             ->findByFolderAndRecord($this->_folder, $record);
         if ($archiveRecords) {
             // Set the index if possible, for example when a record is created
             // before its metadata.
-            if ($index) {
+            if ($index || $name) {
                 $archiveRecord = reset($archiveRecords);
-                if ($archiveRecord->index == 0) {
+                $flag = false;
+                if ($index && $archiveRecord->index == 0) {
                     $archiveRecord->setIndex($index);
+                    $flag = true;
+                }
+                if ($name && empty($archiveRecord->name)) {
+                    $archiveRecord->setName($name);
+                    $flag = true;
+                }
+                if ($flag) {
                     $archiveRecord->save();
                 }
             }
@@ -994,10 +1130,12 @@ class ArchiveFolder_Importer
         $archiveRecord->setFolder($this->_folder);
         $archiveRecord->setIndex($index);
         $archiveRecord->setRecord($record);
+        $archiveRecord->setName($name);
         $result = $archiveRecord->save();
         if (!$result) {
-            $message = __('Cannot archive the record %s #%d [index #%d].',
-                get_class($record), $record->id, $index);
+            $message = __('Cannot archive the record %s #%d [index #%d, %s].',
+                get_class($record), $record->id, $index,
+                $name ? __('name "%s"', $name) : __('no name'));
             throw new ArchiveFolder_ImporterException($message);
         }
 

@@ -109,6 +109,21 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $this->_checkFolder();
     }
 
+    public function testCollections()
+    {
+        $uri = TEST_FILES_DIR
+            . DIRECTORY_SEPARATOR . 'Folder_Test_Collections';
+
+        $parameters = array(
+        );
+
+        $this->_expectedXml = $this->_expectedBaseDir
+            . DIRECTORY_SEPARATOR . 'FolderTest_Collections.xml';
+
+        $this->_prepareFolderTest($uri, $parameters);
+        $this->_checkFolder();
+    }
+
     public function testFullFolder()
     {
         if (!plugin_is_active('OcrElementSet')) {

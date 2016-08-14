@@ -27,6 +27,9 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
             array('ods' => 'External_Metadata.ods'),
             array('mets' => 'Dir_B/Subdir_B-B.mets.xml'),
         ),
+        'Folder_Test_Collections' => array(
+            array('doc' => 'items_and_collections.xml'),
+        ),
         'Folder_Test_Characters_Http' => array(
             array('text' => 'Non-Latin - Http.metadata.txt'),
         ),
