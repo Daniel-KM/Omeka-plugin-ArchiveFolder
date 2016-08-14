@@ -94,10 +94,11 @@ class ArchiveFolder_Format_Document extends ArchiveFolder_Format_Abstract
     {
         $writer = $this->_writer;
 
-        // Process data are not written, except the record type and the action.
+        // Process data are not written, except the name, the record type and
+        // the action.
         $attributes = array();
         foreach ($record['process'] as $key => $value) {
-            if (in_array($key, array('record type', 'action'))) {
+            if (in_array($key, array('name', 'record type', 'action'))) {
                 $attributes[$key] = $value;
             }
         }

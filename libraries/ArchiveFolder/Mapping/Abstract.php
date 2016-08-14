@@ -341,37 +341,36 @@ abstract class ArchiveFolder_Mapping_Abstract
                 continue;
             }
             foreach ($document['files'] as $order => &$file) {
+                // The path and the fullpath are set during normalization, but
+                // not checked for security. They are the same.
                 $file = $this->_normalizeDocument($file, 'File');
 
-                // The absolute and the relative paths should be the same file.
-                $path = isset($file['specific']['path']) && strlen($file['specific']['path']) > 0
-                    ? $file['specific']['path']
-                    : (isset($file['process']['name']) ? $file['process']['name'] : null);
-
-                // Check if there is a filepath.
-                // Empty() is not used, because "0" can be a content.
-                $path = trim($path);
-                if (strlen($path) == 0) {
-                    throw new ArchiveFolder_BuilderException(__('The filepath for document "%s" is empty.', $document['process']['name']));
+                // The path is not required if the file can be identified with
+                // another metadata, for example for update or deletion.
+                if (!strlen($file['process']['fullpath']) && !strlen($file['specific']['path'])) {
+                    // TODO Check other metadata (name...).
+                    continue;
                 }
 
-                // The path is absolute or relative to the path of the
-                // metadata file.
-                $absoluteFilePath = $this->_managePaths->getAbsolutePath($path);
-                if (empty($absoluteFilePath)) {
-                    throw new ArchiveFolder_BuilderException(__('The file "%s" is incorrect.', $path));
+                // Secure the absolute filepath.
+                $absoluteFilepath = $this->_managePaths->getAbsolutePath($file['process']['fullpath']);
+                if (empty($absoluteFilepath)) {
+                    throw new ArchiveFolder_BuilderException(__('The file "%s" inside document "%s" is incorrect.',
+                        $file['process']['fullpath'], $document['process']['name']));
                 }
 
                 // No relative path if the file is external to the folder.
-                $relativeFilepath = $this->_managePaths->isInsideFolder($absoluteFilePath)
-                    ? $this->_managePaths->getRelativePathToFolder($path)
-                    : $absoluteFilePath;
+                $relativeFilepath = $this->_managePaths->isInsideFolder($absoluteFilepath)
+                    ? $this->_managePaths->getRelativePathToFolder($absoluteFilepath)
+                    : $absoluteFilepath;
                 if (empty($relativeFilepath)) {
-                    throw new ArchiveFolder_BuilderException(__('The file path "%s" is incorrect.', $path));
+                    throw new ArchiveFolder_BuilderException(__('The file path "%s" is incorrect.',
+                        $file['process']['fullpath']));
                 }
 
-                $file['process']['name'] = $relativeFilepath;
-                $file['specific']['path'] = $absoluteFilePath;
+                if (empty($file['process']['name'])) {
+                    $file['process']['name'] = $relativeFilepath;
+                }
             }
         }
 
@@ -491,7 +490,7 @@ abstract class ArchiveFolder_Mapping_Abstract
                 }
 
                 // The full path is checked and simplifies management of files.
-                if ($document['specific']['path']) {
+                if (isset($document['specific']['path']) && strlen($document['specific']['path'])) {
                     $absoluteFilePath = $this->_managePaths->getAbsoluteUri($document['specific']['path']);
                     // An empty result means an incorrect path.
                     // Access rights for local files are checked by the builder.
@@ -499,10 +498,12 @@ abstract class ArchiveFolder_Mapping_Abstract
                         $message = __('The path "%s" is forbidden or incorrect.', $document['specific']['path']);
                         throw new ArchiveFolder_BuilderException($message);
                     }
+                    $document['specific']['path'] = $absoluteFilePath;
                     $document['process']['fullpath'] = $absoluteFilePath;
                 }
                 // No path is allowed for update if there is another identifier.
                 else {
+                    $document['specific']['path'] = '';
                     $document['process']['fullpath'] = '';
                 }
 

@@ -62,13 +62,13 @@ class ArchiveFolder_Builder
      *                 process => internal data used for the process
      *                     record type => File
      *                     action
-     *                     name => filepath relative to main folder, else url
+     *                     name => filepath relative to main folder, url or name
+     *                     fullpath => the absolute url determined from the path
      *                     oai_id => oai id of the file (set internally)
      *                     format_xml => format of xml metadata to include
      *                     xml => if any, the content to include for the format
      *                 specific = if any, specific data for this record type
      *                     path => the original filepath (local or http)
-     *                     fullpath => the absolute url determined from the path
      *                     original filename
      *                     authentication
      *                 metadata => array of elements (Dublin Core...)
@@ -461,7 +461,7 @@ class ArchiveFolder_Builder
 
                     $doc = array();
                     $doc['process']['record type'] = 'Item';
-                    $doc['process']['name'] = $relativeFolderpath;
+                    $doc['process']['name'] = $relativeFolderpath === '' ? '[root]' : $relativeFolderpath;
                     $doc['specific'] = array();
                     $doc['metadata'] = array();
                     $doc['extra'] = array();

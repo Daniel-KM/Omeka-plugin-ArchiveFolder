@@ -249,7 +249,9 @@ abstract class ArchiveFolder_Format_Abstract
         $doc = &$this->_document;
 
         $metadata = array();
-        $metadata['Dublin Core']['Title'][] = $doc['process']['name'] ?: '/';
+        $metadata['Dublin Core']['Title'][] = empty($doc['process']['name'])
+            ? '/'
+            : $doc['process']['name'];
 
         $doc['metadata'] = $metadata;
     }

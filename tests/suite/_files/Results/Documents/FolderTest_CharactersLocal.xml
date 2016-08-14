@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <documents>
-<record recordType="Item">
+<record name="Non-Latin - Local.metadata.txt" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Title of a document with non-latin characters (from "Non-Latin - Local.metadata.txt")</data>
@@ -18,7 +18,7 @@
       <data>::ExampleBasePath::/Folder_Test_Characters_Local/Non-Latin%20-%20Local.metadata.txt</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Characters_Local/With non-latin/Caf&#xE9; #1 (2&#x20AC;).png">
+  <record recordType="File" name="With non-latin/Caf&#xE9; #1 (2&#x20AC;).png" file="::ExampleBasePath::/Folder_Test_Characters_Local/With non-latin/Caf&#xE9; #1 (2&#x20AC;).png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>The file with spaces and non-alphanumeric and non-recommended characters (local)</data>

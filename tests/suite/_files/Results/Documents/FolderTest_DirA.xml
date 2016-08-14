@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <documents>
-<record recordType="Item">
+<record name="Directory_A.metadata.txt" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Title of the document of the Directory A (from "Directory_A.metadata.txt")</data>
@@ -23,7 +23,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
       <data>::ExampleBasePath::/Folder_Test/Dir_A/Directory_A.metadata.txt</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_1.png">
+  <record recordType="File" name="image_Dir_A_1.png" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_1.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>The Recto of the Image (Image Dir A 1)</data>
@@ -33,7 +33,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_2.png">
+  <record recordType="File" name="image_Dir_A_2.png" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_2.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>The verso of the Image (Image Dir A 2)</data>
@@ -45,7 +45,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   </record>
 </record>
 
-<record recordType="Item">
+<record name="Document 2" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Second document of "Directory_A.metadata.txt", without attached file</data>
