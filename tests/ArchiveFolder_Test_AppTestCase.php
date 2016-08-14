@@ -85,8 +85,11 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
             . DIRECTORY_SEPARATOR . '_files');
 
         $pluginHelper = new Omeka_Test_Helper_Plugin;
-        // OcrElementSet is an optional plugin required for tests.
-        $pluginHelper->setUp('OcrElementSet');
+        // OcrElementSet is an optional plugin, but required for some tests.
+        try {
+            $pluginHelper->setUp('OcrElementSet');
+        } catch (Omeka_Plugin_Loader_Exception $e) {
+        }
         $pluginHelper->setUp(self::PLUGIN_NAME);
 
         // Allow extensions "xml" and "json".
@@ -117,10 +120,13 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
 
     protected function _prepareFolderTest($uri = '', $parameters = array())
     {
+        if (empty($uri)) {
+            $uri = TEST_FILES_DIR . DIRECTORY_SEPARATOR . 'Folder_Test';
+        }
+        $parameters['uri'] = $uri;
         $this->_folder = new ArchiveFolder_Folder();
-        $this->_folder->uri = $uri ?: (TEST_FILES_DIR
-            . DIRECTORY_SEPARATOR . 'Folder_Test');
-        $this->_folder->prepareParameters($parameters);
+        $this->_folder->uri = $uri;
+        $this->_folder->setPostData($parameters);
         $this->_folder->save();
     }
 
