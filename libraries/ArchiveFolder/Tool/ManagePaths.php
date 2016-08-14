@@ -200,13 +200,16 @@ class ArchiveFolder_Tool_ManagePaths
         }
 
         // Set and check real path for local paths (security).
-        if ($this->_getParameter('transfer_strategy') == 'Filesystem'
-                && (realpath($absolutePath) != $absolutePath
-                    || strpos($absolutePath, $this->_uri) !== 0
-                    || substr($absolutePath, strlen($this->_uri), 1) !=  '/'
-                )
-            ) {
-            $absolutePath = null;
+        if ($this->_getParameter('transfer_strategy') == 'Filesystem') {
+            $settings = Zend_Registry::get('archive_folder');
+            if ($settings->local_folders->check_realpath == '1'
+                    && realpath($absolutePath) != $absolutePath
+                ) {
+                $absolutePath = null;
+            }
+            elseif (!$this->isInsideFolder($absolutePath)) {
+                $absolutePath = null;
+            }
         }
 
         return $absolutePath;
@@ -335,13 +338,13 @@ class ArchiveFolder_Tool_ManagePaths
     }
 
     /**
-     * Determine if a uri is an external url or inside the folder.
+     * Determine if a uri is inside the folder (main uri).
      *
      * @param string $uri
      * @return boolean
      */
     public function isInsideFolder($uri)
     {
-        return strpos($uri, $this->_uri) === 0;
+        return strpos($uri, $this->_uri . DIRECTORY_SEPARATOR) === 0;
     }
 }
