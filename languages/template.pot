@@ -58,6 +58,7 @@ msgstr ""
 #: views/admin/index/browse.php:24 views/admin/index/browse.php:145
 #: views/admin/plugins/archive-folder-config-form.php:1
 #: libraries/ArchiveFolder/Form/Add.php:251 views/admin/index/browse.php:136
+#: libraries/ArchiveFolder/Form/Add.php:252
 msgid "Process"
 msgstr ""
 
@@ -111,15 +112,18 @@ msgid "Are your sure to remove these folders?"
 msgstr ""
 
 #: views/admin/index/browse.php:192 views/admin/index/browse.php:201
+#: views/admin/index/browse.php:202
 #, php-format
 msgid "The query searched %s records and returned no results."
 msgstr ""
 
 #: views/admin/index/browse.php:193 views/admin/index/browse.php:202
+#: views/admin/index/browse.php:203
 msgid "See all folders."
 msgstr ""
 
 #: views/admin/index/browse.php:195 views/admin/index/browse.php:204
+#: views/admin/index/browse.php:205
 msgid "No url or path have been checked or exposed."
 msgstr ""
 
@@ -306,6 +310,7 @@ msgstr ""
 
 #: views/admin/common/archive-folder-status.php:16
 #: models/ArchiveFolder/Folder.php:928 models/ArchiveFolder/Folder.php:1000
+#: models/ArchiveFolder/Folder.php:1051
 msgid "Error"
 msgstr ""
 
@@ -328,6 +333,7 @@ msgid ""
 msgstr ""
 
 #: ArchiveFolderPlugin.php:187 ArchiveFolderPlugin.php:188
+#: ArchiveFolderPlugin.php:197
 #, php-format
 msgid ""
 "The folder \"%s\" where the xml files of the documents are saved will not be "
@@ -335,30 +341,37 @@ msgid ""
 msgstr ""
 
 #: ArchiveFolderPlugin.php:356 ArchiveFolderPlugin.php:364
+#: ArchiveFolderPlugin.php:373
 msgid "Archive Folders"
 msgstr ""
 
 #: ArchiveFolderPlugin.php:378 ArchiveFolderPlugin.php:386
+#: ArchiveFolderPlugin.php:395
 msgid "Documents xml (simple format that manages all features of Omeka)"
 msgstr ""
 
 #: ArchiveFolderPlugin.php:382 ArchiveFolderPlugin.php:390
+#: ArchiveFolderPlugin.php:399
 msgid "Text (extension: \".metadata.txt\")"
 msgstr ""
 
 #: ArchiveFolderPlugin.php:386 ArchiveFolderPlugin.php:394
+#: ArchiveFolderPlugin.php:403
 msgid "Json (extension: \".json\")"
 msgstr ""
 
 #: ArchiveFolderPlugin.php:390 ArchiveFolderPlugin.php:398
+#: ArchiveFolderPlugin.php:407
 msgid "Open Document Text (extension: \".odt\")"
 msgstr ""
 
 #: ArchiveFolderPlugin.php:394 ArchiveFolderPlugin.php:402
+#: ArchiveFolderPlugin.php:411
 msgid "Open Document Spreadsheet (extension: \".ods\")"
 msgstr ""
 
 #: ArchiveFolderPlugin.php:398 ArchiveFolderPlugin.php:406
+#: ArchiveFolderPlugin.php:419
 msgid "METS xml (with a profile compliant with Dublin Core)"
 msgstr ""
 
@@ -386,7 +399,7 @@ msgid "Folder # %d does not exist."
 msgstr ""
 
 #: controllers/IndexController.php:216 models/ArchiveFolder/Folder.php:603
-#: controllers/IndexController.php:231 models/ArchiveFolder/Folder.php:603
+#: controllers/IndexController.php:231 models/ArchiveFolder/Folder.php:627
 msgid "Error when processing folder."
 msgstr ""
 
@@ -406,7 +419,7 @@ msgid "Folder \"%s\" is being updated."
 msgstr ""
 
 #: controllers/IndexController.php:233 models/ArchiveFolder/Folder.php:620
-#: controllers/IndexController.php:250 models/ArchiveFolder/Folder.php:620
+#: controllers/IndexController.php:250 models/ArchiveFolder/Folder.php:644
 msgid "This may take a while. Please check below for status."
 msgstr ""
 
@@ -417,45 +430,50 @@ msgid ""
 msgstr ""
 
 #: tests/ArchiveFolder_Test_AppTestCase.php:148
+#: tests/ArchiveFolder_Test_AppTestCase.php:164
 #, php-format
 msgid "Class \"%s\" does not exists."
 msgstr ""
 
 #: tests/ArchiveFolder_Test_AppTestCase.php:160
+#: tests/ArchiveFolder_Test_AppTestCase.php:176
 msgid "The folder cache is not set."
 msgstr ""
 
 #: tests/ArchiveFolder_Test_AppTestCase.php:163
 #: tests/ArchiveFolder_Test_AppTestCase.php:164
+#: tests/ArchiveFolder_Test_AppTestCase.php:179
+#: tests/ArchiveFolder_Test_AppTestCase.php:180
 msgid "The folder cache is incorrect."
 msgstr ""
 
-#: tests/suite/MappingTest.php:48
+#: tests/suite/MappingTest.php:48 tests/suite/MappingTest.php:56
 #, php-format
 msgid "Result for file \"%s\" (prefix \"%s\") is not readable."
 msgstr ""
 
-#: tests/suite/MappingTest.php:52
+#: tests/suite/MappingTest.php:52 tests/suite/MappingTest.php:60
 #, php-format
 msgid "The file \"%s\" is not recognized as format \"%s\"."
 msgstr ""
 
-#: tests/suite/MappingTest.php:56
+#: tests/suite/MappingTest.php:56 tests/suite/MappingTest.php:64
 msgid "This test requires php 5.4.0 or higher."
 msgstr ""
 
-#: tests/suite/MappingTest.php:67
+#: tests/suite/MappingTest.php:67 tests/suite/MappingTest.php:75
 #, php-format
 msgid "The list of documents for file \"%s\" (prefix \"%s\") is not correct."
 msgstr ""
 
-#: tests/suite/MappingTest.php:73
+#: tests/suite/MappingTest.php:73 tests/suite/MappingTest.php:81
 #, php-format
 msgid "Some file for the mapping test are not ready: \"%s\"."
 msgstr ""
 
 #: tests/suite/SecurityTest.php:28 libraries/ArchiveFolder/Builder.php:1015
 #: libraries/ArchiveFolder/Builder.php:1034
+#: libraries/ArchiveFolder/Builder.php:1031
 msgid "Local paths are not allowed by the administrator."
 msgstr ""
 
@@ -465,19 +483,23 @@ msgstr ""
 
 #: tests/suite/SecurityTest.php:66 libraries/ArchiveFolder/Builder.php:1030
 #: libraries/ArchiveFolder/Builder.php:1049
+#: libraries/ArchiveFolder/Builder.php:1046
 #, php-format
 msgid "The uri \"%s\" is not allowed."
 msgstr ""
 
 #: tests/suite/ImporterTesttempo.php:223 tests/suite/BuilderTest.php:168
+#: tests/suite/BuilderTest.php:239
 msgid "No test for non-latin characters via http."
 msgstr ""
 
 #: tests/suite/ImporterTesttempo.php:236 tests/suite/BuilderTest.php:181
+#: tests/suite/BuilderTest.php:252
 msgid "To be done: replace \"document.xml\" by the updated one."
 msgstr ""
 
-#: tests/suite/BuilderTest.php:126
+#: tests/suite/BuilderTest.php:126 tests/suite/BuilderTest.php:131
+#: tests/suite/BuilderTest.php:154
 msgid "This test requires OcrElementSet."
 msgstr ""
 
@@ -586,17 +608,23 @@ msgstr ""
 #: models/ArchiveFolder/Folder.php:816 controllers/IndexController.php:234
 #: libraries/ArchiveFolder/Builder.php:337
 #: libraries/ArchiveFolder/Builder.php:345
-#: libraries/ArchiveFolder/Builder.php:548 models/ArchiveFolder/Folder.php:514
-#: models/ArchiveFolder/Folder.php:530 models/ArchiveFolder/Folder.php:536
-#: models/ArchiveFolder/Folder.php:543 models/ArchiveFolder/Folder.php:549
-#: models/ArchiveFolder/Folder.php:561 models/ArchiveFolder/Folder.php:581
-#: models/ArchiveFolder/Folder.php:606 models/ArchiveFolder/Folder.php:749
-#: models/ArchiveFolder/Folder.php:757 models/ArchiveFolder/Folder.php:764
+#: libraries/ArchiveFolder/Builder.php:548 models/ArchiveFolder/Folder.php:606
 #: models/ArchiveFolder/Folder.php:779 models/ArchiveFolder/Folder.php:788
 #: models/ArchiveFolder/Folder.php:801 models/ArchiveFolder/Folder.php:807
 #: models/ArchiveFolder/Folder.php:821 models/ArchiveFolder/Folder.php:825
 #: models/ArchiveFolder/Folder.php:833 models/ArchiveFolder/Folder.php:936
 #: models/ArchiveFolder/Folder.php:945 models/ArchiveFolder/Folder.php:977
+#: libraries/ArchiveFolder/Builder.php:545 models/ArchiveFolder/Folder.php:538
+#: models/ArchiveFolder/Folder.php:554 models/ArchiveFolder/Folder.php:560
+#: models/ArchiveFolder/Folder.php:567 models/ArchiveFolder/Folder.php:573
+#: models/ArchiveFolder/Folder.php:585 models/ArchiveFolder/Folder.php:605
+#: models/ArchiveFolder/Folder.php:630 models/ArchiveFolder/Folder.php:786
+#: models/ArchiveFolder/Folder.php:794 models/ArchiveFolder/Folder.php:801
+#: models/ArchiveFolder/Folder.php:816 models/ArchiveFolder/Folder.php:825
+#: models/ArchiveFolder/Folder.php:838 models/ArchiveFolder/Folder.php:844
+#: models/ArchiveFolder/Folder.php:858 models/ArchiveFolder/Folder.php:864
+#: models/ArchiveFolder/Folder.php:872 models/ArchiveFolder/Folder.php:981
+#: models/ArchiveFolder/Folder.php:990 models/ArchiveFolder/Folder.php:1028
 #, php-format
 msgid "Folder #%d [%s]: %s"
 msgstr ""
@@ -615,45 +643,53 @@ msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:492
 #: libraries/ArchiveFolder/Builder.php:496
+#: libraries/ArchiveFolder/Builder.php:493
 #, php-format
 msgid "Some files are not manageable \"%s\"."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:531
 #: libraries/ArchiveFolder/Builder.php:544
+#: libraries/ArchiveFolder/Builder.php:541
 #, php-format
 msgid "%d documents were skipped because of a forbidden extension: \"%s\"."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:539
 #: libraries/ArchiveFolder/Builder.php:553
+#: libraries/ArchiveFolder/Builder.php:550
 #, php-format
 msgid "%d forbidden documents were skipped: \"%s\"."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:542
 #: libraries/ArchiveFolder/Builder.php:556
+#: libraries/ArchiveFolder/Builder.php:553
 #, php-format
 msgid "Folder #%d [%s]: \"%s\""
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:682
 #: libraries/ArchiveFolder/Builder.php:696
+#: libraries/ArchiveFolder/Builder.php:693
 msgid "The static repository has not been created."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:686
 #: libraries/ArchiveFolder/Builder.php:700
+#: libraries/ArchiveFolder/Builder.php:697
 msgid "The static repository cannot be copied in destination folder."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:1022
 #: libraries/ArchiveFolder/Builder.php:1041
+#: libraries/ArchiveFolder/Builder.php:1038
 msgid "The base path is not correct."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:1039
 #: libraries/ArchiveFolder/Builder.php:1058
+#: libraries/ArchiveFolder/Builder.php:1055
 #, php-format
 msgid "The uri \"%s\" is not correct."
 msgstr ""
@@ -678,6 +714,7 @@ msgid "The file \"%s\" is incorrect."
 msgstr ""
 
 #: libraries/ArchiveFolder/Mapping/Abstract.php:331
+#: libraries/ArchiveFolder/Mapping/Abstract.php:367
 #, php-format
 msgid "The file path \"%s\" is incorrect."
 msgstr ""
@@ -688,31 +725,37 @@ msgid "The record type \"%s\" does not exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Mapping/Abstract.php:426
+#: libraries/ArchiveFolder/Mapping/Abstract.php:465
 #, php-format
 msgid "The action \"%s\" does not exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Mapping/Abstract.php:459
+#: libraries/ArchiveFolder/Mapping/Abstract.php:498
 #, php-format
 msgid "The path \"%s\" is forbidden or incorrect."
 msgstr ""
 
 #: libraries/ArchiveFolder/Mapping/Abstract.php:509
+#: libraries/ArchiveFolder/Mapping/Abstract.php:550
 #, php-format
 msgid "The collection \"%s\" does not exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Mapping/Abstract.php:533
+#: libraries/ArchiveFolder/Mapping/Abstract.php:574
 #, php-format
 msgid "The item type \"%s\" does not exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Mapping/Abstract.php:542
+#: libraries/ArchiveFolder/Mapping/Abstract.php:583
 #, php-format
 msgid "The item type id \"%d\" does not exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Mapping/Abstract.php:590
+#: libraries/ArchiveFolder/Mapping/Abstract.php:634
 #, php-format
 msgid "The identifier field \"%s\" is not allowed for the record type \"%s\"."
 msgstr ""
@@ -982,60 +1025,72 @@ msgid "Archive Folder URI"
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:210
+#: libraries/ArchiveFolder/Form/Add.php:211
 msgid "Archive Folder Records and files"
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:211
+#: libraries/ArchiveFolder/Form/Add.php:212
 msgid "Set parameters to create each record from files."
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:212
+#: libraries/ArchiveFolder/Form/Add.php:213
 msgid "Note:"
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:213
+#: libraries/ArchiveFolder/Form/Add.php:214
 msgid ""
 "An item can have multiple files, and items and files can have different "
 "metadata."
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:214
+#: libraries/ArchiveFolder/Form/Add.php:215
 msgid ""
 "For example, a record of a book can have each digitalized page attached to "
 "it."
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:215
+#: libraries/ArchiveFolder/Form/Add.php:216
 msgid ""
 "An object can have multiple pictures under different views or taken by "
 "different photographers."
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:216
+#: libraries/ArchiveFolder/Form/Add.php:217
 msgid ""
 "In that case, it is recommended to separate the metadata, for example to add "
 "data about each page or the different authors of the view."
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:217
+#: libraries/ArchiveFolder/Form/Add.php:218
 msgid ""
 "Conversely, an image of a paint, a photography, or a book digitalized as a "
 "pdf and e-book files doesn't need to have separate records."
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:228
+#: libraries/ArchiveFolder/Form/Add.php:229
 msgid "Tables"
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:229
+#: libraries/ArchiveFolder/Form/Add.php:230
 msgid "Set specific parameters for table or spreadsheets."
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:240
+#: libraries/ArchiveFolder/Form/Add.php:241
 msgid "Extra Parameters"
 msgstr ""
 
 #: libraries/ArchiveFolder/Form/Add.php:260
+#: libraries/ArchiveFolder/Form/Add.php:261
 msgid "Add folder"
 msgstr ""
 
@@ -1057,6 +1112,7 @@ msgstr ""
 
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:60
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:67
+#: libraries/ArchiveFolder/Tool/ProcessXslt.php:87
 #, php-format
 msgid ""
 "An error occurs during the xsl transformation of the file \"%s\" with the "
@@ -1065,6 +1121,7 @@ msgstr ""
 
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:87
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:94
+#: libraries/ArchiveFolder/Tool/ProcessXslt.php:109
 #, php-format
 msgid ""
 "Could not load \"%s\". Verify that you have rights to access this folder and "
@@ -1073,12 +1130,14 @@ msgstr ""
 
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:91
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:98
+#: libraries/ArchiveFolder/Tool/ProcessXslt.php:113
 #, php-format
 msgid "The file \"%s\" is empty. Process is aborted."
 msgstr ""
 
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:128
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:135
+#: libraries/ArchiveFolder/Tool/ProcessXslt.php:155
 #, php-format
 msgid ""
 "An error occurs during the xsl transformation of the file \"%s\" with the "
@@ -1092,99 +1151,119 @@ msgid ""
 msgstr ""
 
 #: libraries/ArchiveFolder/Tool/ManagePaths.php:287
+#: libraries/ArchiveFolder/Tool/ManagePaths.php:290
 #, php-format
 msgid "The file path \"%s\" is not correct."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:56
+#: libraries/ArchiveFolder/Importer.php:66
 #, php-format
 msgid "There is no record #%d."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:68
+#: libraries/ArchiveFolder/Importer.php:78
 #, php-format
 msgid "The record #%d is empty."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:94
 #: libraries/ArchiveFolder/Importer.php:104
+#: libraries/ArchiveFolder/Importer.php:115
+#: libraries/ArchiveFolder/Importer.php:125
 #, php-format
 msgid "The record #%d doesn't exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:95
+#: libraries/ArchiveFolder/Importer.php:116
 #, php-format
 msgid "The action \"%s\" has no effect."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:105
+#: libraries/ArchiveFolder/Importer.php:126
 #, php-format
 msgid "The action \"%s\" is replaced by a creation."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:115
+#: libraries/ArchiveFolder/Importer.php:136
 #, php-format
 msgid ""
 "Cannot process action \"%s\" for record #%d: the record exists (%s id %d)."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:136
+#: libraries/ArchiveFolder/Importer.php:157
 #, php-format
 msgid "Cannot create a second record with the same identifier (record #%d)."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:154
+#: libraries/ArchiveFolder/Importer.php:175
 #, php-format
 msgid "Action \"%s\" does not exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:240
+#: libraries/ArchiveFolder/Importer.php:261
 #, php-format
 msgid "The file \"%s\" cannot be created before the item."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:253
+#: libraries/ArchiveFolder/Importer.php:274
 #, php-format
 msgid "Local paths are not allowed by the administrator (%s) [%s]."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:271
+#: libraries/ArchiveFolder/Importer.php:292
 #, php-format
 msgid "Error occurred when attempting to ingest \"%s\" as a file: %s"
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:343
+#: libraries/ArchiveFolder/Importer.php:376
 #, php-format
 msgid "Only update actions are allowed here, not \"%s\"."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:349
+#: libraries/ArchiveFolder/Importer.php:382
 #, php-format
 msgid ""
 "The record type \"%s\" is not the same than the record to update (\"%s\")."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:438
+#: libraries/ArchiveFolder/Importer.php:471
 #, php-format
 msgid "Record type \"%s\" is not allowed."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:463
+#: libraries/ArchiveFolder/Importer.php:496
 #, php-format
 msgid "Unable to delete the record: %s"
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:466
+#: libraries/ArchiveFolder/Importer.php:499
 #, php-format
 msgid "Unable to delete this record: %s"
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:542
+#: libraries/ArchiveFolder/Importer.php:624
 #, php-format
 msgid "The repository file \"%s\" does not exist."
 msgstr ""
 
 #: libraries/ArchiveFolder/Importer.php:550
+#: libraries/ArchiveFolder/Importer.php:632
 #, php-format
 msgid "The repository file \"%s\" is not an xml one."
 msgstr ""
@@ -1194,113 +1273,113 @@ msgstr ""
 msgid "Cannot archive the record %s #%d [index #%d]."
 msgstr ""
 
-#: models/ArchiveFolder/Record.php:170
+#: models/ArchiveFolder/Record.php:170 models/ArchiveFolder/Record.php:197
 msgid "Folder cannot be empty."
 msgstr ""
 
-#: models/ArchiveFolder/Record.php:173
+#: models/ArchiveFolder/Record.php:173 models/ArchiveFolder/Record.php:200
 #, php-format
 msgid "Type of record \"%s\" is not correct."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:112 models/ArchiveFolder/Folder.php:112
+#: models/ArchiveFolder/Folder.php:112 models/ArchiveFolder/Folder.php:113
 #, php-format
 msgid "Parameters must be an array. Instead, the following was given: %s."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:139 models/ArchiveFolder/Folder.php:139
+#: models/ArchiveFolder/Folder.php:139 models/ArchiveFolder/Folder.php:140
 msgid "Anonymous"
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:167 models/ArchiveFolder/Folder.php:167
+#: models/ArchiveFolder/Folder.php:167 models/ArchiveFolder/Folder.php:168
 msgid "Parameters must be an array."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:450 models/ArchiveFolder/Folder.php:450
+#: models/ArchiveFolder/Folder.php:450 models/ArchiveFolder/Folder.php:474
 msgid "An url or a path is required to add a folder."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:455 models/ArchiveFolder/Folder.php:455
+#: models/ArchiveFolder/Folder.php:455 models/ArchiveFolder/Folder.php:479
 msgid "The url or path should be written in a standard way."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:460 models/ArchiveFolder/Folder.php:460
+#: models/ArchiveFolder/Folder.php:460 models/ArchiveFolder/Folder.php:484
 msgid "There is no repository identifier."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:466 models/ArchiveFolder/Folder.php:466
+#: models/ArchiveFolder/Folder.php:466 models/ArchiveFolder/Folder.php:490
 #, php-format
 msgid "The folder for uri \"%s\" exists already."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:471 models/ArchiveFolder/Folder.php:471
+#: models/ArchiveFolder/Folder.php:471 models/ArchiveFolder/Folder.php:495
 #, php-format
 msgid "The repository identifier \"%s\" exists already."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:491 models/ArchiveFolder/Folder.php:491
+#: models/ArchiveFolder/Folder.php:491 models/ArchiveFolder/Folder.php:515
 #, php-format
 msgid "The status \"%s\" does not exist."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:512 models/ArchiveFolder/Folder.php:512
+#: models/ArchiveFolder/Folder.php:512 models/ArchiveFolder/Folder.php:536
 #, php-format
 msgid "Process \"%s\" started."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:528 models/ArchiveFolder/Folder.php:528
+#: models/ArchiveFolder/Folder.php:528 models/ArchiveFolder/Folder.php:552
 #, php-format
 msgid "Error during process: %s"
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:534 models/ArchiveFolder/Folder.php:534
+#: models/ArchiveFolder/Folder.php:534 models/ArchiveFolder/Folder.php:558
 #, php-format
 msgid "Unknown error during process: %s"
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:541 models/ArchiveFolder/Folder.php:541
+#: models/ArchiveFolder/Folder.php:541 models/ArchiveFolder/Folder.php:565
 msgid "Process has been stopped by user."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:553 models/ArchiveFolder/Folder.php:553
+#: models/ArchiveFolder/Folder.php:553 models/ArchiveFolder/Folder.php:577
 #, php-format
 msgid "Folder #%d [%s]: Check finished."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:559 models/ArchiveFolder/Folder.php:559
+#: models/ArchiveFolder/Folder.php:559 models/ArchiveFolder/Folder.php:583
 msgid "List of records ready."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:579 models/ArchiveFolder/Folder.php:579
+#: models/ArchiveFolder/Folder.php:579 models/ArchiveFolder/Folder.php:603
 msgid "The process can't be launched, because the folder is not ready."
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:612 controllers/IndexController.php:240
-#: models/ArchiveFolder/Folder.php:612
+#: models/ArchiveFolder/Folder.php:636
 #, php-format
 msgid "Folder \"%s\" has been processed."
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:619 controllers/IndexController.php:249
-#: models/ArchiveFolder/Folder.php:619
+#: models/ArchiveFolder/Folder.php:643
 #, php-format
 msgid "Folder \"%s\" is being processed."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:634 models/ArchiveFolder/Folder.php:634
+#: models/ArchiveFolder/Folder.php:634 models/ArchiveFolder/Folder.php:658
 msgid "No document or resource unavailable."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:639 models/ArchiveFolder/Folder.php:639
+#: models/ArchiveFolder/Folder.php:639
 #, php-format
 msgid "Result: %d items and %d files."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:747 models/ArchiveFolder/Folder.php:747
+#: models/ArchiveFolder/Folder.php:747 models/ArchiveFolder/Folder.php:784
 msgid "This folder has no record to process."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:755 models/ArchiveFolder/Folder.php:755
+#: models/ArchiveFolder/Folder.php:755 models/ArchiveFolder/Folder.php:792
 #, php-format
 msgid "All %d records have already been processed."
 msgstr ""
@@ -1310,21 +1389,25 @@ msgid "Folder is not ready to be processed."
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:769 models/ArchiveFolder/Folder.php:786
+#: models/ArchiveFolder/Folder.php:823
 #, php-format
 msgid "Process of record #%d/%d started."
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:782 models/ArchiveFolder/Folder.php:799
+#: models/ArchiveFolder/Folder.php:836
 #, php-format
 msgid "Error during import of record #%d/%d: %s"
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:788 models/ArchiveFolder/Folder.php:805
+#: models/ArchiveFolder/Folder.php:842
 #, php-format
 msgid "Unknown error during import of record #%d/%d: %s"
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:802 models/ArchiveFolder/Folder.php:819
+#: models/ArchiveFolder/Folder.php:856
 #, php-format
 msgid "Process of record #%d/%d finished."
 msgstr ""
@@ -1335,19 +1418,23 @@ msgid "All %d records have been processed."
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:814 models/ArchiveFolder/Folder.php:831
+#: models/ArchiveFolder/Folder.php:870
 #, php-format
 msgid "Process of record #%d/%d failed."
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:929 models/ArchiveFolder/Folder.php:1001
+#: models/ArchiveFolder/Folder.php:1052
 msgid "Notice"
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:930 models/ArchiveFolder/Folder.php:1002
+#: models/ArchiveFolder/Folder.php:1053
 msgid "Info"
 msgstr ""
 
 #: models/ArchiveFolder/Folder.php:931 models/ArchiveFolder/Folder.php:1003
+#: models/ArchiveFolder/Folder.php:1054
 msgid "Debug"
 msgstr ""
 
@@ -1372,45 +1459,48 @@ msgid "Let empty to use the internal xslt processor of php."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:539
+#: libraries/ArchiveFolder/Builder.php:536
 #, php-format
 msgid "%d document was skipped because of a forbidden extension: \"%s\"."
 msgstr ""
 
 #: libraries/ArchiveFolder/Builder.php:719
+#: libraries/ArchiveFolder/Builder.php:716
 #, php-format
 msgid "The folder \"%s\" is not readable."
 msgstr ""
 
 #: libraries/ArchiveFolder/Tool/ProcessXslt.php:26
+#: libraries/ArchiveFolder/Tool/ProcessXslt.php:40
 #, php-format
 msgid "The input file \"%s\" is not readable."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:762
+#: models/ArchiveFolder/Folder.php:762 models/ArchiveFolder/Folder.php:799
 #, php-format
 msgid "Folder is not ready to be processed (status: %s)."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:776
+#: models/ArchiveFolder/Folder.php:776 models/ArchiveFolder/Folder.php:813
 msgid "An error occured during import."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:777
+#: models/ArchiveFolder/Folder.php:777 models/ArchiveFolder/Folder.php:814
 msgid "You should relaunch the process (imported items won't be reimported)."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:933
+#: models/ArchiveFolder/Folder.php:933 models/ArchiveFolder/Folder.php:978
 #, php-format
 msgid ""
 "The imported records cannot be removed: the status should be \"completed\" "
 "or \"reset\", not \"%s\"."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:943
+#: models/ArchiveFolder/Folder.php:943 models/ArchiveFolder/Folder.php:988
 msgid "No record have been imported, so no record can be removed."
 msgstr ""
 
-#: models/ArchiveFolder/Folder.php:959
+#: models/ArchiveFolder/Folder.php:959 models/ArchiveFolder/Folder.php:1005
 #, php-format
 msgid "Removed record #%d/%d (%s #%d)."
 msgstr ""
@@ -1420,4 +1510,76 @@ msgstr ""
 msgid ""
 "All %d imported records (%d collections, %d items, %d files) have been "
 "removed."
+msgstr ""
+
+#: views/admin/index/browse.php:166
+msgid "Delete records"
+msgstr ""
+
+#: views/admin/index/browse.php:195
+msgid "WARNING: Updated records will be removed too."
+msgstr ""
+
+#: ArchiveFolderPlugin.php:415
+msgid "Omeka xml"
+msgstr ""
+
+#: ArchiveFolderPlugin.php:423
+msgid "MAG xml"
+msgstr ""
+
+#: libraries/ArchiveFolder/Mapping/Abstract.php:358
+#, php-format
+msgid "The file \"%s\" inside document \"%s\" is incorrect."
+msgstr ""
+
+#: libraries/ArchiveFolder/Mapping/Abstract.php:448
+#, php-format
+msgid "The record type \"%s\" is not managed."
+msgstr ""
+
+#: libraries/ArchiveFolder/Mapping/Abstract.php:1012
+#, php-format
+msgid "Failed to execute command: %s"
+msgstr ""
+
+#: libraries/ArchiveFolder/Tool/ProcessXslt.php:35
+#, php-format
+msgid "The remote file \"%s\" is not readable or empty."
+msgstr ""
+
+#: libraries/ArchiveFolder/Importer.php:1138
+#, php-format
+msgid "name \"%s\""
+msgstr ""
+
+#: libraries/ArchiveFolder/Importer.php:1138
+msgid "no name"
+msgstr ""
+
+#: libraries/ArchiveFolder/Importer.php:1136
+#, php-format
+msgid "Cannot archive the record %s #%d [index #%d, %s]."
+msgstr ""
+
+#: models/ArchiveFolder/Folder.php:663
+#, php-format
+msgid "Result: %d collections, %d items and %d files."
+msgstr ""
+
+#: models/ArchiveFolder/Folder.php:861
+#, php-format
+msgid "All %d records have been processed (%d managed)."
+msgstr ""
+
+#: models/ArchiveFolder/Folder.php:1026
+#, php-format
+msgid "(%d already deleted, including files of items)"
+msgstr ""
+
+#: models/ArchiveFolder/Folder.php:1024
+#, php-format
+msgid ""
+"All %d imported records (%d collections, %d items, %d files) have been "
+"removed%s."
 msgstr ""
