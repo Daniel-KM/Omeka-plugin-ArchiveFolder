@@ -163,7 +163,7 @@ echo head(array(
                                                 'id' => $folder->id,
                                             ),
                                             'default');
-                                        $action = __('Del. records'); ?>
+                                        $action = __('Delete records'); ?>
                         <a href="<?php echo html_escape($actionUri); ?>" class="delete-records button red" title="<?php echo __('Delete all imported records'); ?>"><?php echo $action; ?></a>
                                     <?php endif;
 
@@ -191,7 +191,8 @@ echo head(array(
         Omeka.messages = jQuery.extend(Omeka.messages,
             {'archiveFolder':{
                 'confirmBatch':<?php echo json_encode(__('Are your sure to remove these folders?')); ?>,
-                'confirmDeleteRecords':<?php echo json_encode(__('Are your sure to remove all imported records of this folder?')); ?>
+                'confirmDeleteRecords':<?php echo json_encode(__('Are your sure to remove all imported records of this folder?') . PHP_EOL . PHP_EOL
+                    . __('WARNING: Updated records will be removed too.')); ?>
             }}
         );
         Omeka.addReadyCallback(Omeka.ArchiveFolderBrowse.setupBatchEdit);

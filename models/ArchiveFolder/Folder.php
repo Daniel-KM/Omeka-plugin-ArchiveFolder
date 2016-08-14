@@ -956,6 +956,7 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         $this->setStatus(ArchiveFolder_Folder::STATUS_PROGRESS);
 
         $currentTotal = $totalImportedRecords;
+        $alreadyDeleted = 0;
         $total = array(
             'Collection' => 0,
             'Item' => 0,
@@ -970,6 +971,10 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
             if ($record) {
                 $record->delete();
             }
+            // Log if the record is already deleted.
+            else {
+                $alreadyDeleted++;
+            }
             $archiveFolderRecord->delete();
             $this->setParameter('imported_records', --$currentTotal);
             $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_DEBUG);
@@ -978,8 +983,9 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         // Force to zero.
         $this->setParameter('imported_records', 0);
         $this->setStatus(ArchiveFolder_Folder::STATUS_COMPLETED);
-        $message = __('All %d imported records (%d collections, %d items, %d files) have been removed.',
-            $totalImportedRecords, $total['Collection'], $total['Item'], $total['File']);
+        $message = __('All %d imported records (%d collections, %d items, %d files) have been removed%s.',
+            $totalImportedRecords, $total['Collection'], $total['Item'], $total['File'],
+            $alreadyDeleted && $alreadyDeleted != $total['File'] ? ' ' . __('(%d already deleted, including files of items)', $alreadyDeleted) : '');
         $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_INFO);
         _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s', $this->id, $this->uri, $message), Zend_Log::INFO);
     }
