@@ -12,6 +12,13 @@ class ArchiveFolder_Importer
     const IDFIELD_INTERNAL_ID = 'internal id';
     const IDFIELD_NAME = 'name';
 
+    // For files only.
+    const IDFIELD_ORIGINAL_FILENAME = 'original filename';
+    const IDFIELD_FILENAME = 'filename';
+    const IDFIELD_AUTHENTICATION = 'authentication';
+
+    // The Identifiers fields can be elements too, for example "Dublin Core:Identifier".
+
     const DEFAULT_IDFIELD = 'none';
 
     const ACTION_UPDATE_ELSE_CREATE = 'update else create';
@@ -597,9 +604,9 @@ class ArchiveFolder_Importer
             // Manage specific fields for file.
             $fieldFile = false;
             if ($document['process']['record type'] == 'File' && in_array($identifierField, array(
-                    'original filename',
-                    'filename',
-                    'authentication',
+                    ArchiveFolder_Importer::IDFIELD_ORIGINAL_FILENAME,
+                    ArchiveFolder_Importer::IDFIELD_FILENAME,
+                    ArchiveFolder_Importer::IDFIELD_AUTHENTICATION,
                 ))) {
                 $document['process']['identifier'] = empty($document['specific'][$identifierField]) ? '' : $document['specific'][$identifierField];
             }
@@ -756,11 +763,12 @@ class ArchiveFolder_Importer
 
         // Manage specific fields for file.
         if ($recordType == 'File' && in_array($identifierField, array(
-                'original filename',
-                'filename',
-                'authentication',
+                ArchiveFolder_Importer::IDFIELD_ORIGINAL_FILENAME,
+                ArchiveFolder_Importer::IDFIELD_FILENAME,
+                ArchiveFolder_Importer::IDFIELD_AUTHENTICATION,
             ))) {
-            if ($identifierField == 'original filename') {
+            // Quick check to simplify query.
+            if ($identifierField == ArchiveFolder_Importer::IDFIELD_ORIGINAL_FILENAME) {
                 $identifierField = 'original_filename';
             }
             $record = $db->getTable('File')->findBySql($identifierField . ' = ?', array($identifier), true);

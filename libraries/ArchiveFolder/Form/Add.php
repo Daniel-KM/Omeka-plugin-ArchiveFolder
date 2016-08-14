@@ -152,8 +152,8 @@ class ArchiveFolder_Form_Add extends Omeka_Form
         $values = array(
             ArchiveFolder_Importer::IDFIELD_NONE => __('No default identifier field'),
             ArchiveFolder_Importer::IDFIELD_INTERNAL_ID => __('Internal id'),
-            // 'filename' => __('Imported filename (to import files only)'),
-            // 'original filename' => __('Original filename (to import files only)'),
+            // ArchiveFolder_Importer::IDFIELD_ORIGINAL_FILENAME => __('Original filename (to import files only)'),
+            // ArchiveFolder_Importer::IDFIELD_FILENAME => __('Imported filename (to import files only)'),
         ) + $values;
         $this->addElement('select', 'identifier_field', array(
             'label' => __('Identifier field (required)'),

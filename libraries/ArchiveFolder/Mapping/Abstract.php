@@ -608,25 +608,28 @@ abstract class ArchiveFolder_Mapping_Abstract
                     ArchiveFolder_Importer::IDFIELD_NONE,
                     ArchiveFolder_Importer::IDFIELD_INTERNAL_ID,
                     // For file only.
-                    'original filename',
-                    'filename',
+                    ArchiveFolder_Importer::IDFIELD_ORIGINAL_FILENAME,
+                    ArchiveFolder_Importer::IDFIELD_FILENAME,
+                    ArchiveFolder_Importer::IDFIELD_AUTHENTICATION,
+                    'original_filename',
                     'md5',
-                    'authentication',
                 ))) {
 
                 if ($document['process']['record type'] == 'File') {
-                    if ($lowerIdentifierField == 'original filename') {
-                        $lowerIdentifierField = 'original_filename';
+                    // Quick checks for old releases.
+                    if ($lowerIdentifierField == 'original_filename') {
+                        $lowerIdentifierField = ArchiveFolder_Importer::IDFIELD_ORIGINAL_FILENAME;
                     }
                     elseif ($lowerIdentifierField == 'md5') {
                         $lowerIdentifierField = 'authentication';
                     }
                 }
                 elseif (in_array($lowerIdentifierField, array(
-                        'original filename',
-                        'filename',
+                        ArchiveFolder_Importer::IDFIELD_ORIGINAL_FILENAME,
+                        ArchiveFolder_Importer::IDFIELD_FILENAME,
+                        ArchiveFolder_Importer::IDFIELD_AUTHENTICATION,
+                        'original_filename',
                         'md5',
-                        'authentication',
                     ))) {
                     $message = __('The identifier field "%s" is not allowed for the record type "%s".',
                         $document['process']['identifier field'], $document['process']['record type']);
