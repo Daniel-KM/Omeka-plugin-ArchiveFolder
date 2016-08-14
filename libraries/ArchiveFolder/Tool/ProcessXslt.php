@@ -15,10 +15,17 @@ class ArchiveFolder_Tool_ProcessXslt
      * be used.
      * @param array $parameters Parameters array.
      * @return string|null Path to the output file if ok, null else.
+     * @throws ArchiveFolder_Exception()
      */
     public function processXslt($input, $stylesheet, $output = '', $parameters = array())
     {
         $command = get_option('archive_folder_processor');
+
+            // The readability is a very common error, so it is checked separately.
+        if (!is_file($input) || !is_readable($input)) {
+            $msg = __('The input file "%s" is not readable.', $input);
+            throw new ArchiveFolder_Exception($msg);
+        }
 
         // Default is the internal xslt processor of php.
         return empty($command)
