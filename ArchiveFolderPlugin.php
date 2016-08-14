@@ -112,6 +112,7 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
             `index` int(10) unsigned NOT NULL,
             `record_type` varchar(50) collate utf8_unicode_ci NOT NULL,
             `record_id` int(10) unsigned NOT NULL,
+            `name` varchar(255) collate utf8_unicode_ci NOT NULL,
             PRIMARY KEY  (`id`),
             INDEX (`folder_id`),
             INDEX `folder_id_index` (`folder_id`, `index`),
@@ -161,6 +162,14 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
                 INDEX `folder_id_index` (`folder_id`, `index`),
                 INDEX `record_type_record_id` (`record_type`, `record_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+            ";
+            $db->query($sql);
+        }
+
+        if (version_compare($oldVersion, '2.5.2', '<')) {
+            $sql = "
+                ALTER TABLE `{$db->ArchiveFolder_Record}`
+                ADD `name` varchar(255) collate utf8_unicode_ci NOT NULL AFTER `record_id`
             ";
             $db->query($sql);
         }

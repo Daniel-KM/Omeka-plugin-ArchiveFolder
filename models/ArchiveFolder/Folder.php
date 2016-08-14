@@ -356,7 +356,23 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
      */
     public function getArchiveFolderRecord($index)
     {
-        return $this->getTable('ArchiveFolder_Record')->findByFolderAndIndex($this->id, $index);
+        return $this->getTable('ArchiveFolder_Record')
+            ->findByFolderAndIndex($this->id, $index);
+    }
+
+    /**
+     * Get an archive folder record by name.
+     *
+     * @param string $name
+     * @param string|array $recordType
+     * @param integer $limit
+     * @return Record|array One archive folder record if limit is 1, or a list
+     * of archive folder records (normally only one).
+     */
+    public function getArchiveFolderRecordsByName($name, $recordType = '', $limit = 0)
+    {
+        return $this->getTable('ArchiveFolder_Record')
+            ->findByFolderAndName($this->id, $name, $recordType, $limit);
     }
 
     /**

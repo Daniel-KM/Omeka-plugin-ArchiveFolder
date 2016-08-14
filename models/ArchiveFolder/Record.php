@@ -34,6 +34,11 @@ class ArchiveFolder_Record extends Omeka_Record_AbstractRecord implements Zend_A
     public $record_id;
 
     /**
+     * @var string The name of the record in the source, if any.
+     */
+    public $name;
+
+    /**
      * Records related to an Item.
      *
      * @var array
@@ -99,6 +104,16 @@ class ArchiveFolder_Record extends Omeka_Record_AbstractRecord implements Zend_A
     }
 
     /**
+     * Sets the name of the record.
+     *
+     * @param string $name The name of the record.
+     */
+    public function setName($name)
+    {
+        $this->name = (string) $name;
+    }
+
+    /**
      * Returns the folder related to this record.
      *
      * @return ArchiveFolder_Folder.
@@ -158,6 +173,18 @@ class ArchiveFolder_Record extends Omeka_Record_AbstractRecord implements Zend_A
         // Manage the case where record type has been removed.
         if (class_exists($recordType)) {
             return $this->getTable($recordType)->find($recordId);
+        }
+    }
+
+    /**
+     * Executes before the record is saved.
+     *
+     * @param array $args
+     */
+    protected function beforeSave($args)
+    {
+        if (is_null($this->name)) {
+            $this->name = '';
         }
     }
 

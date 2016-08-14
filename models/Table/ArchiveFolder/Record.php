@@ -74,6 +74,32 @@ class Table_ArchiveFolder_Record extends Omeka_Db_Table
     }
 
     /**
+     * Retrieve a list of records from a name associated with a folder.
+     *
+     * @param Folder|integer $folder
+     * @param string $name
+     * @param string|array $recordType
+     * @param integer $limit
+     * @return Record|array One archive folder record if limit is 1, or a list
+     * of archive folder records (normally only one).
+     */
+    public function findByFolderAndName($folder, $name, $recordType = '', $limit = 0)
+    {
+        $alias = $this->getTableAlias();
+        $select = $this->getSelect();
+
+        $this->filterByFolder($select, $folder);
+        $select->where("`$alias`.`name` = ?", $name);
+        $this->filterByRecordType($select, $recordType);
+        $select->order("$alias.index ASC");
+        if ($limit) {
+            $select->limit($limit);
+        }
+
+        return $limit = 1 ? $this->fetchObject($select) : $this->fetchObjects($select);
+    }
+
+    /**
      * Retrieve records associated with a folder.
      *
      * @param Folder|integer|array $folder May be multiple.
