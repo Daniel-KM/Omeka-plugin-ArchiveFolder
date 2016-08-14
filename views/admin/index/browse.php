@@ -106,15 +106,6 @@ echo head(array(
                                     $action = __('Stop');
                                 ?>
                         <a href="<?php echo html_escape($actionUri); ?>" class="stop button blue"><?php echo $action; ?></a>
-
-                            <?php
-                                $actionUri = $this->url(array(
-                                        'action' => 'browse',
-                                    ),
-                                    'default');
-                                $action = __('Refresh page');
-                                ?>
-                        <a href="<?php echo html_escape($actionUri); ?>" class="refresh button blue"><?php echo $action; ?></a>
                             <?php
                                 endif;
                                 break;
