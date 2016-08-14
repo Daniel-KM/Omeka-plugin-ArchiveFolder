@@ -69,7 +69,8 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
 
         // Update the folder (no change).
         $folder->process(ArchiveFolder_Builder::TYPE_UPDATE);
-        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED, $folder->status, 'Folder update failed: ' . $folder->messages);
+        $this->assertEquals(ArchiveFolder_Folder::STATUS_COMPLETED,
+            $folder->status, 'Folder update failed: ' . $folder->messages);
     }
 
     public function testByDirectory()
@@ -121,6 +122,7 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
 
         $parameters = array(
             'unreferenced_files' => 'by_directory',
+            'add_relations' => true,
         );
 
         $this->_expectedXml = $this->_expectedBaseDir
@@ -141,7 +143,12 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $uri = TEST_FILES_DIR
             . DIRECTORY_SEPARATOR . 'Folder_Test_Mets_Alto';
 
-        $parameters = array();
+        $parameters = array(
+            'add_relations' => true,
+            'ocr_fill_text' => true,
+            'ocr_fill_data' => true,
+            'ocr_fill_process' => true,
+        );
 
         $this->_expectedXml = $this->_expectedBaseDir
             . DIRECTORY_SEPARATOR . 'FolderTest_Mets_Alto.xml';

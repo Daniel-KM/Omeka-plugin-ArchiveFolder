@@ -24,6 +24,13 @@ class ArchiveFolder_MappingTest extends ArchiveFolder_Test_AppTestCase
                 $prefix = key($metadataFile);
                 $metadataFile = reset($metadataFile);
 
+                if ($prefix == 'mets' && !plugin_is_active('OcrElementSet')) {
+                    // $this->markTestSkipped(
+                    //    __('This test requires OcrElementSet.')
+                    // );
+                    continue;
+                }
+
                 $mapping = $this->_mappings[$prefix]['class'];
                 $uri = TEST_FILES_DIR . DIRECTORY_SEPARATOR . $folder;
                 $mapping = new $mapping($uri, array());
