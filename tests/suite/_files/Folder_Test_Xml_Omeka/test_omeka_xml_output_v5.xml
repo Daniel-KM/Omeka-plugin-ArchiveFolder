@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itemContainer xmlns="http://omeka.org/schemas/omeka-xml/v5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://omeka.org/schemas/omeka-xml/v5 http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd" uri="http://localhost/admin/items/browse?output=omeka-xml" accessDate="2013-05-31T14:31:52+02:00">
+  <miscellaneousContainer>
+    <pagination>
+      <pageNumber>1</pageNumber>
+      <perPage>50</perPage>
+      <totalResults>2</totalResults>
+    </pagination>
+  </miscellaneousContainer>
+  <item itemId="465" public="0" featured="1">
+    <fileContainer>
+      <file fileId="492">
+        <src>https://upload.wikimedia.org/wikipedia/commons/7/7d/Kafka_portrait.jpg</src>
+        <authentication>09d85756638fb88a09407968ef5bc252</authentication>
+        <elementSetContainer>
+          <elementSet elementSetId="1">
+            <name>Dublin Core</name>
+            <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+            <elementContainer>
+              <element elementId="50">
+                <name>Title</name>
+                <description>A name given to the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1668">
+                    <text>Franz Kafka : portrait</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="39">
+                <name>Creator</name>
+                <description>An entity primarily responsible for making the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1669">
+                    <text>Atelier Jacobi: Sigismund Jacobi (1860–1935)</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="40">
+                <name>Date</name>
+                <description>A point or period of time associated with an event in the lifecycle of the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1670">
+                    <text>1906</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="47">
+                <name>Rights</name>
+                <description>Information about rights held in and over the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1671">
+                    <text>public domain</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+            </elementContainer>
+          </elementSet>
+        </elementSetContainer>
+      </file>
+      <file fileId="493">
+        <src>https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Kafka_statue_Prague.jpg/328px-Kafka_statue_Prague.jpg</src>
+        <authentication>5a061329112b188e73a15f899b70150d</authentication>
+        <elementSetContainer>
+          <elementSet elementSetId="1">
+            <name>Dublin Core</name>
+            <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+            <elementContainer>
+              <element elementId="50">
+                <name>Title</name>
+                <description>A name given to the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1672">
+                    <text>Monument to Franz Kafka</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="39">
+                <name>Creator</name>
+                <description>An entity primarily responsible for making the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1673">
+                    <text>Róna, Jaroslav</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="40">
+                <name>Date</name>
+                <description>A point or period of time associated with an event in the lifecycle of the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1674">
+                    <text>statue: 2003</text>
+                  </elementText>
+                  <elementText elementTextId="1675">
+                    <text>photo: 2011</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="41">
+                <name>Description</name>
+                <description>An account of the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1676">
+                    <text>Kafka statue in Prague</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="47">
+                <name>Rights</name>
+                <description>Information about rights held in and over the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1677">
+                    <text>Statue: Jaroslav Róna (2003)</text>
+                  </elementText>
+                  <elementText elementTextId="1678">
+                    <text>Photo: Myrabella / Wikimedia Commons / CC-BY-SA-3.0</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+            </elementContainer>
+          </elementSet>
+        </elementSetContainer>
+      </file>
+    </fileContainer>
+    <itemType itemTypeId="12">
+      <name>Person</name>
+      <description>An individual.</description>
+      <elementContainer>
+        <element elementId="31">
+          <name>Birth Date</name>
+          <description/>
+          <elementTextContainer>
+            <elementText elementTextId="1666">
+              <text>3 July 1883</text>
+            </elementText>
+          </elementTextContainer>
+        </element>
+        <element elementId="33">
+          <name>Death Date</name>
+          <description/>
+          <elementTextContainer>
+            <elementText elementTextId="1667">
+              <text>3 June 1924</text>
+            </elementText>
+          </elementTextContainer>
+        </element>
+      </elementContainer>
+    </itemType>
+    <elementSetContainer>
+      <elementSet elementSetId="1">
+        <name>Dublin Core</name>
+        <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+        <elementContainer>
+          <element elementId="50">
+            <name>Title</name>
+            <description>A name given to the resource</description>
+            <elementTextContainer>
+              <elementText elementTextId="1665">
+                <text>Franz Kafka</text>
+              </elementText>
+            </elementTextContainer>
+          </element>
+        </elementContainer>
+      </elementSet>
+    </elementSetContainer>
+    <tagContainer>
+      <tag tagId="8">
+        <name>writer</name>
+      </tag>
+      <tag tagId="9">
+        <name>absurdism</name>
+      </tag>
+    </tagContainer>
+  </item>
+  <item itemId="464" public="0" featured="1">
+    <fileContainer>
+      <file fileId="491">
+        <src>https://upload.wikimedia.org/wikipedia/en/f/f9/TrialKafka.jpg</src>
+        <authentication>e06731cc9857daebeef712bf523d7006</authentication>
+        <elementSetContainer>
+          <elementSet elementSetId="1">
+            <name>Dublin Core</name>
+            <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+            <elementContainer>
+              <element elementId="50">
+                <name>Title</name>
+                <description>A name given to the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1661">
+                    <text>Franz Kafka : Der Prozess</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="40">
+                <name>Date</name>
+                <description>A point or period of time associated with an event in the lifecycle of the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1662">
+                    <text>1925</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="41">
+                <name>Description</name>
+                <description>An account of the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1663">
+                    <text>Front cover art for the book 1st edition</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+              <element elementId="47">
+                <name>Rights</name>
+                <description>Information about rights held in and over the resource</description>
+                <elementTextContainer>
+                  <elementText elementTextId="1664">
+                    <text>Verlag Die Schmiede, Berlin, 1925</text>
+                  </elementText>
+                </elementTextContainer>
+              </element>
+            </elementContainer>
+          </elementSet>
+        </elementSetContainer>
+      </file>
+    </fileContainer>
+    <itemType itemTypeId="1">
+      <name>Text</name>
+      <description>A resource consisting primarily of words for reading. Examples include books, letters, dissertations, poems, newspapers, articles, archives of mailing lists. Note that facsimiles or images of texts are still of the genre Text.</description>
+    </itemType>
+    <elementSetContainer>
+      <elementSet elementSetId="1">
+        <name>Dublin Core</name>
+        <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+        <elementContainer>
+          <element elementId="50">
+            <name>Title</name>
+            <description>A name given to the resource</description>
+            <elementTextContainer>
+              <elementText elementTextId="1656">
+                <text>Der Proceß</text>
+              </elementText>
+              <elementText elementTextId="1657">
+                <text>English: The Trial</text>
+              </elementText>
+            </elementTextContainer>
+          </element>
+          <element elementId="39">
+            <name>Creator</name>
+            <description>An entity primarily responsible for making the resource</description>
+            <elementTextContainer>
+              <elementText elementTextId="1658">
+                <text>Kafka, Franz</text>
+              </elementText>
+            </elementTextContainer>
+          </element>
+          <element elementId="40">
+            <name>Date</name>
+            <description>A point or period of time associated with an event in the lifecycle of the resource</description>
+            <elementTextContainer>
+              <elementText elementTextId="1659">
+                <text>1925</text>
+              </elementText>
+            </elementTextContainer>
+          </element>
+          <element elementId="41">
+            <name>Description</name>
+            <description>An account of the resource</description>
+            <elementTextContainer>
+              <elementText elementTextId="1660">
+                <text>A man seeks an inaccessible authority.</text>
+              </elementText>
+            </elementTextContainer>
+          </element>
+        </elementContainer>
+      </elementSet>
+    </elementSetContainer>
+    <tagContainer>
+      <tag tagId="1">
+        <name>book</name>
+      </tag>
+      <tag tagId="2">
+        <name>classic</name>
+      </tag>
+      <tag tagId="6">
+        <name>Czechoslovak Republic</name>
+      </tag>
+    </tagContainer>
+  </item>
+</itemContainer>

@@ -172,6 +172,24 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $this->_checkFolder();
     }
 
+    public function testXmlOmeka()
+    {
+        $uri = TEST_FILES_DIR
+            . DIRECTORY_SEPARATOR . 'Folder_Test_Xml_Omeka';
+
+        $parameters = array(
+            'extra_parameters' => array(
+                'base_url' => $uri,
+            ),
+        );
+
+        $this->_expectedXml = $this->_expectedBaseDir
+            . DIRECTORY_SEPARATOR . 'FolderTest_Xml_Omeka.xml';
+
+        $this->_prepareFolderTest($uri, $parameters);
+        $this->_checkFolder();
+    }
+
     public function testXmlMag()
     {
         $uri = TEST_FILES_DIR

@@ -410,6 +410,10 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
             'class' => 'ArchiveFolder_Mapping_Ods',
             'description' => __('Open Document Spreadsheet (extension: ".ods")'),
         );
+        $archiveFolderMappings['omeka'] = array(
+            'class' => 'ArchiveFolder_Mapping_XmlOmeka',
+            'description' => __('Omeka xml'),
+        );
         $archiveFolderMappings['mets'] = array(
             'class' => 'ArchiveFolder_Mapping_Mets',
             'description' => __('METS xml (with a profile compliant with Dublin Core)'),

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itemContainer xmlns="http://omeka.org/schemas/omeka-xml/v5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://omeka.org/schemas/omeka-xml/v5 http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd" uri="http://localhost/admin/items/browse?output=omeka-xml" accessDate="2016-08-15T00:00:00+02:00">
+  <miscellaneousContainer>
+    <pagination>
+      <pageNumber>1</pageNumber>
+      <perPage>100</perPage>
+      <totalResults>2</totalResults>
+    </pagination>
+  </miscellaneousContainer>
+  <item itemId="1" public="0" featured="1">
+    <fileContainer>
+      <file fileId="1">
+        <src>Basic/Image_Basic_1.jpg</src>
+        <authentication>761fbe12ae94847ebf0c455eaa45135b</authentication>
+      </file>
+      <file fileId="2">
+        <src>Basic/Image_Basic_2.png</src>
+        <authentication>1bd7d89e65f281ea52e1c4eceb16c6ac</authentication>
+      </file>
+    </fileContainer>
+    <collection collectionId="1" public="0" featured="0">
+      <elementSetContainer>
+        <elementSet elementSetId="1">
+          <name>Dublin Core</name>
+          <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+          <elementContainer>
+            <element elementId="50">
+              <name>Title</name>
+              <description>A name given to the resource</description>
+              <elementTextContainer>
+                <elementText elementTextId="3">
+                  <text>Collection Test (import of Omeka Xml)</text>
+                </elementText>
+              </elementTextContainer>
+            </element>
+          </elementContainer>
+        </elementSet>
+      </elementSetContainer>
+    </collection>
+    <elementSetContainer>
+      <elementSet elementSetId="1">
+        <name>Dublin Core</name>
+        <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+        <elementContainer>
+          <element elementId="50">
+            <name>Title</name>
+            <description>A name given to the resource</description>
+            <elementTextContainer>
+              <elementText elementTextId="1">
+                <text>Basic</text>
+              </elementText>
+            </elementTextContainer>
+          </element>
+        </elementContainer>
+      </elementSet>
+    </elementSetContainer>
+  </item>
+  <item itemId="2" public="1" featured="0">
+    <fileContainer>
+      <file fileId="3">
+        <src>image_Root_1.png</src>
+        <authentication>ecee876b9303776a855fe71c00282885</authentication>
+      </file>
+      <file fileId="4">
+        <src>image_Root_2.png</src>
+        <authentication>463209a1ccc7d6acf11b951b292d4191</authentication>
+      </file>
+    </fileContainer>
+    <elementSetContainer>
+      <elementSet elementSetId="1">
+        <name>Dublin Core</name>
+        <description>The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http://dublincore.org/documents/dces/.</description>
+        <elementContainer>
+          <element elementId="50">
+            <name>Title</name>
+            <description>A name given to the resource</description>
+            <elementTextContainer>
+              <elementText elementTextId="2">
+                <text>Root</text>
+              </elementText>
+            </elementTextContainer>
+          </element>
+        </elementContainer>
+      </elementSet>
+    </elementSetContainer>
+  </item>
+</itemContainer>
