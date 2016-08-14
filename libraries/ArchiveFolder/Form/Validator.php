@@ -58,7 +58,7 @@ class ArchiveFolder_Form_Validator extends Zend_Validate_Callback
      * @param string $value The value to check.
      * @return boolean
      */
-    public function validateExtraParameters($value)
+    static public function validateExtraParameters($value)
     {
         $value = trim($value);
         if (empty($value)) {
