@@ -956,12 +956,16 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         );
         foreach ($archiveRecordsToDelete as $archiveFolderRecord) {
             $record = get_record_by_id($archiveFolderRecord->record_type, $archiveFolderRecord->record_id);
+            $message = __('Removed record #%d/%d (%s #%d).',
+                $totalImportedRecords - $currentTotal + 1, $totalImportedRecords,
+                $archiveFolderRecord->record_type, $archiveFolderRecord->record_id);
             $total[$archiveFolderRecord->record_type]++;
             if ($record) {
                 $record->delete();
             }
             $archiveFolderRecord->delete();
             $this->setParameter('imported_records', --$currentTotal);
+            $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_DEBUG);
         }
 
         // Force to zero.
