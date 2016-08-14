@@ -21,16 +21,33 @@ class ArchiveFolder_Tool_ProcessXslt
     {
         $command = get_option('archive_folder_processor');
 
-            // The readability is a very common error, so it is checked separately.
-        if (!is_file($input) || !is_readable($input)) {
-            $msg = __('The input file "%s" is not readable.', $input);
+        // The readability is a very common error, so it is checked separately.
+        // Furthermore, the input should be local to be processed by php or cli.
+        $filepath = $input;
+        $isRemote = $this->_isRemote($input);
+        if ($isRemote) {
+            $filepath = tempnam(sys_get_temp_dir(), basename($input));
+            $result = file_put_contents($filepath, file_get_contents($input));
+            if (empty($result)) {
+                $msg = __('The remote file "%s" is not readable or empty.', $input);
+                throw new ArchiveFolder_Exception($msg);
+            }
+        }
+        elseif (!is_file($filepath) || !is_readable($filepath) || !filesize($filepath)) {
+            $msg = __('The input file "%s" is not readable.', $filepath);
             throw new ArchiveFolder_Exception($msg);
         }
 
         // Default is the internal xslt processor of php.
-        return empty($command)
-            ? $this->_processXsltViaPhp($input, $stylesheet, $output, $parameters)
-            : $this->_processXsltViaExternal($input, $stylesheet, $output, $parameters);
+        $result = empty($command)
+            ? $this->_processXsltViaPhp($filepath, $stylesheet, $output, $parameters)
+            : $this->_processXsltViaExternal($filepath, $stylesheet, $output, $parameters);
+
+        if ($isRemote) {
+            unlink($filepath);
+        }
+
+        return $result;
     }
 
     /**
@@ -82,13 +99,8 @@ class ArchiveFolder_Tool_ProcessXslt
     {
         $domDocument = new DomDocument;
 
-        // Default import via file system.
-        if (parse_url($filepath, PHP_URL_SCHEME) != 'http' && parse_url($filepath, PHP_URL_SCHEME) != 'https') {
-            $domDocument->load($filepath);
-        }
-
         // If xml file is over http, need to get it locally to process xslt.
-        else {
+        if ($this->_isRemote($filepath)) {
             $xmlContent = file_get_contents($filepath);
             if ($xmlContent === false) {
                 $message = __('Could not load "%s". Verify that you have rights to access this folder and subfolders.', $filepath);
@@ -99,6 +111,11 @@ class ArchiveFolder_Tool_ProcessXslt
                 throw new ArchiveFolder_Exception($message);
             }
             $domDocument->loadXML($xmlContent);
+        }
+
+        // Default import via file system.
+        else {
+            $domDocument->load($filepath);
         }
 
         return $domDocument;
@@ -138,5 +155,19 @@ class ArchiveFolder_Tool_ProcessXslt
         }
 
         return $output;
+    }
+
+    /**
+     * Determine if a uri is a remote url or a local path.
+     *
+     * @param string $uri
+     * @return boolean
+     */
+    private function _isRemote($uri)
+    {
+        return strpos($uri, 'http://') === 0
+            || strpos($uri, 'https://') === 0
+            || strpos($uri, 'ftp://') === 0
+            || strpos($uri, 'sftp://') === 0;
     }
 }
