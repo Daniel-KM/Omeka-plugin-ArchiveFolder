@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <documents>
-<record recordType="Item">
+<record name="my_obj_id_1" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Image #2 of Subdir B-B Alto</data>
@@ -12,7 +12,7 @@
       <data>::ExampleBasePath::/Folder_Test_Mets_Alto/my_obj_id_1</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/master/image_Subdir_B-B_1.png">
+  <record recordType="File" name="master/image_Subdir_B-B_1.png" file="::ExampleBasePath::/Folder_Test_Mets_Alto/master/image_Subdir_B-B_1.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Image #1 of Subdir B-B Alto</data>
@@ -40,7 +40,7 @@ Date: 2015-09-14
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/master/image_Subdir_B-B_2.png">
+  <record recordType="File" name="master/image_Subdir_B-B_2.png" file="::ExampleBasePath::/Folder_Test_Mets_Alto/master/image_Subdir_B-B_2.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Image #2 of Subdir B-B Alto</data>
@@ -68,7 +68,7 @@ Date: 2015-09-14
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_1.alto.xml">
+  <record recordType="File" name="ocr/image_Subdir_B-B_1.alto.xml" file="::ExampleBasePath::/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_1.alto.xml">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Image #1 of Subdir B-B Alto</data>
@@ -78,7 +78,7 @@ Date: 2015-09-14
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_2.alto.xml">
+  <record recordType="File" name="ocr/image_Subdir_B-B_2.alto.xml" file="::ExampleBasePath::/Folder_Test_Mets_Alto/ocr/image_Subdir_B-B_2.alto.xml">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Image #2 of Subdir B-B Alto</data>

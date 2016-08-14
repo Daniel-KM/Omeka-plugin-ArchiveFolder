@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <documents>
-<record recordType="Item">
+<record name="Dir_A/Directory_A.metadata.txt" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Title of the document of the Directory A (from "Directory_A.metadata.txt")</data>
@@ -23,7 +23,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
       <data>::ExampleBasePath::/Folder_Test/Dir_A/Directory_A.metadata.txt</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_1.png">
+  <record recordType="File" name="Dir_A/image_Dir_A_1.png" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_1.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>The Recto of the Image (Image Dir A 1)</data>
@@ -33,7 +33,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_2.png">
+  <record recordType="File" name="Dir_A/image_Dir_A_2.png" file="::ExampleBasePath::/Folder_Test/Dir_A/image_Dir_A_2.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>The verso of the Image (Image Dir A 2)</data>
@@ -45,7 +45,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   </record>
 </record>
 
-<record recordType="Item">
+<record name="Document 2" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Second document of "Directory_A.metadata.txt", without attached file</data>
@@ -59,7 +59,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
   </extra>
 </record>
 
-<record recordType="Item" itemType="Physical Object">
+<record name="Monument de la renaissance africaine" recordType="Item" itemType="Physical Object">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Monument de la renaissance africaine</data>
@@ -89,7 +89,7 @@ The spaces at the start of the fourth line, after the first two, are not trimmed
     <data name="Tags">Memorial</data>
     <data name="Tags">Statue</data>
   </extra>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/3/3a/Le_Monument_de_la_Renaissance_africaine.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/3/3a/Le_Monument_de_la_Renaissance_africaine.jpg" file="https://upload.wikimedia.org/wikipedia/commons/3/3a/Le_Monument_de_la_Renaissance_africaine.jpg">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>From the base of the monument</data>
@@ -230,7 +230,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
             </element>
         </elementSet>
     </record>
-<record recordType="Item">
+<record name="my_obj_id_1" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Test of Mets import via Archive Folder (from "Subdir_B-B.mets.xml")</data>
@@ -263,7 +263,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       <data>Public Domain</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_B/Subdir_B-B/image_Subdir_B-B_1.png">
+  <record recordType="File" name="Dir_B/Subdir_B-B/image_Subdir_B-B_1.png" file="::ExampleBasePath::/Folder_Test/Dir_B/Subdir_B-B/image_Subdir_B-B_1.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Image #1 of Subdir B-B</data>
@@ -273,7 +273,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_B/Subdir_B-B/image_Subdir_B-B_2.png">
+  <record recordType="File" name="Dir_B/Subdir_B-B/image_Subdir_B-B_2.png" file="::ExampleBasePath::/Folder_Test/Dir_B/Subdir_B-B/image_Subdir_B-B_2.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Image #2 of Subdir B-B</data>
@@ -285,7 +285,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </record>
 </record>
 
-<record recordType="Item" collection="Architectural Heritage" itemType="Still Image">
+<record recordType="Item" name="External_Metadata.ods:01" collection="Architectural Heritage" itemType="Still Image">
   <elementSet name="Dublin Core">
     <element name="Identifier">
       <data>Mont Saint-Michel</data>
@@ -313,7 +313,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <data name="tags">Abbey</data>
     <data name="tags">Monastery</data>
   </extra>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/France-Mont-Saint-Michel-1900_bordercropped.jpg/1200px-France-Mont-Saint-Michel-1900_bordercropped.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/France-Mont-Saint-Michel-1900_bordercropped.jpg/1200px-France-Mont-Saint-Michel-1900_bordercropped.jpg" file="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/France-Mont-Saint-Michel-1900_bordercropped.jpg/1200px-France-Mont-Saint-Michel-1900_bordercropped.jpg">
     <elementSet name="Dublin Core">
       <element name="Identifier">
         <data>Mont Saint-Michel f1</data>
@@ -342,7 +342,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </record>
 </record>
 
-<record recordType="Item" collection="Architectural Heritage" itemType="Still Image">
+<record recordType="Item" name="External_Metadata.ods:02" collection="Architectural Heritage" itemType="Still Image">
   <elementSet name="Dublin Core">
     <element name="Identifier">
       <data>Coliseum</data>
@@ -373,7 +373,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <data name="geolocation [address]"></data>
     <data name="tags">Amphitheatre</data>
   </extra>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/8/87/Exterior_of_the_Coliseum_Rome_Italy.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/8/87/Exterior_of_the_Coliseum_Rome_Italy.jpg" file="https://upload.wikimedia.org/wikipedia/commons/8/87/Exterior_of_the_Coliseum_Rome_Italy.jpg">
     <elementSet name="Dublin Core">
       <element name="Identifier">
         <data>Coliseum f1</data>
@@ -400,7 +400,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/b/b3/Fyodor_Matveyev_1.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/b/b3/Fyodor_Matveyev_1.jpg" file="https://upload.wikimedia.org/wikipedia/commons/b/b3/Fyodor_Matveyev_1.jpg">
     <elementSet name="Dublin Core">
       <element name="Identifier">
         <data>Coliseum f2</data>
@@ -422,7 +422,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </record>
 </record>
 
-<record recordType="Item">
+<record recordType="Item" name="External_Metadata.ods:03">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>0</data>
@@ -436,7 +436,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </elementSet>
 </record>
 
-<record recordType="Item" collection="Architectural Heritage" itemType="Still Image">
+<record recordType="Item" name="External_Metadata.ods:04" collection="Architectural Heritage" itemType="Still Image">
   <elementSet name="Dublin Core">
     <element name="Identifier">
       <data>Saint-Louis Cathedral</data>
@@ -454,7 +454,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </elementSet>
 </record>
 
-<record recordType="Collection">
+<record recordType="Collection" name="External_Metadata.ods:05">
   <elementSet name="Dublin Core">
     <element name="Identifier">
       <data>Architectural Heritage</data>
@@ -469,7 +469,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </elementSet>
 </record>
 
-<record recordType="Item" collection="Example of new created collection" itemType="Still Image">
+<record recordType="Item" name="External_Metadata.ods:06" collection="Example of new created collection" itemType="Still Image">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Example of simple item from "manage_one.csv"</data>
@@ -487,11 +487,11 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       <data>::ExampleBasePath::/Folder_Test/External_Metadata.ods%3A06</data>
     </element>
   </elementSet>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/a/a2/16_Franken_1800_HR_681735.jpg"/>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/6/6d/1935_Indian_Head_Buffalo_Nickel.jpg"/>
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/a/a2/16_Franken_1800_HR_681735.jpg" file="https://upload.wikimedia.org/wikipedia/commons/a/a2/16_Franken_1800_HR_681735.jpg"/>
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/6/6d/1935_Indian_Head_Buffalo_Nickel.jpg" file="https://upload.wikimedia.org/wikipedia/commons/6/6d/1935_Indian_Head_Buffalo_Nickel.jpg"/>
 </record>
 
-<record recordType="Item">
+<record name="Item #1" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Type">
       <data>Still Image</data>
@@ -525,7 +525,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <data name="tags">Protest</data>
     <data name="tags">Commemoration</data>
   </extra>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/7/7f/UCT_Cape_Town_-_Statue_of_Rhodes.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/7/7f/UCT_Cape_Town_-_Statue_of_Rhodes.jpg" file="https://upload.wikimedia.org/wikipedia/commons/7/7f/UCT_Cape_Town_-_Statue_of_Rhodes.jpg">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>UCT Cape Town - Statue of Rhodes</data>
@@ -544,7 +544,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/3/37/Cecil_John_Rhodes_looking_over_Cape_Town_%287347447748%29.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/3/37/Cecil_John_Rhodes_looking_over_Cape_Town_%287347447748%29.jpg" file="https://upload.wikimedia.org/wikipedia/commons/3/37/Cecil_John_Rhodes_looking_over_Cape_Town_%287347447748%29.jpg">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Statue of Cecil Rhodes at the University of Cape Town</data>
@@ -562,7 +562,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </record>
 </record>
 
-<record recordType="Item">
+<record name="2" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Type">
       <data>Still Image</data>
@@ -595,7 +595,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <data name="geolocation [map_type]">hybrid</data>
     <data name="geolocation [address]"></data>
   </extra>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/6/66/Monument_Reunification.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/6/66/Monument_Reunification.jpg" file="https://upload.wikimedia.org/wikipedia/commons/6/66/Monument_Reunification.jpg">
     <elementSet name="Dublin Core">
       <element name="Creator">
         <data>Steve Mvondo</data>
@@ -614,7 +614,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/7/71/Monument_de_la_R%C3%A9unification.JPG">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/7/71/Monument_de_la_R%C3%A9unification.JPG" file="https://upload.wikimedia.org/wikipedia/commons/7/71/Monument_de_la_R%C3%A9unification.JPG">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Monument de la Réunification</data>
@@ -630,7 +630,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/3/3c/YaoundeReunificationStatue.png">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/3/3c/YaoundeReunificationStatue.png" file="https://upload.wikimedia.org/wikipedia/commons/3/3c/YaoundeReunificationStatue.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Yaounde Reunification Statue</data>
@@ -646,7 +646,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/9/95/Monument_Reunification_6.JPG">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/9/95/Monument_Reunification_6.JPG" file="https://upload.wikimedia.org/wikipedia/commons/9/95/Monument_Reunification_6.JPG">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Monument de la Réunification du Cameroun Yaoundé</data>
@@ -664,7 +664,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </record>
 </record>
 
-<record recordType="Item">
+<record recordType="Item" name="External_Metadata.ods:09">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Lion of Judah Monument</data>
@@ -689,10 +689,10 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <data name="geolocation [map_type]">hybrid</data>
     <data name="geolocation [address]"></data>
   </extra>
-  <record recordType="File" file="http://worldpics.com.au/Ethiopia/addisababa/slides/1973021201.jpg"/>
+  <record recordType="File" name="http://worldpics.com.au/Ethiopia/addisababa/slides/1973021201.jpg" file="http://worldpics.com.au/Ethiopia/addisababa/slides/1973021201.jpg"/>
 </record>
 
-<record recordType="Item">
+<record recordType="Item" name="External_Metadata.ods:010">
   <elementSet name="Dublin Core">
     <element name="Type">
       <data>Still Image</data>
@@ -714,10 +714,10 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <data name="geolocation [map_type]">hybrid</data>
     <data name="geolocation [address]"></data>
   </extra>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/f/fd/Livingstone_monument_burundi.jpg"/>
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/f/fd/Livingstone_monument_burundi.jpg" file="https://upload.wikimedia.org/wikipedia/commons/f/fd/Livingstone_monument_burundi.jpg"/>
 </record>
 
-<record recordType="Item">
+<record recordType="Item" name="External_Metadata.ods:011">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Sphinx</data>
@@ -733,8 +733,8 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
     <data name="geolocation [map_type]">hybrid</data>
     <data name="geolocation [address]"></data>
   </extra>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/9/94/Brooklyn_Museum_-_Egypt_Gizeh.jpg"/>
-  <record recordType="File" file="https://upload.wikimedia.org/wikipedia/commons/d/de/Paris_H%C3%B4tel_de_Ville_2497_07.jpg">
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/9/94/Brooklyn_Museum_-_Egypt_Gizeh.jpg" file="https://upload.wikimedia.org/wikipedia/commons/9/94/Brooklyn_Museum_-_Egypt_Gizeh.jpg"/>
+  <record recordType="File" name="https://upload.wikimedia.org/wikipedia/commons/d/de/Paris_H%C3%B4tel_de_Ville_2497_07.jpg" file="https://upload.wikimedia.org/wikipedia/commons/d/de/Paris_H%C3%B4tel_de_Ville_2497_07.jpg">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>Female sphinx on the tower of the Town Hall of Paris</data>
@@ -757,7 +757,7 @@ To try the update of the folder by the OAI-PMH harvester, replace the file "Dir_
   </record>
 </record>
 
-<record recordType="Item">
+<record recordType="Item" name="External_Metadata.ods:012">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>The description of this document from "External_Metadata.ods" has multiple lines.</data>
@@ -775,7 +775,7 @@ The item has two files without specific metadata.</data>
   </elementSet>
 </record>
 
-<record recordType="Item">
+<record name="First document" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Title of the document of the Directory B (from “OpenDocument_Metadata_Dir_B.odt”)</data>
@@ -795,7 +795,7 @@ This is the second line of the description, after a line break.</data>
       <data>::ExampleBasePath::/Folder_Test/First%20document</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_B/image_Dir_B_1.png">
+  <record recordType="File" name="Dir_B/image_Dir_B_1.png" file="::ExampleBasePath::/Folder_Test/Dir_B/image_Dir_B_1.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>The recto of the Image (Image Dir B #1)</data>
@@ -805,7 +805,7 @@ This is the second line of the description, after a line break.</data>
       </element>
     </elementSet>
   </record>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Dir_B/image_Dir_B_2.png">
+  <record recordType="File" name="Dir_B/image_Dir_B_2.png" file="::ExampleBasePath::/Folder_Test/Dir_B/image_Dir_B_2.png">
     <elementSet name="Dublin Core">
       <element name="Title">
         <data>The verso of the Image (Image Dir B #2)</data>
@@ -817,7 +817,7 @@ This is the second line of the description, after a line break.</data>
   </record>
 </record>
 
-<record recordType="Item">
+<record name="Another Document" recordType="Item">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Second document of “OpenDocument_Metadata_Dir_B.odt”, without attached file</data>
@@ -834,20 +834,20 @@ This is the second line of the description, after a line break.</data>
   </extra>
 </record>
 
-<record recordType="Item">
+<record recordType="Item" name="[root]">
   <elementSet name="Dublin Core">
     <element name="Title">
-      <data>/</data>
+      <data>[root]</data>
     </element>
     <element name="Identifier">
-      <data>::ExampleBasePath::/Folder_Test/</data>
+      <data>::ExampleBasePath::/Folder_Test/%5Broot%5D</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/image_Root_1.png"/>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/image_Root_2.png"/>
+  <record recordType="File" name="image_Root_1.png" file="::ExampleBasePath::/Folder_Test/image_Root_1.png"/>
+  <record recordType="File" name="image_Root_2.png" file="::ExampleBasePath::/Folder_Test/image_Root_2.png"/>
 </record>
 
-<record recordType="Item">
+<record recordType="Item" name="Basic">
   <elementSet name="Dublin Core">
     <element name="Title">
       <data>Basic</data>
@@ -856,7 +856,7 @@ This is the second line of the description, after a line break.</data>
       <data>::ExampleBasePath::/Folder_Test/Basic</data>
     </element>
   </elementSet>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Basic/Image_Basic_1.jpg"/>
-  <record recordType="File" file="::ExampleBasePath::/Folder_Test/Basic/Image_Basic_2.png"/>
+  <record recordType="File" name="Basic/Image_Basic_1.jpg" file="::ExampleBasePath::/Folder_Test/Basic/Image_Basic_1.jpg"/>
+  <record recordType="File" name="Basic/Image_Basic_2.png" file="::ExampleBasePath::/Folder_Test/Basic/Image_Basic_2.png"/>
 </record>
 </documents>
