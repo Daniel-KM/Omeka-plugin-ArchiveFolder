@@ -31,15 +31,18 @@
                             <xs:element ref="dc:any"/>
                             <xs:element ref="dcterms:any"/>
                         </xs:choice>
+                        <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="recordType" type="xs:string"/>
                         <xs:attribute name="file" type="xs:anyURI" use="required"/>
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
             <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="recordType" type="xs:string"/>
             <xs:attribute name="collection" type="xs:string"/>
             <xs:attribute name="itemType" type="xs:string"/>
-            <xs:attribute name="featured" type="xs:boolean"/>
             <xs:attribute name="public" type="xs:boolean"/>
+            <xs:attribute name="featured" type="xs:boolean"/>
             <xs:attribute name="action">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
