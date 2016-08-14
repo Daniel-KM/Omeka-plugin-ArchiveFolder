@@ -15,11 +15,12 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
     const DCTERMS_PREFIX = 'dcterms';
     const DCTERMS_NAMESPACE = 'http://purl.org/dc/terms/';
 
-    protected $_checkMetadataFile = array('extension', 'xml');
+    protected $_checkMetadataFile = array('extension', 'root xml');
     protected $_extension = 'xml';
     protected $_formatXml = self::XML_PREFIX;
     protected $_xmlRoot = self::XML_ROOT;
     protected $_xmlNamespace = self::XML_NAMESPACE;
+    protected $_xmlPrefix = self::XML_PREFIX;
 
     // Current doc for internal purposes.
     protected $_doc;
@@ -46,9 +47,9 @@ class ArchiveFolder_Mapping_Document extends ArchiveFolder_Mapping_Abstract
             $doc = $this->getDocument($record, true);
 
             // Add a name.
-            $doc['process']['name'] = isset($doc['process']['name'])
-                ? $doc['process']['name']
-                : $nameBase . '-' . ($key + 1);
+            if (!isset($doc['process']['name'])) {
+                $doc['process']['name'] = $nameBase . '-' . ($key + 1);
+            }
 
             // All records are imported: no check if empty.
             $recordDom = dom_import_simplexml($record);

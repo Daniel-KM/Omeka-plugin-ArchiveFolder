@@ -369,6 +369,7 @@ class ArchiveFolder_Builder
                         throw new ArchiveFolder_BuilderException(__('The document "%s" has an issue: %s', $filepath, $e->getMessage()));
                     }
                     $documents = array_merge($documents, $metadataDocs);
+                    break;
                 }
             }
         }

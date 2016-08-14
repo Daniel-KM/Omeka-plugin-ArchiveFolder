@@ -20,7 +20,7 @@ class ArchiveFolder_Format_Document extends ArchiveFolder_Format_Abstract
     protected $_metadataPrefix = self::METADATA_PREFIX;
     protected $_metadataSchema = self::METADATA_SCHEMA;
     protected $_metadataNamespace = self::METADATA_NAMESPACE;
-    protected $_root = self::XML_ROOT;
+    protected $_xmlRoot = self::XML_ROOT;
 
     protected $_parametersFormat = array(
         // Force the dc terms.
@@ -33,7 +33,7 @@ class ArchiveFolder_Format_Document extends ArchiveFolder_Format_Abstract
     public function startRoot()
     {
         $writer = $this->_writer;
-        $writer->startElement(self::XML_ROOT);
+        $writer->startElement($this->_xmlRoot);
         // $writer->writeAttribute('xmlns', self::METADATA_NAMESPACE);
         // $writer->writeAttribute('xmlns:' . self::DC_PREFIX, self::DC_NAMESPACE);
         // $writer->writeAttribute('xmlns:' . self::DCTERMS_PREFIX, self::DCTERMS_NAMESPACE);

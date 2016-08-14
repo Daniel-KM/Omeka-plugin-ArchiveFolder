@@ -51,8 +51,12 @@ abstract class ArchiveFolder_Mapping_Abstract
     protected $_formatXml;
     protected $_xmlRoot = '';
     protected $_xmlNamespace = '';
+    protected $_xmlPrefix = '';
+    protected $_xslMain = '';
     // The content of the file via SimpleXML.
     protected $_xml;
+    // This tool is used only when the xsl generates an xml document.
+    protected $_mappingDocument;
 
     // List of the Dublin Core terms. Can be enlarged to qualified ones.
     protected $_dcTerms = array(
@@ -162,6 +166,7 @@ abstract class ArchiveFolder_Mapping_Abstract
                 'extension' => $this->_extension,
                 'xmlRoot' => $this->_xmlRoot,
                 'xmlNamespace' => $this->_xmlNamespace,
+                'xmlPrefix' => $this->_xmlPrefix,
         ));
     }
 
@@ -250,6 +255,40 @@ abstract class ArchiveFolder_Mapping_Abstract
      * Prepare the list of documents set inside the current metadata file.
      */
     abstract protected function _prepareDocuments();
+
+    /**
+     * When an xsl creates a generic xml document, the process can be automatic.
+     */
+    protected function _prepareXmlDocuments()
+    {
+        $this->_mappingDocument = new ArchiveFolder_Mapping_Document($this->_uri, $this->_parameters);
+
+        $this->_processedFiles[$this->_metadataFilepath] = array();
+        $documents = &$this->_processedFiles[$this->_metadataFilepath];
+
+        // If the xml is too large, the php memory may be increased so it can be
+        // processed directly via SimpleXml.
+        $this->_xml = simplexml_load_file($this->_metadataFilepath, 'SimpleXMLElement', LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_PARSEHUGE);
+        if ($this->_xml === false) {
+            return;
+        }
+
+        // Only one document by mets file is managed (the main use of Mag).
+        $doc = &$this->_doc;
+
+        $this->_xml->registerXPathNamespace($this->_xmlPrefix, $this->_xmlNamespace);
+
+        $extraParameters = $this->_getParameter('extra_parameters');
+
+        // Process the xml file via the stylesheet.
+        $xmlpath = $this->_processXslt($this->_metadataFilepath, $this->_xslMain, '', $extraParameters);
+        if (filesize($xmlpath) == 0) {
+            return;
+        }
+
+        // Now, the xml is a standard document, so process it with the class.
+        $documents = $this->_mappingDocument->listDocuments($xmlpath);
+    }
 
     /**
      * Convert one record (e.g. one row of a spreadsheet) into a document.
@@ -345,7 +384,7 @@ abstract class ArchiveFolder_Mapping_Abstract
      * No default is added here, except the record type.
      *
      * @param array $document The document to normalize.
-     * @param array $recordType Optinoal The record type if not set
+     * @param array $recordType Optional The record type if not set
      * @return array The normalized document.
      */
     protected function _normalizeDocument($document, $recordType = null)
@@ -403,11 +442,12 @@ abstract class ArchiveFolder_Mapping_Abstract
                     : 'Item';
             }
         }
+
         // Normalize and check the record type.
         $recordType = ucfirst(strtolower($document['process']['record type']));
         if (!in_array($recordType, array('File', 'Item', 'Collection'))) {
-            throw new ArchiveFolder_BuilderException(__('The record type "%s" does not exist.',
-                $document['extra']['record type']));
+            throw new ArchiveFolder_BuilderException(__('The record type "%s" is not managed.',
+                $document['process']['record type']));
         }
         $document['process']['record type'] = $recordType;
 

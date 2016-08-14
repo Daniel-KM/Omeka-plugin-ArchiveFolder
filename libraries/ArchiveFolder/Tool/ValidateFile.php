@@ -76,28 +76,90 @@ class ArchiveFolder_Tool_ValidateFile
     }
 
     /**
+     * Quick check if the current file is a xml metadata one.
+     *
+     * @param string $filepath
+     * @param array $args
+     * @return boolean
+     */
+    protected function _checkQuickXml($filepath, $args)
+    {
+        // XmlReader is the quickest and the simplest for such a check, localy
+        // or remotely.
+        $reader = new XMLReader;
+        $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
+        $reader->close();
+        return $result;
+    }
+
+    /**
      * Check if the current file is a xml metadata one, without validation.
      *
      * @param string $filepath
      * @param array $args Specific value needed: xmlRoot.
      * @return boolean
      */
-    protected function _checkXml($filepath, $args)
+    protected function _checkRootXml($filepath, $args)
     {
         $xmlRoot = $args['xmlRoot'];
         if (empty($xmlRoot)) {
             return false;
         }
+
         // XmlReader is the quickest and the simplest for such a check, localy
         // or remotely.
         $reader = new XMLReader;
         $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
         if ($result) {
+            // The xml prefix may or may not be used.
+            // TODO Use the prefix used in the xml file for the specified namespace.
+            $xmlPrefix = $args['xmlPrefix'];
+            $xmlPrefixRoot = empty($xmlPrefix) ? '' : $xmlPrefix . ':' . $xmlRoot;
+
             $result = false;
             while ($reader->read()) {
                 if ($reader->name != '#comment') {
-                    $result = $reader->name === $xmlRoot;
+                    $result = $reader->name === $xmlRoot
+                        || ($xmlPrefixRoot && $reader->name === $xmlPrefixRoot);
                     break;
+                }
+            }
+        }
+        $reader->close();
+        return $result;
+    }
+
+    /**
+     * Validate the namespace of a file, without checking root.
+     *
+     * @param string $filepath
+     * @param array $args
+     * @return boolean
+     */
+    protected function _checkNamespaceXml($filepath, $args)
+    {
+        $xmlNamespace = $args['xmlNamespace'];
+        if (empty($xmlNamespace)) {
+            return false;
+        }
+
+        // XmlReader is the quickest and the simplest for such a check, localy
+        // or remotely.
+        $reader = new XMLReader;
+        $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
+        if ($result) {
+            // The xml prefix may or may not be used.
+            // TODO Use the prefix used in the xml file for the specified namespace.
+            $xmlPrefix = $args['xmlPrefix'];
+            $xmlPrefixNs = empty($xmlPrefix) ? '' : 'xmlns:' . $xmlPrefix;
+
+            $result = false;
+            while ($reader->read()) {
+                if ($reader->name != '#comment') {
+                    $result = $reader->getAttribute('xmlns') === $xmlNamespace
+                        || ($xmlPrefixNs
+                            && $reader->getAttribute($xmlPrefixNs) === $xmlNamespace);
+                        break;
                 }
             }
         }
@@ -119,16 +181,33 @@ class ArchiveFolder_Tool_ValidateFile
         if (empty($xmlRoot) || empty($xmlNamespace)) {
             return false;
         }
+
         // XmlReader is the quickest and the simplest for such a check, localy
         // or remotely.
         $reader = new XMLReader;
         $result = $reader->open($filepath, null, LIBXML_NSCLEAN);
         if ($result) {
+            // The xml prefix may or may not be used.
+            // TODO Use the prefix used in the xml file for the specified namespace.
+            $xmlPrefix = $args['xmlPrefix'];
+            if (empty($xmlPrefix)) {
+                $xmlPrefixNs = '';
+                $xmlPrefixRoot = '';
+            }
+            // Check the existing prefix.
+            else {
+                $xmlPrefixNs = 'xmlns:' . $xmlPrefix;
+                $xmlPrefixRoot = $xmlPrefix . ':' . $xmlRoot;
+            }
+
             $result = false;
             while ($reader->read()) {
                 if ($reader->name != '#comment') {
-                    $result = $reader->name === $xmlRoot
-                        &&  $reader->getAttribute('xmlns') === $xmlNamespace;
+                    $result = ($reader->name === $xmlRoot
+                            && $reader->getAttribute('xmlns') === $xmlNamespace)
+                        || ($xmlPrefixNs
+                            && $reader->name === $xmlPrefixRoot
+                            && $reader->getAttribute($xmlPrefixNs) === $xmlNamespace);
                     break;
                 }
             }

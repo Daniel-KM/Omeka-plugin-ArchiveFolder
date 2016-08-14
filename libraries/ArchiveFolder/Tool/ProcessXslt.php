@@ -21,6 +21,9 @@ class ArchiveFolder_Tool_ProcessXslt
     {
         $command = get_option('archive_folder_processor');
 
+        // Parameters should not be null.
+        $parameters = $parameters ?: array();
+
         // The readability is a very common error, so it is checked separately.
         // Furthermore, the input should be local to be processed by php or cli.
         $filepath = $input;

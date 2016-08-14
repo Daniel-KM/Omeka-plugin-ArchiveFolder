@@ -16,7 +16,7 @@ abstract class ArchiveFolder_Format_Abstract
     protected $_metadataNamespace;
 
     // The root of the xml document.
-    protected $_root = 'XMLROOT';
+    protected $_xmlRoot = 'XMLROOT';
 
     // Tools that will be used.
     protected $_managePaths;
@@ -146,7 +146,7 @@ abstract class ArchiveFolder_Format_Abstract
     public function startRoot()
     {
         $writer = $this->_writer;
-        $writer->startElement($this->_root);
+        $writer->startElement($this->_xmlRoot);
         $writer->writeAttribute('xmlns', $this->_metadataNamespace);
         $writer->writeAttribute('xmlns:' . self::XSI_PREFIX, self::XSI_NAMESPACE);
         $writer->writeAttribute('xsi:schemaLocation', $this->_metadataNamespace . ' ' . $this->_metadataSchema);
