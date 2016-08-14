@@ -338,6 +338,7 @@ abstract class ArchiveFolder_Mapping_Abstract
             }
 
             if (empty($document['files'])) {
+                $document['files'] = array();
                 continue;
             }
             foreach ($document['files'] as $order => &$file) {
