@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mag:metadigit xmlns:mag="http://www.iccu.sbn.it/metaAG1.pdf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:niso="http://www.niso.org/pdfs/DataDict.pdf" xmlns:xlink="http://www.w3.org/TR/xlink" version="2.0.1">
+  <mag:gen last_update="2015-11-16T00:00:01" creation="2015-11-16T00:00:00">
+    <mag:stprog>Mag Program</mag:stprog>
+    <mag:collection>Mag Collection</mag:collection>
+    <mag:agency>Mag Agency</mag:agency>
+    <mag:access_rights>1</mag:access_rights>
+    <mag:completeness>0</mag:completeness>
+  </mag:gen>
+  <mag:bib level="m">
+    <dc:identifier>sb1</dc:identifier>
+    <dc:title>Title of the digitalized book</dc:title>
+    <dc:creator>Anonymous</dc:creator>
+    <dc:date>2015</dc:date>
+    <dc:type>Manuscript</dc:type>
+    <dc:format>21 cm</dc:format>
+    <dc:language>French</dc:language>
+    <dc:coverage>France</dc:coverage>
+    <dc:rights>Public Domain</dc:rights>
+    <mag:holdings>
+      <mag:library>My Library</mag:library>
+      <mag:inventory_number>1984</mag:inventory_number>
+      <mag:shelfmark>Shelf Book 1</mag:shelfmark>
+    </mag:holdings>
+  </mag:bib>
+  <mag:img>
+    <mag:sequence_number>0001</mag:sequence_number>
+    <mag:nomenclature>copertina.0001</mag:nomenclature>
+    <mag:usage>1</mag:usage>
+    <mag:scale>0</mag:scale>
+    <mag:file xlink:type="simple" xlink:href="sb1/mag_1.png" Location="URL"/>
+    <mag:md5>3091eb05f41b748451c9fa45d74d8f64</mag:md5>
+    <mag:filesize>10454</mag:filesize>
+    <mag:image_dimensions>
+      <niso:imagelength>640</niso:imagelength>
+      <niso:imagewidth>480</niso:imagewidth>
+    </mag:image_dimensions>
+    <mag:image_metrics>
+      <niso:samplingfrequencyunit>2</niso:samplingfrequencyunit>
+      <niso:samplingfrequencyplane>1</niso:samplingfrequencyplane>
+      <niso:xsamplingfrequency>96</niso:xsamplingfrequency>
+      <niso:ysamplingfrequency>96</niso:ysamplingfrequency>
+      <niso:photometricinterpretation>RGB</niso:photometricinterpretation>
+      <niso:bitpersample>8,8,8</niso:bitpersample>
+    </mag:image_metrics>
+    <mag:format>
+      <niso:name>PNG</niso:name>
+      <niso:mime>image/png</niso:mime>
+      <niso:compression>PNG</niso:compression>
+    </mag:format>
+  </mag:img>
+  <mag:img>
+    <mag:sequence_number>0002</mag:sequence_number>
+    <mag:nomenclature>cartaguardia.0001</mag:nomenclature>
+    <mag:usage>1</mag:usage>
+    <mag:scale>0</mag:scale>
+    <mag:file xlink:type="simple" xlink:href="sb1/mag_2.png" Location="URL"/>
+    <mag:md5>e67780cfca99e0e274b750c0329f8591</mag:md5>
+    <mag:filesize>11415</mag:filesize>
+    <mag:image_dimensions>
+      <niso:imagelength>640</niso:imagelength>
+      <niso:imagewidth>480</niso:imagewidth>
+    </mag:image_dimensions>
+    <mag:image_metrics>
+      <niso:samplingfrequencyunit>2</niso:samplingfrequencyunit>
+      <niso:samplingfrequencyplane>1</niso:samplingfrequencyplane>
+      <niso:xsamplingfrequency>96</niso:xsamplingfrequency>
+      <niso:ysamplingfrequency>96</niso:ysamplingfrequency>
+      <niso:photometricinterpretation>RGB</niso:photometricinterpretation>
+      <niso:bitpersample>8,8,8</niso:bitpersample>
+    </mag:image_metrics>
+    <mag:format>
+      <niso:name>PNG</niso:name>
+      <niso:mime>image/png</niso:mime>
+      <niso:compression>PNG</niso:compression>
+    </mag:format>
+  </mag:img>
+</mag:metadigit>

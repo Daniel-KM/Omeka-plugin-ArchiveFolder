@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents>
+<record recordType="Item" name="-1" collection="Mag Collection" public="1" itemType="Text">
+  <elementSet name="Dublin Core">
+    <element name="Type">
+      <data>monografia</data>
+      <data>Manuscript</data>
+    </element>
+    <element name="Identifier">
+      <data>sb1</data>
+      <data>Library: My Library</data>
+      <data>Inventory number: 1984</data>
+      <data>Shelf mark: Shelf Book 1</data>
+    </element>
+    <element name="Title">
+      <data>Title of the digitalized book</data>
+    </element>
+    <element name="Creator">
+      <data>Anonymous</data>
+    </element>
+    <element name="Date">
+      <data>2015</data>
+    </element>
+    <element name="Format">
+      <data>21 cm</data>
+    </element>
+    <element name="Language">
+      <data>French</data>
+    </element>
+    <element name="Coverage">
+      <data>France</data>
+    </element>
+    <element name="Rights">
+      <data>Public Domain</data>
+    </element>
+  </elementSet>
+  <record recordType="File" name="sb1/mag_1.png" file="::ExampleBasePath::/Folder_Test_Xml_Mag/sb1/mag_1.png" authentication="3091eb05f41b748451c9fa45d74d8f64">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>Copertina 1</data>
+      </element>
+      <element name="Format">
+        <data>12.75 x 17 cm</data>
+        <data>480 x 640 pixels</data>
+        <data>image/png</data>
+      </element>
+      <element name="Identifier">
+        <data>sb1_0001</data>
+        <data>copertina.0001</data>
+      </element>
+    </elementSet>
+    <extra>
+      <data name="order">1</data>
+      <data name="filesize">10454</data>
+    </extra>
+  </record>
+  <record recordType="File" name="sb1/mag_2.png" file="::ExampleBasePath::/Folder_Test_Xml_Mag/sb1/mag_2.png" authentication="e67780cfca99e0e274b750c0329f8591">
+    <elementSet name="Dublin Core">
+      <element name="Title">
+        <data>Cartaguardia 1</data>
+      </element>
+      <element name="Format">
+        <data>12.75 x 17 cm</data>
+        <data>480 x 640 pixels</data>
+        <data>image/png</data>
+      </element>
+      <element name="Identifier">
+        <data>sb1_0002</data>
+        <data>cartaguardia.0001</data>
+      </element>
+    </elementSet>
+    <extra>
+      <data name="order">2</data>
+      <data name="filesize">11415</data>
+    </extra>
+  </record>
+</record>
+</documents>

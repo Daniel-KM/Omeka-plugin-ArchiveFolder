@@ -39,6 +39,9 @@ class ArchiveFolder_Test_AppTestCase extends Omeka_Test_AppTestCase
         'Folder_Test_Importer' => array(
             array('doc' => 'documents.xml'),
         ),
+        'Folder_Test_Xml_Mag' => array(
+            array('mag' => 'sb1.mag.xml'),
+        ),
     );
 
     // List of black-listed files ordered by folder.

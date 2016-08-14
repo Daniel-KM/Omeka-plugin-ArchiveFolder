@@ -172,6 +172,24 @@ class ArchiveFolder_BuilderTest extends ArchiveFolder_Test_AppTestCase
         $this->_checkFolder();
     }
 
+    public function testXmlMag()
+    {
+        $uri = TEST_FILES_DIR
+            . DIRECTORY_SEPARATOR . 'Folder_Test_Xml_Mag';
+
+        $parameters = array(
+            'extra_parameters' => array(
+                'base_url' => $uri,
+            ),
+        );
+
+        $this->_expectedXml = $this->_expectedBaseDir
+            . DIRECTORY_SEPARATOR . 'FolderTest_Xml_Mag.xml';
+
+        $this->_prepareFolderTest($uri, $parameters);
+        $this->_checkFolder();
+    }
+
     public function testNonLatinCharactersLocal()
     {
         $uri = TEST_FILES_DIR

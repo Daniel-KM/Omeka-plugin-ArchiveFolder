@@ -414,6 +414,10 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
             'class' => 'ArchiveFolder_Mapping_Mets',
             'description' => __('METS xml (with a profile compliant with Dublin Core)'),
         );
+        $archiveFolderMappings['mag'] = array(
+            'class' => 'ArchiveFolder_Mapping_XmlMag',
+            'description' => __('MAG xml'),
+        );
 
         return array_merge($archiveFolderMappings, $mappings);
     }
