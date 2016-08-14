@@ -138,7 +138,11 @@ echo head(array(
                         <a href="<?php echo html_escape($actionUri); ?>" class="process button green"><?php echo $action; ?></a>
                         <?php
 
-                                    if (!in_array($folder->status, array(ArchiveFolder_Folder::STATUS_ADDED, ArchiveFolder_Folder::STATUS_COMPLETED))):
+                                    if (!in_array($folder->status, array(
+                                            ArchiveFolder_Folder::STATUS_ADDED,
+                                            ArchiveFolder_Folder::STATUS_RESET,
+                                            ArchiveFolder_Folder::STATUS_COMPLETED,
+                                        ))):
                                         $actionUri = $this->url(array(
                                                 'action' => 'reset-status',
                                                 'id' => $folder->id,
