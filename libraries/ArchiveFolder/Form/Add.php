@@ -204,6 +204,7 @@ class ArchiveFolder_Form_Add extends Omeka_Form
                 'exclude_extensions',
                 'allow_no_extension',
                 'item_type_id',
+                'add_relations',
             ),
             'archive_folder_records',
             array(
