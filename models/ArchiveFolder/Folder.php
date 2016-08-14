@@ -601,10 +601,10 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
                 $jobDispatcher->send('ArchiveFolder_UpdateJob', $options);
             } catch (Exception $e) {
                 $message = __('Error when processing folder.');
-                $folder->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
-                $folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
-                _log('[ArchiveFolder] ' . __('Folder "%s" (#%d): %s',
-                    $folder->uri, $folder->id, $message), Zend_Log::ERR);
+                $this->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
+                $this->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
+                _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
+                    $this->id, $this->uri, $message), Zend_Log::ERR);
                 $flash->addMessage($message, 'error');
                 return false;
             }

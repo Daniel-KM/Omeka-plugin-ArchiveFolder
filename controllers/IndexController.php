@@ -216,8 +216,8 @@ class ArchiveFolder_IndexController extends Omeka_Controller_AbstractActionContr
                 $message = __('Error when processing folder.');
                 $folder->setStatus(ArchiveFolder_Folder::STATUS_ERROR);
                 $folder->addMessage($message, ArchiveFolder_Folder::MESSAGE_CODE_ERROR);
-                _log('[ArchiveFolder] ' . __('Folder "%s" (#%d): %s',
-                    $folder->uri, $folder->id, $message), Zend_Log::ERR);
+                _log('[ArchiveFolder] ' . __('Folder #%d [%s]: %s',
+                    $folder->id, $folder->uri, $message), Zend_Log::ERR);
                 $this->_helper->flashMessenger($message, 'error');
                 return false;
             }
