@@ -131,6 +131,7 @@
                 </xsl:attribute>
             </xsl:if>
             <xsl:apply-templates select="omeka:elementSetContainer" />
+            <xsl:apply-templates select="omeka:itemType" />
             <xsl:apply-templates select="omeka:tagContainer" />
             <xsl:apply-templates select="omeka:fileContainer" />
         </xsl:element>
@@ -198,6 +199,15 @@
     <xsl:template match="omeka:elementText/omeka:text">
         <xsl:element name="data">
             <xsl:apply-templates select="node()" />
+        </xsl:element>
+    </xsl:template>
+
+    <xsl:template match="omeka:itemType">
+        <xsl:element name="elementSet">
+            <xsl:attribute name="name">
+                <xsl:text>Item Type Metadata</xsl:text>
+            </xsl:attribute>
+            <xsl:apply-templates select="omeka:elementContainer/omeka:element" />
         </xsl:element>
     </xsl:template>
 
