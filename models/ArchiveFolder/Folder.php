@@ -104,14 +104,15 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
      */
     public function getParameters()
     {
-        if ($this->_parameters === null) {
-            $parameters = json_decode($this->parameters, true);
-            if (empty($parameters)) {
-                $parameters = array();
-            }
-            elseif (!is_array($parameters)) {
-                throw new UnexpectedValueException(__('Parameters must be an array. '
-                    . 'Instead, the following was given: %s.', var_export($parameters, true)));
+        if (is_null($this->_parameters)) {
+            // Check if the parameters have been set directly.
+            $parameters = empty($this->parameters) ? array() : $this->parameters;
+            if (!is_array($parameters)) {
+                $parameters = json_decode($parameters, true);
+                if (!is_array($parameters)) {
+                    throw new UnexpectedValueException(__('Parameters must be an array. '
+                        . 'Instead, the following was given: %s.', var_export($parameters, true)));
+                }
             }
             $this->_parameters = $parameters;
         }
@@ -167,6 +168,8 @@ class ArchiveFolder_Folder extends Omeka_Record_AbstractRecord implements Zend_A
         elseif (!is_array($parameters)) {
             throw new InvalidArgumentException(__('Parameters must be an array.'));
         }
+        // This is required to manage all the cases and tests.
+        $this->parameters = json_encode($parameters);
         $this->_parameters = $parameters;
     }
 
