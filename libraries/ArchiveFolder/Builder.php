@@ -685,6 +685,14 @@ class ArchiveFolder_Builder
     {
         // Check and save the static repository (overwrite existing one).
         $xmlpath = $this->_folder->getLocalRepositoryFilepath();
+
+        // Check if the dirpath exists.
+        $dir = dirname($xmlpath);
+        if (!file_exists($dir)) {
+            mkdir($dir, 0775, true);
+        }
+
+        // Copy the file if there is something to copy.
         if (file_exists($this->_xmlpathTemp) && filesize($this->_xmlpathTemp)) {
             copy($this->_xmlpathTemp, $xmlpath);
             unlink($this->_xmlpathTemp);
@@ -693,6 +701,7 @@ class ArchiveFolder_Builder
             throw new ArchiveFolder_BuilderException(__('The static repository has not been created.'));
         }
 
+        // Check if the copy is fine.
         if (!file_exists($xmlpath) || !filesize($xmlpath)) {
             throw new ArchiveFolder_BuilderException(__('The static repository cannot be copied in destination folder.'));
         }

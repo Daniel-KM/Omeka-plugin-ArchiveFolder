@@ -476,7 +476,7 @@ class ArchiveFolder_Importer
         $this->_setExtraData($record, $document['extra'], $action);
 
         $this->_archiveRecord($record, $document['process']['index'], $document['process']['name']);
-         return $record;
+        return $record;
     }
 
     /**

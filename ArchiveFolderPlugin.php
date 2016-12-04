@@ -127,7 +127,10 @@ class ArchiveFolderPlugin extends Omeka_Plugin_AbstractPlugin
         // create one and protect it.
         $staticDir = FILES_DIR . DIRECTORY_SEPARATOR . get_option('archive_folder_static_dir');
         if (!file_exists($staticDir)) {
-            mkdir($staticDir, 0755, true);
+            mkdir($staticDir, 0775, true);
+            if (!file_exists($staticDir)) {
+                throw new Omeka_Plugin_Installer_Exception(__('Cannot create directory "%s".', $staticDir));
+            }
             copy(FILES_DIR . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . 'index.html',
                 $staticDir . DIRECTORY_SEPARATOR . 'index.html');
         }
