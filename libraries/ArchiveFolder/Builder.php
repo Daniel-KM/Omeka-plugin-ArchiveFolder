@@ -306,8 +306,8 @@ class ArchiveFolder_Builder
     }
 
     /**
-     * Remove files outside of the foder, with black-listed extensions or not in
-     * the Omeka white-list.
+     * Remove files outside of the folder, with black-listed extensions or not
+     * in the Omeka white-list.
      */
     protected function _checkFiles()
     {
