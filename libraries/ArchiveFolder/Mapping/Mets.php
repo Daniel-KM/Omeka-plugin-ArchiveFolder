@@ -216,8 +216,11 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
         $doc = &$this->_doc;
 
         // This will be used only if there are alto xml files.
-        $altoMetadata = array();
-        $altoIngester = new ArchiveFolder_Ingester_Alto($this->_uri, $this->_parameters);
+        $processAlto = plugin_is_active('OcrElementSetPlugin');
+        if ($processAlto) {
+            $altoMetadata = array();
+            $altoIngester = new ArchiveFolder_Ingester_Alto($this->_uri, $this->_parameters);
+        }
 
         foreach ($doc['files'] as &$file) {
             $dmdId = $file['dmdId'];
@@ -226,21 +229,23 @@ class ArchiveFolder_Mapping_Mets extends ArchiveFolder_Mapping_Abstract
             $amdMetadata = $this->_getDCMetadataForSource($amdId) ?: array();
             $file['metadata'] = array_merge_recursive($file['metadata'], $amdMetadata);
 
-            $ocrMetadata = $altoIngester->extractMetadata($file['specific']['path']);
-            if ($ocrMetadata) {
-                if ($this->_getParameter('keep_ocr_with_alto_file')) {
-                    $file['metadata'] = array_merge_recursive($file['metadata'], $ocrMetadata);
-                }
-                // Ocr metadata will be merged in the associated image once all
-                // metadata will be extracted.
-                else {
-                    $altoMetadata[$file['fileId']] = $ocrMetadata;
+            if ($processAlto) {
+                $ocrMetadata = $altoIngester->extractMetadata($file['specific']['path']);
+                if ($ocrMetadata) {
+                    if ($this->_getParameter('keep_ocr_with_alto_file')) {
+                        $file['metadata'] = array_merge_recursive($file['metadata'], $ocrMetadata);
+                    }
+                    // Ocr metadata will be merged in the associated image once all
+                    // metadata will be extracted.
+                    else {
+                        $altoMetadata[$file['fileId']] = $ocrMetadata;
+                    }
                 }
             }
         }
 
         // Merge associated alto file if there are metadata.
-        if ($altoMetadata && !$this->_getParameter('keep_ocr_with_alto_file')) {
+        if ($processAlto && $altoMetadata && !$this->_getParameter('keep_ocr_with_alto_file')) {
             foreach ($altoMetadata as $fileId => $ocrMetadata) {
                 // Get the file.
                 $siblingIds = array();
