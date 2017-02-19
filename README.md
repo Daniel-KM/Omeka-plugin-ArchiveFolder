@@ -710,7 +710,7 @@ Current maintainers:
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015-2016
+* Copyright Daniel Berthereau, 2015-2017
 
 
 [Archive Folder]: https://github.com/Daniel-KM/ArchiveFolder
