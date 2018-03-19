@@ -5,7 +5,7 @@
          <name>Daniel Berthereau</name>
       </agent>
       <agent ROLE="OTHER" OTHERROLE="BUILDER" TYPE="OTHER" OTHERTYPE="SOFTWARE">
-         <name>Archive Folder for Omeka (https://github.com/Daniel-KM/ArchiveFolder)</name>
+         <name>Archive Folder for Omeka (https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder)</name>
       </agent>
    </metsHdr>
    <dmdSec ID="DMD.2">

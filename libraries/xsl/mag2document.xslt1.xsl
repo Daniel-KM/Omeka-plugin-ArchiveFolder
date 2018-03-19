@@ -50,8 +50,8 @@
 
     <!-- The full path of files will be required in next steps. It is built with
     a base path and generally a specific one relative to the current document.
-    It can be a local path if it is allowed by Csv Import (fork at http://github.com/Daniel-KM/CsvImport)
-    of by Archive Folder (http://github.com/Daniel-KM/ArchiveFolder).
+    It can be a local path if it is allowed by Csv Import (fork at http://github.com/Daniel-KM/Omeka-plugin-CsvImport)
+    of by Archive Folder (http://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder).
     -->
     <xsl:param name="base_url"></xsl:param>
     <!-- The path of the document to add to the base url, if any. The code below

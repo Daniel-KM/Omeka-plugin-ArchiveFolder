@@ -666,8 +666,8 @@ Warning
 
 Use it at your own risk.
 
-It's always recommended to backup your files and database regularly so you can
-roll back if needed.
+It’s always recommended to backup your files and your databases and to check
+your archives regularly so you can roll back if needed.
 
 
 Troubleshooting
@@ -710,40 +710,40 @@ Current maintainers:
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015-2017
+* Copyright Daniel Berthereau, 2015-2018
 
 
-[Archive Folder]: https://github.com/Daniel-KM/ArchiveFolder
+[Archive Folder]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder
 [Omeka]: https://www.omeka.org
-[fork of Csv Import]: https://github.com/Daniel-KM/CsvImport
-[Xml Import]: https://github.com/Daniel-KM/XmlImport
-[fixed release]: https://github.com/Daniel-KM/Geolocation
+[fork of Csv Import]: https://github.com/Daniel-KM/Omeka-plugin-CsvImport
+[Xml Import]: https://github.com/Daniel-KM/Omeka-plugin-XmlImport
+[fixed release]: https://github.com/Daniel-KM/Omeka-plugin-Geolocation
 [Open Document Spreadsheet (ods)]: http://opendocumentformat.org
 [LibreOffice]: https://www.libreoffice.org
 [Mets]: https://www.loc.gov/standards/mets
 [Ead]: https://www.loc.gov/standards/ead
-[Ead for Omeka]: https://github.com/Daniel-KM/Ead4Omeka
+[Ead for Omeka]: https://github.com/Daniel-KM/Omeka-plugin-Ead
 [Dublin Core Extended]: https://github.com/omeka/plugin-DublinCoreExtended
 [Alto]: https://www.loc.gov/standards/alto
 [Mag]: http://www.iccu.sbn.it/opencms/opencms/it/main/standard/metadati/pagina_267.html
 [Omeka Xml]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
-[below]: https://github.com/Daniel-KM/ArchiveFolder#add-a-custom-format
-[Ocr Element Set]: https://github.com/Daniel-KM/OcrElementSet
+[below]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder#add-a-custom-format
+[Ocr Element Set]: https://github.com/Daniel-KM/Omeka-plugin-OcrElementSet
 [Geolocation]: https://omeka.org/add-ons/plugins/geolocation
-[fork of Geolocation]: https://github.com/Daniel-KM/Geolocation
-[OAI-PMH Static Repository]: https://github.com/Daniel-KM/OaiPmhStaticRepository
+[fork of Geolocation]: https://github.com/Daniel-KM/Omeka-plugin-Geolocation
+[OAI-PMH Static Repository]: https://github.com/Daniel-KM/Omeka-plugin-OaiPmhStaticRepository
 [Apache httpd]: https://httpd.apache.org
 [Jpeg 2000]: http://www.jpeg.org/jpeg2000
 [refNum]: http://bibnum.bnf.fr/refNum
 [refNum2Mets]: https://github.com/Daniel-KM/refNum2Mets
-[sheet and code]: https://github.com/Daniel-KM/ArchiveFolder/commit/2ea100cc9a2cb3557a0cf7091a88cebfc42cebb0
-[sheet]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/libraries/xsl/mag2document.xslt1.xsl
-[tests/suite/_files/Folder_Test_Xml_Omeka]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Folder_Test_Xml_Omeka
-[tests/suite/_files/Folder_Test_Xml_Mag]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Folder_Test_Xml_Mag
-[tests/suite/_files/Results/Documents/FolderTest_Xml_Omeka.xml]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Results/Documents/FolderTest_Xml_Omeka.xml
-[tests/suite/_files/Results/Documents/FolderTest_Xml_Mag.xml]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files/Results/Documents/FolderTest_Xml_Mag.xml
-[tests/suite/_files/]: https://github.com/Daniel-KM/ArchiveFolder/tree/master/tests/suite/_files
-[plugin issues]: https://github.com/Daniel-KM/ArchiveFolder/issues
+[sheet and code]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/commit/2ea100cc9a2cb3557a0cf7091a88cebfc42cebb0
+[sheet]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/tree/master/libraries/xsl/mag2document.xslt1.xsl
+[tests/suite/_files/Folder_Test_Xml_Omeka]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/tree/master/tests/suite/_files/Folder_Test_Xml_Omeka
+[tests/suite/_files/Folder_Test_Xml_Mag]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/tree/master/tests/suite/_files/Folder_Test_Xml_Mag
+[tests/suite/_files/Results/Documents/FolderTest_Xml_Omeka.xml]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/tree/master/tests/suite/_files/Results/Documents/FolderTest_Xml_Omeka.xml
+[tests/suite/_files/Results/Documents/FolderTest_Xml_Mag.xml]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/tree/master/tests/suite/_files/Results/Documents/FolderTest_Xml_Mag.xml
+[tests/suite/_files/]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/tree/master/tests/suite/_files
+[plugin issues]: https://github.com/Daniel-KM/Omeka-plugin-ArchiveFolder/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
